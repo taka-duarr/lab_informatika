@@ -9,11 +9,12 @@ import {
 } from "@/components/ui/card";
 import {
     ArrowRightIcon,
-    CalendarIcon, ChevronRight,
+    CalendarIcon,
+    ChevronRight,
     ChevronsDown,
     SquareArrowOutUpRight,
     UserCircle2,
-    UserRound
+    UserRound,
 } from "lucide-react";
 import {
     LandingPrak,
@@ -41,7 +42,7 @@ import { id as localdeId } from "date-fns/locale";
 export default function LandingPage({
     auth,
     aslabs,
-    beritas
+    beritas,
 }: PageProps<{
     aslabs: {
         id: string;
@@ -389,7 +390,10 @@ export default function LandingPage({
                                                         {aslab.username}
                                                     </p>
                                                     <Badge className="mt-2 font-medium text-base text-center bg-primary">
-                                                        { aslab.laboratorium.nama }
+                                                        {
+                                                            aslab.laboratorium
+                                                                .nama
+                                                        }
                                                     </Badge>
                                                 </CardContent>
                                             </Card>
@@ -411,56 +415,107 @@ export default function LandingPage({
                         <div className="mx-auto !px-6">
                             <ScrollArea className="w-full rounded-md">
                                 <div className="flex w-max space-x-4 py-4 px-2 mx-auto">
-                                    {beritas.length > 0
-                                        ? beritas.map((berita) => (
-                                            <Card key={berita.id} className="w-[19.5rem] md:w-96 h-72 flex-shrink-0 rounded-sm shadow">
+                                    {beritas.length > 0 ? (
+                                        beritas.map((berita) => (
+                                            <Card
+                                                key={berita.id}
+                                                className="w-[19.5rem] md:w-96 h-72 flex-shrink-0 rounded-sm shadow"
+                                            >
                                                 <CardHeader>
-                                                    <CardTitle className="line-clamp-2 text-ellipsis">{berita.judul}</CardTitle>
+                                                    <CardTitle className="line-clamp-2 text-ellipsis">
+                                                        {berita.judul}
+                                                    </CardTitle>
                                                     <CardDescription className="space-y-0.5 *:flex *:items-center *:gap-0.5 text-sm">
                                                         <div>
-                                                            <CalendarIcon size={16} />
-                                                            {berita.updated_at ? format(new Date(berita.updated_at), 'PPPp', { locale: localdeId }) : ''}
+                                                            <CalendarIcon
+                                                                size={16}
+                                                            />
+                                                            {berita.updated_at
+                                                                ? format(
+                                                                      new Date(
+                                                                          berita.updated_at
+                                                                      ),
+                                                                      "PPPp",
+                                                                      {
+                                                                          locale: localdeId,
+                                                                      }
+                                                                  )
+                                                                : ""}
                                                         </div>
                                                         <div>
-                                                            <UserRound size={16} />
-                                                            {berita.admin?.nama ?? ''}
+                                                            <UserRound
+                                                                size={16}
+                                                            />
+                                                            {berita.admin
+                                                                ?.nama ?? ""}
                                                         </div>
                                                     </CardDescription>
                                                 </CardHeader>
                                                 <CardContent className="min-h-24">
-                                                    <p className="line-clamp-3 text-ellipsis">{berita.deskripsi}</p>
+                                                    <p className="line-clamp-3 text-ellipsis">
+                                                        {berita.deskripsi}
+                                                    </p>
                                                 </CardContent>
                                                 <CardFooter className="px-4 items-end">
-                                                    <Button variant="ghost" className="ml-auto w-min justify-between" onClick={() => router.visit(route('berita.show', { slug: berita.slug }))}>
-                                                        Baca selengkapnya <ArrowRightIcon className="h-4 w-4" />
+                                                    <Button
+                                                        variant="ghost"
+                                                        className="ml-auto w-min justify-between"
+                                                        onClick={() =>
+                                                            router.visit(
+                                                                route(
+                                                                    "berita.show",
+                                                                    {
+                                                                        slug: berita.slug,
+                                                                    }
+                                                                )
+                                                            )
+                                                        }
+                                                    >
+                                                        Baca selengkapnya{" "}
+                                                        <ArrowRightIcon className="h-4 w-4" />
                                                     </Button>
                                                 </CardFooter>
                                             </Card>
-                                        )) : (
-                                            <p className="text-center mx-auto">Belum ada berita</p>
-                                        )}
+                                        ))
+                                    ) : (
+                                        <p className="text-center mx-auto">
+                                            Belum ada berita
+                                        </p>
+                                    )}
                                 </div>
                                 <ScrollBar orientation="horizontal" />
                             </ScrollArea>
                         </div>
                         <CardFooter className="mt-3">
-                            <Button asChild={beritas.length > 0} variant="outline" disabled={beritas.length < 1} className="ml-auto">
-                                {beritas.length > 0
-                                    ? (
-                                        <Link href={route('berita.index')} className="!ml-auto gap-1">
-                                            Lihat semua berita <ChevronRight size={16} />
-                                        </Link>
-                                    ) : (
-                                        <div className="!ml-auto flex gap-1">
-                                            Lihat semua berita <ChevronRight size={16} />
-                                        </div>
-                                    )}
+                            <Button
+                                asChild={beritas.length > 0}
+                                variant="outline"
+                                disabled={beritas.length < 1}
+                                className="ml-auto"
+                            >
+                                {beritas.length > 0 ? (
+                                    <Link
+                                        href={route("berita.index")}
+                                        className="!ml-auto gap-1"
+                                    >
+                                        Lihat semua berita{" "}
+                                        <ChevronRight size={16} />
+                                    </Link>
+                                ) : (
+                                    <div className="!ml-auto flex gap-1">
+                                        Lihat semua berita{" "}
+                                        <ChevronRight size={16} />
+                                    </div>
+                                )}
                             </Button>
                         </CardFooter>
                     </Card>
                 </section>
 
-                <section id="cta" className="w-full py-12 md:py-24 lg:py-32 bg-gray-100">
+                <section
+                    id="cta"
+                    className="w-full py-12 md:py-24 lg:py-32 bg-gray-100"
+                >
                     <div className="flex flex-col items-center space-y-4 text-center">
                         <div className="space-y-2">
                             <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
