@@ -45,15 +45,12 @@ class JenisNilaiController extends Controller
 
             $laboratoriumId = $validated['jenis_nilai'][0]['laboratorium_id'];
 
-            // Ambil semua ID yang dikirim dari frontend
             $newIds = collect($validated['jenis_nilai'])->pluck('id');
 
-            // Hapus record yang tidak ada dalam request
             JenisNilai::where('laboratorium_id', $laboratoriumId)
                 ->whereNotIn('id', $newIds)
                 ->delete();
 
-            // Update atau insert data baru
             foreach ($validated['jenis_nilai'] as $data) {
                 JenisNilai::updateOrCreate(['id' => $data['id']], $data);
             }

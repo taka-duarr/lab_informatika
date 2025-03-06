@@ -490,7 +490,7 @@ class AdminPagesController extends Controller
                 ->where('id', $idParam)
                 ->with([
                     'jenis:id,nama,laboratorium_id',
-                    'jenis.laboratorium:id,nama',
+                    'jenis.laboratorium:id,nama,avatar',
                     'periode:id,nama',
                     'pertemuan' => fn($query) => $query
                         ->select('id', 'praktikum_id', 'nama')
@@ -503,11 +503,13 @@ class AdminPagesController extends Controller
                             'modul' => 'praktikum_praktikan.modul',
                             'terverifikasi' => 'praktikum_praktikan.terverifikasi',
                             'aslab_id' => 'praktikum_praktikan.aslab_id',
+                            'dosen_id' => 'praktikum_praktikan.dosen_id',
                             'sesi_praktikum_id' => 'praktikum_praktikan.sesi_praktikum_id',
                         ])
                         ->with([
-                            'sesi:id,nama',
                             'aslab:id,nama',
+                            'dosen:id,nama',
+                            'sesi:id,nama',
                         ]),
                 ])
                 ->first();
@@ -540,6 +542,9 @@ class AdminPagesController extends Controller
                         'terverifikasi' => (bool) $p->terverifikasi,
                         'aslab' => $p->aslab
                             ? ['id' => $p->aslab->id, 'nama' => $p->aslab->nama]
+                            : null,
+                        'dosen' => $p->dosen
+                            ? ['id' => $p->dosen->id, 'nama' => $p->dosen->nama]
                             : null,
                         'sesi' => $p->sesi
                             ? ['id' => $p->sesi->id, 'nama' => $p->sesi->nama]
@@ -598,6 +603,29 @@ class AdminPagesController extends Controller
                         'avatar' => $aslab->avatar,
                         'username' => $aslab->username,
                         'kuota' => (int) $aslab->kuota,
+                    ]),
+                'dosens' => fn() => Dosen::select([
+                    'dosen.id',
+                    'dosen.nama',
+                    'dosen.username',
+                    DB::raw('COUNT(praktikum_praktikan.praktikan_id) AS kuota')
+                ])
+                    ->leftJoin('praktikum_praktikan', function ($join) use ($idParam) {
+                        $join->on('dosen.id', '=', 'praktikum_praktikan.dosen_id')
+                            ->where('praktikum_praktikan.praktikum_id', '=', $idParam);
+                    })
+                    ->when($laboratoriumId, function ($query) use ($laboratoriumId) {
+                        $query->join('dosen_laboratorium', 'dosen.id', '=', 'dosen_laboratorium.dosen_id')
+                            ->where('dosen_laboratorium.laboratorium_id', $laboratoriumId);
+                    })
+                    ->groupBy('dosen.id', 'dosen.nama', 'dosen.username')
+                    ->orderBy('dosen.username', 'asc')
+                    ->get()
+                    ->map(fn($dosen) => [
+                        'id' => $dosen->id,
+                        'nama' => $dosen->nama,
+                        'username' => $dosen->username,
+                        'kuota' => (int) $dosen->kuota,
                     ]),
             ]);
         } catch (QueryException $exception) {

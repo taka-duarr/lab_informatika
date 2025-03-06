@@ -20,10 +20,10 @@ class Praktikan extends Authenticatable
         return $this->belongsToMany(Praktikum::class, 'praktikum_praktikan', 'praktikan_id', 'praktikum_id')
             ->withPivot(['krs', 'pembayaran', 'modul', 'terverifikasi', 'sesi_praktikum_id', 'aslab_id']);
     }
-    public function nilai(): HasMany
-    {
-        return $this->hasMany(Nilai::class, 'praktikan_id');
-    }
+//    public function nilai(): HasMany
+//    {
+//        return $this->hasMany(Nilai::class, 'praktikan_id');
+//    }
     public function sesi(): BelongsTo
     {
         return $this->belongsTo(SesiPraktikum::class, 'sesi_praktikum_id');
@@ -31,6 +31,10 @@ class Praktikan extends Authenticatable
     public function aslab(): BelongsTo
     {
         return $this->belongsTo(Aslab::class, 'aslab_id');
+    }
+    public function dosen(): BelongsTo
+    {
+        return $this->belongsTo(Dosen::class, 'dosen_id');
     }
 
 }

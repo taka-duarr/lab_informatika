@@ -226,7 +226,7 @@ export default function AdminPraktikumIndexPage({ auth, pagination }: PageProps<
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
                             <DropdownMenuItem onClick={ () => router.visit(route('admin.praktikum.details', { q: originalRow.id })) }>
-                                <Pencil /> Ubah data
+                                <Pencil /> Details
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={ () => router.visit(route('admin.praktikum.praktikan.index', { q: originalRow.id })) }>
                                 <Users2 /> Data Praktikan

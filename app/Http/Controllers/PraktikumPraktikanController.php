@@ -141,6 +141,7 @@ class PraktikumPraktikanController extends Controller
             'praktikum_id' => 'required|exists:praktikum,id',
             'sesi_praktikum_id' => 'required|exists:sesi_praktikum,id',
             'aslab_id' => 'required|exists:aslab,id',
+            'dosen_id' => 'required|exists:dosen,id',
             'terverifikasi' => 'required|boolean',
         ]);
 
@@ -149,6 +150,7 @@ class PraktikumPraktikanController extends Controller
             $updateData = [
                 'sesi_praktikum_id' => $validated['sesi_praktikum_id'],
                 'aslab_id' => $validated['aslab_id'],
+                'dosen_id' => $validated['dosen_id'],
                 'terverifikasi' => $validated['terverifikasi'],
             ];
 

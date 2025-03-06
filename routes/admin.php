@@ -36,6 +36,7 @@ Route::prefix('admin')->name('admin.')->middleware('guard:admin')->group(functio
         Route::get('/details', [AdminPagesController::class, 'praktikumDetailsPage'])->name('details');
         Route::prefix('praktikan')->name('praktikan.')->group(function () {
             Route::get('/', [AdminPagesController::class, 'praktikumPraktikanIndexPage'])->name('index');
+            Route::get('/export-kartu', [AdminPagesController::class, 'praktikumPraktikanExportKartuPage'])->name('export-kartu');
         });
 
         Route::prefix('/nilai')->name('nilai.')->group(function () {

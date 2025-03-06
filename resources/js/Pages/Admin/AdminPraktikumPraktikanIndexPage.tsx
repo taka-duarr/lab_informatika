@@ -3,11 +3,11 @@ import { Head, router } from "@inertiajs/react";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { NotificationCard } from "@/components/notification-card";
 import {
-    ArrowUpDown,
+    ArrowUpDown, Check,
     ChevronDown,
     CircleAlert,
     CircleCheckBig,
-    Clock,
+    Clock, Copy,
     Download,
     FolderCheck,
     FolderX,
@@ -38,6 +38,12 @@ import {
     AlertDialogHeader,
     AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip"
 import { cn, parseSesiTime } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -74,8 +80,8 @@ import {
     Text,
     View,
 } from "@react-pdf/renderer";
-import { MahiruCirle, MahiruStandart } from "@/lib/StaticImagesLib";
-import LogoJarkom from "@/assets/logo-jarkom-new.png";
+import { LogoLabInformatika } from "@/lib/StaticImagesLib";
+import * as React from "react";
 
 type Praktikan = {
     id: string;
@@ -87,6 +93,10 @@ type Praktikan = {
     modul: string | null;
     terverifikasi: boolean;
     aslab: {
+        id: string;
+        nama: string;
+    } | null;
+    dosen: {
         id: string;
         nama: string;
     } | null;
@@ -111,19 +121,14 @@ type Praktikum = {
     laboratorium: {
         id: string;
         nama: string;
+        avatar: string | null;
     };
     pertemuan: {
         id: string;
         nama: string;
     }[];
 };
-export default function AdminPraktikumPraktikanIndexPage({
-    auth,
-    currentDate,
-    praktikum,
-    sesiPraktikums,
-    aslabs,
-}: PageProps<{
+export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, praktikum, sesiPraktikums, aslabs, dosens }: PageProps<{
     currentDate: string;
     praktikum: Praktikum;
     sesiPraktikums: {
@@ -139,6 +144,12 @@ export default function AdminPraktikumPraktikanIndexPage({
         id: string;
         nama: string;
         avatar: string | null;
+        username: string;
+        kuota: number;
+    }[];
+    dosens: {
+        id: string;
+        nama: string;
         username: string;
         kuota: number;
     }[];
@@ -169,7 +180,9 @@ export default function AdminPraktikumPraktikanIndexPage({
         username: string;
         sesi_praktikum_id: string;
         aslab_id: string;
+        dosen_id: string;
         isRandomAslab: boolean;
+        isRandomDosen: boolean;
         onSubmit: boolean;
     };
     const uploadFileInit: uploadFile = {
@@ -190,8 +203,15 @@ export default function AdminPraktikumPraktikanIndexPage({
         username: "",
         sesi_praktikum_id: "",
         aslab_id: "",
+        dosen_id: "",
         isRandomAslab: false,
+        isRandomDosen: false,
         onSubmit: false,
+    };
+    const [ clipboard, setClipboard ] = useState<string>('');
+    const handleSetClipboard = (value: string) => {
+        setClipboard(value);
+        navigator.clipboard.writeText(value);
     };
 
     const [uploadFile, setUploadFile] = useState<uploadFile>(uploadFileInit);
@@ -425,7 +445,7 @@ export default function AdminPraktikumPraktikanIndexPage({
         );
         const isFullSesiPraktikum = sesiPraktikum
             ? sesiPraktikum.kuota !== null &&
-              (sesiPraktikum.sisa_kuota ?? 0) <= 0
+            (sesiPraktikum.sisa_kuota ?? 0) <= 0
             : false;
         setVerifikasiPraktikan((prevState) => ({
             ...prevState,
@@ -446,31 +466,21 @@ export default function AdminPraktikumPraktikanIndexPage({
             setVerifikasiPraktikan(verifikasiPraktikanInit);
         }
     };
-    const handleSubmitVerifikasiPraktikan = (
-        event: FormEvent<HTMLFormElement>
-    ) => {
+    const handleSubmitVerifikasiPraktikan = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setVerifikasiPraktikan((prevState) => ({
             ...prevState,
             onSubmit: true,
         }));
 
-        const { id, sesi_praktikum_id, aslab_id, isRandomAslab } =
-            verifikasiPraktikan;
+        const { id, sesi_praktikum_id, aslab_id, isRandomAslab, dosen_id, isRandomDosen } = verifikasiPraktikan;
 
         let selectedAslabId = aslab_id;
         if (isRandomAslab) {
             if (aslabs.length > 0) {
-                const minKuota = Math.min(
-                    ...aslabs.map((aslab) => aslab.kuota)
-                );
-                const minKuotaAslabs = aslabs.filter(
-                    (aslab) => aslab.kuota === minKuota
-                );
-                selectedAslabId =
-                    minKuotaAslabs[
-                        Math.floor(Math.random() * minKuotaAslabs.length)
-                    ].id;
+                const minKuota = Math.min(...aslabs.map((aslab) => aslab.kuota));
+                const minKuotaAslabs = aslabs.filter((aslab) => aslab.kuota === minKuota);
+                selectedAslabId = minKuotaAslabs[Math.floor(Math.random() * minKuotaAslabs.length)].id;
             } else {
                 toast({
                     variant: "destructive",
@@ -486,12 +496,33 @@ export default function AdminPraktikumPraktikanIndexPage({
             }
         }
 
+        let selectedDosenId = dosen_id;
+        if (isRandomDosen) {
+            if (dosens.length > 0) {
+                const minKuota = Math.min(...dosens.map((dosen) => dosen.kuota));
+                const minKuotaDosens = dosens.filter((dosen) => dosen.kuota === minKuota);
+                selectedDosenId = minKuotaDosens[Math.floor(Math.random() * minKuotaDosens.length)].id;
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Dosen tidak tersedia!",
+                    description: "Tidak ada data Dosen yang tersedia untuk dipilih.",
+                });
+                setVerifikasiPraktikan((prevState) => ({
+                    ...prevState,
+                    onSubmit: false,
+                }));
+                return;
+            }
+        }
+
         axios
             .post(route("praktikum-praktikan.verifikasi"), {
                 praktikum_id: praktikum.id,
                 praktikan_id: id,
                 sesi_praktikum_id: sesi_praktikum_id,
                 aslab_id: selectedAslabId,
+                dosen_id: selectedDosenId,
                 terverifikasi: true,
             })
             .then((res) => {
@@ -504,7 +535,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                     description: res.data.message,
                 });
                 router.reload({
-                    only: ["praktikum", "sesiPraktikums", "aslabs"],
+                    only: ["praktikum", "sesiPraktikums", "aslabs", "dosens"],
                 });
             })
             .catch((err: unknown) => {
@@ -533,7 +564,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
-                    className="min-w-40 justify-start"
+                    className="min-w-32 justify-start"
                 >
                     NPM
                     <ArrowUpDown />
@@ -560,7 +591,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                 </Button>
             ),
             cell: ({ row }) => (
-                <div className="w-full ml-4 text-left truncate overflow-hidden whitespace-nowrap capitalize">
+                <div className="w-full ml-4 text-left truncate overflow-hidden whitespace-nowrap">
                     {row.getValue("nama")}
                 </div>
             ),
@@ -611,8 +642,34 @@ export default function AdminPraktikumPraktikanIndexPage({
             cell: ({ row }) => {
                 const aslab = row.original.aslab;
                 return (
-                    <div className="capitalize min-w-48 max-w-60 truncate ml-4">
+                    <div className="min-w-48 max-w-60 truncate ml-4">
                         <p>{aslab ? `${aslab.nama}` : "-"}</p>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorFn: (row) => row.dosen?.nama || "-",
+            id: "dosen.nama",
+            header: ({ column }) => {
+                return (
+                    <Button
+                        variant="ghost"
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
+                        className="min-w-48 justify-start"
+                    >
+                        Dosen Pembimbing
+                        <ArrowUpDown />
+                    </Button>
+                );
+            },
+            cell: ({ row }) => {
+                const dosen = row.original.dosen;
+                return (
+                    <div className="min-w-48 max-w-60 truncate ml-4">
+                        <p>{dosen ? `${dosen.nama}` : "-"}</p>
                     </div>
                 );
             },
@@ -625,7 +682,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                     onClick={() =>
                         column.toggleSorting(column.getIsSorted() === "asc")
                     }
-                    className="w-36 justify-start"
+                    className="w-32 justify-start"
                 >
                     Terverifikasi
                     <ArrowUpDown />
@@ -635,7 +692,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                 const terverifikasi = row.original.terverifikasi;
                 return (
                     <div
-                        className={`ml-3 w-28 flex gap-1 items-center justify-center ${
+                        className={`w-32 flex gap-1 items-center justify-center ${
                             terverifikasi ? "text-green-600" : "text-red-500"
                         } text-sm`}
                     >
@@ -744,7 +801,7 @@ export default function AdminPraktikumPraktikanIndexPage({
         },
     ];
 
-    const exportToExcel = (praktikum: Praktikum) => {
+    const exportAbsensiPraktikum = (praktikum: Praktikum) => {
         if (!praktikum || !praktikum.praktikan) return;
 
         const wb = XLSX.utils.book_new();
@@ -919,13 +976,13 @@ export default function AdminPraktikumPraktikanIndexPage({
         handleFile();
     }, [uploadFile]);
 
+    console.log(praktikum.praktikan);
+
     useEffect(() => {
         if (uploadContents.length > 0 && !openUploadContents) {
             setOpenUploadContents(true);
         }
     }, [uploadContents]);
-
-    // console.log(praktikum);
 
     const styles = StyleSheet.create({
         page: {
@@ -1030,135 +1087,112 @@ export default function AdminPraktikumPraktikanIndexPage({
         },
     });
 
-    const savePDF = async () => {
+    const exportKartuPraktikum = async () => {
         try {
-            console.log("Saving PDF kartu...");
+            const praktikansVerified = praktikum.praktikan.filter((filt) => filt.aslab?.id);
+            if (praktikansVerified.length < 1) {
+                toast({
+                    variant: "destructive",
+                    title: "Operasi dibatalkan",
+                    description: 'Belum ada Praktikan yang sudah terverifikasi !',
+                });
+                return;
+            }
             const doc = (
                 <Document>
-                    {praktikum.praktikan
-                        .filter((filt) => filt.aslab?.id)
-                        .map((praktikan, index) => (
-                            <Page
-                                size="A6"
-                                orientation="landscape"
-                                style={styles.page}
-                                key={index}
-                            >
-                                <View style={styles.header}>
-                                    <Image
-                                        style={styles.logo}
-                                        src={MahiruCirle}
-                                    />
-                                    <View style={styles.titleContainer}>
-                                        <Text style={styles.titleText}>
-                                            Kartu Praktikum
-                                        </Text>
-                                        <Text style={styles.subtitleText}>
-                                            {praktikum.nama}{" "}
-                                            {praktikum.periode.nama} -{" "}
-                                            {praktikum.tahun}
-                                        </Text>
-                                        <Text style={styles.subtitleText}>
-                                            Laboratorium{" "}
-                                            {praktikum.laboratorium.nama}
-                                        </Text>
-                                    </View>
-                                    <Image
-                                        style={styles.logo}
-                                        src={LogoJarkom}
-                                    />
-                                </View>
-                                <View style={styles.divider} />
-                                <View style={styles.content}>
-                                    <Image
-                                        src={praktikan.avatar ?? MahiruStandart}
-                                        style={styles.profileImage}
-                                    />
-                                    <View style={styles.bioContainer}>
-                                        <View style={styles.bioRow}>
-                                            <Text style={styles.bioLabel}>
-                                                Nama
-                                            </Text>
-                                            <Text>: {praktikan.nama}</Text>
-                                        </View>
-                                        <View style={styles.bioRow}>
-                                            <Text style={styles.bioLabel}>
-                                                NPM
-                                            </Text>
-                                            <Text>: {praktikan.username}</Text>
-                                        </View>
-                                        <View style={styles.bioRow}>
-                                            <Text style={styles.bioLabel}>
-                                                Sesi
-                                            </Text>
-                                            <Text>
-                                                : {praktikan.sesi?.nama ?? ""}
-                                            </Text>
-                                        </View>
-                                        <View style={styles.bioRow}>
-                                            <Text style={styles.bioLabelWide}>
-                                                Asisten Pembimbing
-                                            </Text>
-                                            <Text>
-                                                : {praktikan.aslab?.nama ?? ""}
-                                            </Text>
-                                        </View>
-                                        <View style={styles.bioRow}>
-                                            <Text style={styles.bioLabelWide}>
-                                                Dosen Pembimbing
-                                            </Text>
-                                            <Text>: Cak Danang</Text>
-                                        </View>
-                                    </View>
-                                </View>
-                                <View style={styles.tableWrapper}>
-                                    <Text style={styles.tableHeader}>
-                                        Pelanggaran
+                    {praktikum.praktikan.map((praktikan, index) => (
+                        <Page key={index} size="A6" orientation="landscape" style={styles.page}>
+                            <View style={styles.header}>
+                                <Image style={styles.logo} src={LogoLabInformatika} />
+                                <View style={styles.titleContainer}>
+                                    <Text style={styles.titleText}>Kartu Praktikum</Text>
+                                    <Text style={styles.subtitleText}>
+                                        {praktikum.nama} {praktikum.periode.nama} - {praktikum.tahun}
                                     </Text>
-                                    <View style={styles.table}>
-                                        <View style={styles.row}>
-                                            {Array.from({
-                                                length: praktikum.pertemuan
-                                                    .length,
-                                            }).map((_, index) => (
-                                                <View
-                                                    key={index}
-                                                    style={styles.cell}
-                                                >
-                                                    <Text>
-                                                        Pertemuan {index + 1}
-                                                    </Text>
-                                                </View>
-                                            ))}
-                                        </View>
-                                        <View style={styles.row}>
-                                            {Array.from({
-                                                length: praktikum.pertemuan
-                                                    .length,
-                                            }).map((_, index) => (
-                                                <View
-                                                    key={index}
-                                                    style={styles.emptyCell}
-                                                />
-                                            ))}
-                                        </View>
+                                    <Text style={styles.subtitleText}>
+                                        Laboratorium {praktikum.laboratorium.nama}
+                                    </Text>
+                                </View>
+                                <Image
+                                    style={styles.logo}
+                                    src={praktikum.laboratorium.avatar ? `/storage/laboratorium/${praktikum.laboratorium.avatar}` : LogoLabInformatika}
+                                />
+                            </View>
+                            <View style={styles.divider} />
+                            <View style={styles.content}>
+                                {praktikan.avatar ? (
+                                    <Image src={praktikan.avatar} style={styles.profileImage} />
+                                ) : (
+                                    <View style={{ ...styles.profileImage, height: 90, border: 1 }} />
+                                )}
+                                <View style={styles.bioContainer}>
+                                    <View style={styles.bioRow}>
+                                        <Text style={styles.bioLabel}>Nama</Text>
+                                        <Text>: {praktikan.nama}</Text>
+                                    </View>
+                                    <View style={styles.bioRow}>
+                                        <Text style={styles.bioLabel}>NPM</Text>
+                                        <Text>: {praktikan.username}</Text>
+                                    </View>
+                                    <View style={styles.bioRow}>
+                                        <Text style={styles.bioLabel}>Sesi</Text>
+                                        <Text>: {praktikan.sesi?.nama ?? ""}</Text>
+                                    </View>
+                                    <View style={styles.bioRow}>
+                                        <Text style={styles.bioLabelWide}>Asisten Pembimbing</Text>
+                                        <Text>: {praktikan.aslab?.nama ?? ""}</Text>
+                                    </View>
+                                    <View style={styles.bioRow}>
+                                        <Text style={styles.bioLabelWide}>Dosen Pembimbing</Text>
+                                        <Text>: {praktikan.dosen?.nama ?? ""}</Text>
                                     </View>
                                 </View>
-                            </Page>
-                        ))}
+                            </View>
+                            <View style={styles.tableWrapper}>
+                                <Text style={styles.tableHeader}>
+                                    Pelanggaran
+                                </Text>
+                                <View style={styles.table}>
+                                    <View style={styles.row}>
+                                        {Array.from({
+                                            length: praktikum.pertemuan.length < 1 ? 8 : praktikum.pertemuan.length,
+                                        }).map((_, index) => (
+                                            <View
+                                                key={index}
+                                                style={styles.cell}
+                                            >
+                                                <Text>
+                                                    Pertemuan {index + 1}
+                                                </Text>
+                                            </View>
+                                        ))}
+                                    </View>
+                                    <View style={styles.row}>
+                                        {Array.from({
+                                            length: praktikum.pertemuan.length < 1 ? 8 : praktikum.pertemuan.length,
+                                        }).map((_, index) => (
+                                            <View
+                                                key={index}
+                                                style={styles.emptyCell}
+                                            />
+                                        ))}
+                                    </View>
+                                </View>
+                            </View>
+                        </Page>
+                    ))}
                 </Document>
             );
             const asPdf = pdf();
             asPdf.updateContainer(doc);
             const pdfBlob = await asPdf.toBlob();
-            saveAs(pdfBlob, "document.pdf");
+            saveAs(pdfBlob, `kartu-praktikum-${praktikum.nama}-${praktikum.periode.nama}.pdf`);
         } catch (error) {
             console.error(error);
             alert("Error generating PDF");
         }
     };
 
-    // console.log(praktikum);
     return (
         <>
             <AdminLayout auth={auth}>
@@ -1255,6 +1289,29 @@ export default function AdminPraktikumPraktikanIndexPage({
                                     className="w-full flex flex-row gap-1"
                                 >
                                     <div className="capitalize w-72 ml-2 flex items-center gap-2">
+                                        <TooltipProvider>
+                                            <Tooltip delayDuration={100}>
+                                                <TooltipTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="w-7 h-7" onClick={ () => handleSetClipboard(sesi.id) }>
+                                                        { clipboard === sesi.id
+                                                            ? (
+                                                                <Check width={ 15 }/>
+                                                            ) : (
+                                                                <Copy width={ 15 }/>
+                                                            )
+                                                        }
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p className="text-xs">
+                                                        { clipboard === sesi.id
+                                                            ? 'Berhasil disalin'
+                                                            : 'Salin ID Sesi'
+                                                        }
+                                                    </p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
                                         <Clock className="ml-2" />
                                         <p className="line-clamp-2 text-ellipsis font-medium -mr-1">
                                             {sesi.nama}
@@ -1279,14 +1336,37 @@ export default function AdminPraktikumPraktikanIndexPage({
                                 </div>
                             ))}
                             <Separator className="!my-4" />
+                            <h5 className="text-lg font-medium !my-4 ml-3.5">Asisten Laboratorium</h5>
                             {aslabs.map((aslab) => (
                                 <div
                                     key={aslab.id}
                                     className="w-full flex flex-row gap-1"
                                 >
-                                    <div className="capitalize w-72 ml-2 flex items-center gap-2">
-                                        <div
-                                            className={`justify-between min-w-11 w-11 h-11 rounded-full overflow-hidden content-center ${
+                                    <div className="capitalize w-80 ml-2 flex items-center gap-2">
+                                        <TooltipProvider>
+                                            <Tooltip delayDuration={100}>
+                                                <TooltipTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="w-7 h-7" onClick={ () => handleSetClipboard(aslab.id) }>
+                                                        { clipboard === aslab.id
+                                                            ? (
+                                                                <Check width={ 15 }/>
+                                                            ) : (
+                                                                <Copy width={ 15 }/>
+                                                            )
+                                                        }
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p className="text-xs">
+                                                        { clipboard === aslab.id
+                                                            ? 'Berhasil disalin'
+                                                            : 'Salin ID Aslab'
+                                                        }
+                                                    </p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                        <div className={`justify-between min-w-11 w-11 h-11 rounded-full overflow-hidden content-center ${
                                                 !aslab.avatar
                                                     ? "bg-gray-100 shadow"
                                                     : ""
@@ -1312,6 +1392,55 @@ export default function AdminPraktikumPraktikanIndexPage({
                                         </span>
                                         <Badge variant="secondary">
                                             {aslab.kuota}
+                                        </Badge>
+                                    </div>
+                                </div>
+                            ))}
+                            <Separator className="!my-4" />
+                            <h5 className="text-lg font-medium !my-4 ml-3.5">Dosen Laboratorium</h5>
+                            {dosens.map((dosen) => (
+                                <div
+                                    key={dosen.id}
+                                    className="w-full flex flex-row gap-1"
+                                >
+                                    <div className="capitalize w-80 ml-2 flex items-center gap-2">
+                                        <TooltipProvider>
+                                            <Tooltip delayDuration={100}>
+                                                <TooltipTrigger asChild>
+                                                    <Button variant="ghost" size="icon" className="w-7 h-7" onClick={ () => handleSetClipboard(dosen.id) }>
+                                                        { clipboard === dosen.id
+                                                            ? (
+                                                                <Check width={ 15 }/>
+                                                            ) : (
+                                                                <Copy width={ 15 }/>
+                                                            )
+                                                        }
+                                                    </Button>
+                                                </TooltipTrigger>
+                                                <TooltipContent>
+                                                    <p className="text-xs">
+                                                        { clipboard === dosen.id
+                                                            ? 'Berhasil disalin'
+                                                            : 'Salin ID Dosen'
+                                                        }
+                                                    </p>
+                                                </TooltipContent>
+                                            </Tooltip>
+                                        </TooltipProvider>
+                                        <div className="justify-between min-w-11 w-11 h-11 rounded-full overflow-hidden content-center bg-gray-100 shadow">
+                                            <UserRound className="mx-auto" />
+                                        </div>
+                                        <p className="line-clamp-2 text-ellipsis">
+                                            {dosen.nama}
+                                        </p>
+                                    </div>
+                                    <div className="flex items-center space-x-2">
+                                        <Users2 className="h-4 w-4 text-muted-foreground" />
+                                        <span className="text-sm hidden sm:block">
+                                            Jumlah Praktikan saat ini:{" "}
+                                        </span>
+                                        <Badge variant="secondary">
+                                            {dosen.kuota}
                                         </Badge>
                                     </div>
                                 </div>
@@ -1415,11 +1544,11 @@ export default function AdminPraktikumPraktikanIndexPage({
                             <DropdownMenuLabel>Ekspor Excel</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                                onClick={() => exportToExcel(praktikum)}
+                                onClick={() => exportAbsensiPraktikum(praktikum)}
                             >
                                 Absensi Praktikum
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => savePDF()}>
+                            <DropdownMenuItem onClick={() => exportKartuPraktikum()}>
                                 Kartu Praktikum
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
@@ -1729,6 +1858,72 @@ export default function AdminPraktikumPraktikanIndexPage({
                                     className="text-sm opacity-80"
                                 >
                                     Asisten Laboratorium Acak
+                                </Label>
+                            </div>
+                        </div>
+                        <div className="space-y-1.5">
+                            <div className="grid gap-2">
+                                <Label>Dosen Pembimbing</Label>
+                                <Select
+                                    disabled={verifikasiPraktikan.isRandomDosen}
+                                    value={verifikasiPraktikan.dosen_id}
+                                    onValueChange={(val) =>
+                                        setVerifikasiPraktikan((prevState) => ({
+                                            ...prevState,
+                                            dosen_id: val,
+                                        }))
+                                    }
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue
+                                            placeholder={`${
+                                                verifikasiPraktikan.isRandomDosen
+                                                    ? "Dosen Pembimbing Acak"
+                                                    : "Pilih Dosen Pembimbing"
+                                            }`}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {dosens.length > 0 ? (
+                                            dosens.map((dosen) => (
+                                                <SelectItem
+                                                    key={dosen.id}
+                                                    value={dosen.id}
+                                                >
+                                                    {dosen.nama}
+                                                </SelectItem>
+                                            ))
+                                        ) : (
+                                            <SelectItem
+                                                value={`null-${Math.random()
+                                                    .toString(36)
+                                                    .substring(2, 6)}`}
+                                                disabled
+                                            >
+                                                Tidak ada Dosen tersedia
+                                            </SelectItem>
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="items-center flex gap-1.5">
+                                <Checkbox
+                                    id="random-dosen"
+                                    onCheckedChange={(checked) =>
+                                        setVerifikasiPraktikan((prevState) => ({
+                                            ...prevState,
+                                            isRandomDosen: !!checked,
+                                            dosen_id: !!checked
+                                                ? ""
+                                                : prevState.dosen_id,
+                                        }))
+                                    }
+                                />
+                                <Label
+                                    htmlFor="random-dosen"
+                                    className="text-sm opacity-80"
+                                >
+                                    Dosen Pembimbing Acak
                                 </Label>
                             </div>
                         </div>

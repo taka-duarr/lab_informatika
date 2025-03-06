@@ -14,6 +14,7 @@ import Glacio from "@/assets/ele-glacio.png";
 import Electro from "@/assets/ele-electro.png";
 import HumpbackWhale from "@/assets/humpback-whale.webp";
 import LogoLogin from "@/assets/login-image.png";
+import LogoLabInformatika from "@/assets/logo-labinformatika.png";
 
 export {
     LogoJarkom,
@@ -32,4 +33,5 @@ export {
     NoaPP,
     HumpbackWhale,
     LogoLogin,
+    LogoLabInformatika,
 };
