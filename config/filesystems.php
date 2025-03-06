@@ -46,6 +46,18 @@ return [
             'throw' => false,
             'report' => false,
         ],
+        'laboratorium' => [
+            'driver' => 'local',
+            'root' => storage_path('app/laboratorium'),
+            'url' => env('APP_URL') . '/storage/laboratorium',
+            'visibility' => 'public',
+        ],
+        'admin' => [
+            'driver' => 'local',
+            'root' => storage_path('app/admin'),
+            'url' => env('APP_URL') . '/storage/admin',
+            'visibility' => 'public',
+        ],
         'aslab' => [
             'driver' => 'local',
             'root' => storage_path('app/aslab'),
@@ -93,6 +105,8 @@ return [
 
     'links' => [
         public_path('storage') => storage_path('app/public'),
+        public_path('storage/laboratorium') => storage_path('app/laboratorium'),
+        public_path('storage/admin') => storage_path('app/admin'),
         public_path('storage/aslab') => storage_path('app/aslab'),
         public_path('storage/praktikan') => storage_path('app/praktikan'),
         public_path('storage/praktikum') => storage_path('app/praktikum'),

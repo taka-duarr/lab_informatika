@@ -21,6 +21,7 @@ return Application::configure(basePath: dirname(__DIR__))
         ]);
         $middleware->alias([
             'guard' => \App\Http\Middleware\GuardMiddleware::class,
+            'shadow' => \App\Http\Middleware\ShadowMiddleware::class,
         ]);
 
         //

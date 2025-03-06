@@ -14,6 +14,7 @@ return new class extends Migration
         Schema::create('laboratorium', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama')->unique();
+            $table->string('avatar')->nullable();
             $table->timestamps();
             $table->softDeletes();
         });

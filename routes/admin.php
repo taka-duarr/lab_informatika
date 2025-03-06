@@ -6,15 +6,19 @@ use Illuminate\Support\Facades\Route;
 Route::prefix('admin')->name('admin.')->middleware('guard:admin')->group(function () {
     Route::get('/dashboard', [AdminPagesController::class, 'dashboardPage'])->name('dashboard');
 
-    Route::prefix('laboratorium')->name('laboratorium.')->group(function () {
-        Route::get('/', [AdminPagesController::class, 'laboratoriumIndexPage'])->name('index');
+    Route::middleware('shadow')->group(function () {
+        Route::prefix('laboratorium')->name('laboratorium.')->group(function () {
+            Route::get('/', [AdminPagesController::class, 'laboratoriumIndexPage'])->name('index');
+            Route::get('/details', [AdminPagesController::class, 'laboratoriumDetailsPage'])->name('details');
+        });
+        Route::prefix('admin')->name('admin.')->group(function () {
+            Route::get('/', [AdminPagesController::class, 'adminIndexPage'])->name('index');
+        });
+        Route::prefix('dosen')->name('dosen.')->group(function () {
+            Route::get('/', [AdminPagesController::class, 'dosenIndexPage'])->name('index');
+        });
     });
-    Route::prefix('admin')->name('admin.')->group(function () {
-        Route::get('/', [AdminPagesController::class, 'adminIndexPage'])->name('index');
-    });
-    Route::prefix('dosen')->name('dosen.')->group(function () {
-        Route::get('/', [AdminPagesController::class, 'dosenIndexPage'])->name('index');
-    });
+
     Route::prefix('aslab')->name('aslab.')->group(function () {
         Route::get('/', [AdminPagesController::class, 'aslabIndexPage'])->name('index');
         Route::get('/create', [AdminPagesController::class, 'aslabCreatePage'])->name('create');

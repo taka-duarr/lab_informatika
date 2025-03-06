@@ -3,7 +3,9 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
 use Illuminate\Database\QueryException;
@@ -77,4 +79,47 @@ class AdminController extends Controller
             return $this->queryExceptionResponse($exception);
         }
     }
+
+    public function uploadAvatar(Request $request)
+    {
+        $validated = $request->validate([
+            'avatar' => 'required|file|mimes:jpg,jpeg,png|max:5120',
+            'id' => 'required|exists:admin,id',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $admin = Admin::findOrFail($validated['id']);
+
+            if ($admin->avatar) {
+                Storage::disk('admin')->delete($admin->avatar);
+            }
+
+            $extension = $request->file('avatar')->getClientOriginalExtension();
+            $randomString = Str::random(8);
+            $filename = Str::slug($admin->nama . '-' . $randomString . '.' . $extension);
+
+            $avatarPath = $request->file('avatar')->storeAs('/', $filename, 'admin');
+            $admin->update(['avatar' => $avatarPath]);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Profil berhasil diunggah!',
+                'avatar_url' => $avatarPath,
+            ], 200);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            if (isset($avatarPath)) {
+                Storage::disk('admin')->delete($avatarPath);
+            }
+
+            return response()->json([
+                'message' => config('app.debug') ? $exception->getMessage() : 'Gagal mengunggah avatar..',
+            ], 500);
+        }
+    }
+
 }

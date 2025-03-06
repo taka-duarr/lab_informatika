@@ -31,4 +31,8 @@ class Laboratorium extends Model
     public function jenis_praktikum() : HasMany {
         return $this->hasMany(JenisPraktikum::class, 'laboratorium_id');
     }
+    public function jenis_nilai(): HasMany
+    {
+        return $this->hasMany(JenisNilai::class, 'laboratorium_id');
+    }
 }

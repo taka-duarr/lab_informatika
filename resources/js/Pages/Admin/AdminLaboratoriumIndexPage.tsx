@@ -42,11 +42,7 @@ export default function AdminLaboratoriumIndexPage({ auth, pagination }: PagePro
         nama: string;
         onSubmit: boolean;
     };
-    type UpdateForm = {
-        id: string;
-        nama: string;
-        onSubmit: boolean;
-    };
+
     type DeleteForm = {
         id: string;
         nama: string;
@@ -57,11 +53,6 @@ export default function AdminLaboratoriumIndexPage({ auth, pagination }: PagePro
         nama: '',
         onSubmit: false
     };
-    const updateFormInit: UpdateForm = {
-        id: '',
-        nama: '',
-        onSubmit: false
-    };
     const deleteFormInit: DeleteForm = {
         id: '',
         nama: '',
@@ -69,11 +60,9 @@ export default function AdminLaboratoriumIndexPage({ auth, pagination }: PagePro
         onSubmit: false
     };
     const [ openCreateForm, setOpenCreateForm ] = useState(false);
-    const [ openUpdateForm, setOpenUpdateForm ] = useState(false);
     const [ openDeleteForm, setOpenDeleteForm ] = useState(false);
 
     const [ createForm, setCreateForm ] = useState<CreateForm>(createFormInit);
-    const [ updateForm, setUpdateForm ] = useState<UpdateForm>(updateFormInit);
     const [ deleteForm, setDeleteForm ] = useState<DeleteForm>(deleteFormInit);
 
     const columns: ColumnDef<Laboratorium>[] = [
@@ -112,15 +101,8 @@ export default function AdminLaboratoriumIndexPage({ auth, pagination }: PagePro
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={ () => {
-                                setOpenUpdateForm(true);
-                                setUpdateForm((prevState) => ({
-                                    ...prevState,
-                                    id: originalRow.id,
-                                    nama: originalRow.nama
-                                }));
-                            } }>
-                                <Pencil /> Ubah data
+                            <DropdownMenuItem onClick={ () => router.visit(route('admin.laboratorium.details', { q: originalRow.id })) }>
+                                <Pencil /> Details
                             </DropdownMenuItem>
                             <DropdownMenuItem onClick={ () => {
                                 setOpenDeleteForm(true);
@@ -181,58 +163,6 @@ export default function AdminLaboratoriumIndexPage({ auth, pagination }: PagePro
                     ? err.response.data.message
                     : 'Error tidak diketahui terjadi!';
                 setCreateForm((prevState) => ({ ...prevState, onSubmit: false }));
-                toast({
-                    variant: "destructive",
-                    title: "Permintaan gagal diproses!",
-                    description: errMsg,
-                });
-            });
-    };
-    const handleUpdateFormSubmit = (event: FormEvent<HTMLFormElement>) => {
-        event.preventDefault();
-        setUpdateForm((prevState) => ({ ...prevState, onSubmit: true }));
-        const { id, nama } = updateForm;
-        const updateSchema = z.object({
-            id: z.string({ message: 'Format Laboratorium tidak valid! '}).min(1, { message: 'Format Laboratorium tidak valid!' }),
-            nama: z.string({ message: 'Format nama tidak valid! '}).min(1, { message: 'Nama Laboratorium wajib diisi!' }),
-        });
-        const updateParse = updateSchema.safeParse({
-            id: id,
-            nama: nama
-        });
-        if (!updateParse.success) {
-            const errMsg = updateParse.error.issues[0]?.message;
-            toast({
-                variant: "destructive",
-                title: "Periksa kembali Input anda!",
-                description: errMsg,
-            });
-            setUpdateForm((prevState) => ({ ...prevState, onSubmit: false }));
-            return;
-        }
-
-        axios.post<{
-            message: string;
-        }>(route('laboratorium.update'), {
-            id: id,
-            nama: nama
-        })
-            .then((res) => {
-                setUpdateForm(updateFormInit);
-                setOpenUpdateForm(false);
-                toast({
-                    variant: 'default',
-                    className: 'bg-green-500 text-white',
-                    title: "Berhasil!",
-                    description: res.data.message,
-                });
-                router.reload({ only: ['pagination'] });
-            })
-            .catch((err: unknown) => {
-                const errMsg: string = err instanceof AxiosError && err.response?.data?.message
-                    ? err.response.data.message
-                    : 'Error tidak diketahui terjadi!';
-                setUpdateForm((prevState) => ({ ...prevState, onSubmit: false }));
                 toast({
                     variant: "destructive",
                     title: "Permintaan gagal diproses!",
@@ -349,46 +279,6 @@ export default function AdminLaboratoriumIndexPage({ auth, pagination }: PagePro
                 data={pagination.data}
                 pagination={pagination}
             />
-
-            {/*--UPDATE-FORM--*/}
-            <AlertDialog open={ openUpdateForm } onOpenChange={ setOpenUpdateForm }>
-                <AlertDialogContent className="my-alert-dialog-content" onOpenAutoFocus={ (e) => e.preventDefault() }>
-                    <AlertDialogHeader>
-                        <AlertDialogTitle>
-                            Update Laboratorium
-                        </AlertDialogTitle>
-                        <AlertDialogDescription>
-                            Anda akan mengubah nama Laboratorium
-                        </AlertDialogDescription>
-                    </AlertDialogHeader>
-                    <form className={ cn("grid items-start gap-4") } onSubmit={ handleUpdateFormSubmit }>
-                        <div className="grid gap-2">
-                            <Label htmlFor="nama">Nama Laboratorium</Label>
-                            <Input
-                                type="text"
-                                name="nama"
-                                id="nama"
-                                value={ updateForm.nama }
-                                onChange={ (event) => setUpdateForm((prevState) => ({
-                                    ...prevState,
-                                    nama: event.target.value
-                                })) }
-                            />
-                        </div>
-                        <Button type="submit" disabled={updateForm.onSubmit}>
-                            { updateForm.onSubmit
-                                ? (
-                                    <>Memproses <Loader2 className="animate-spin" /></>
-                                ) : (
-                                    <span>Simpan</span>
-                                )
-                            }
-                        </Button>
-                    </form>
-                    <AlertDialogCancel>Batal</AlertDialogCancel>
-                </AlertDialogContent>
-            </AlertDialog>
-            {/*---UPDATE-FORM---*/}
 
             {/*--DELETE-FORM--*/}
             <AlertDialog open={ openDeleteForm } onOpenChange={ setOpenDeleteForm }>

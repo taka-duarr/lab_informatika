@@ -11,15 +11,14 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('admin', function (Blueprint $table) {
+        Schema::create('jenis_nilai', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->string('nama')->unique();
-            $table->string('username')->unique();
-            $table->string('password');
-            $table->string('avatar')->nullable();
-            $table->foreignUuid('laboratorium_id')->nullable()->constrained('laboratorium');
-            $table->timestamps();
+            $table->string('nama');
+            $table->integer('urutan');
+            $table->boolean('aktif')->default(true);
+            $table->foreignUuid('laboratorium_id')->constrained('laboratorium');
             $table->softDeletes();
+            $table->timestamps();
         });
     }
 
@@ -28,6 +27,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('admin');
+        Schema::dropIfExists('jenis_nilai');
     }
 };

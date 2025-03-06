@@ -99,6 +99,40 @@ class AdminPagesController extends Controller
             'pagination' => fn() => $laboratoriums
         ]);
     }
+    public function laboratoriumDetailsPage(Request $request)
+    {
+        $authAdmin = Auth::guard('admin')->user();
+        if (!$authAdmin) {
+            abort(401);
+        }
+
+        $idParam = $request->query->get('q');
+        if (!$idParam) {
+            abort(404);
+        }
+
+        try {
+            $laboratorium = Laboratorium::with([
+                'jenis_nilai' => function ($query) {
+                    $query->select('id', 'nama', 'urutan', 'laboratorium_id')
+                        ->orderBy('jenis_nilai.urutan')
+                        ->orderBy('jenis_nilai.created_at');
+                }
+            ])->find($idParam);
+
+            if (!$laboratorium) {
+                abort(404);
+            }
+
+            return Inertia::render('Admin/AdminLaboratoriumDetailsPage', [
+                'laboratorium' => fn() => $laboratorium->only(['id', 'nama', 'avatar', 'jenis_nilai']),
+            ]);
+        } catch (QueryException $exception) {
+
+            dd($exception);
+            abort(500);
+        }
+    }
     public function adminIndexPage(Request $request)
     {
         $authAdmin = Auth::guard('admin')->user();
@@ -478,20 +512,14 @@ class AdminPagesController extends Controller
                 ])
                 ->first();
 
-                
-            
-
             if (!$praktikum) {
                 abort(404);
             }
-
-            // $pertemuan = Pertemuan::
 
 
             $laboratoriumId = $praktikum->jenis->laboratorium_id;
 
             return Inertia::render('Admin/AdminPraktikumPraktikanIndexPage', [
-                // 'laboratorium' => fn() => Laboratorium::select(['id','nama'])->where('id', $laboratoriumId)->first(),
                 'currentDate' => Carbon::now('Asia/Jakarta'),
                 'praktikum' => fn() => [
                     'id' => $praktikum->id,
@@ -502,7 +530,7 @@ class AdminPagesController extends Controller
                     'periode' => $praktikum->periode,
                     'pertemuan'=> $praktikum->pertemuan,
                     'praktikan' => $praktikum->praktikan->map(fn($p) => [
-                        'id' => $p->id, 
+                        'id' => $p->id,
                         'avatar' => $p->avatar,
                         'nama' => $p->nama,
                         'username' => $p->username,
@@ -573,7 +601,6 @@ class AdminPagesController extends Controller
                     ]),
             ]);
         } catch (QueryException $exception) {
-            dd($exception->getMessage());
             abort(500);
         }
     }

@@ -5,6 +5,7 @@ use App\Http\Controllers\AslabController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\JenisNilaiController;
 use App\Http\Controllers\JenisPraktikumController;
 use App\Http\Controllers\KuisController;
 use App\Http\Controllers\LabelController;
@@ -47,6 +48,9 @@ Route::get('/assets/{filename}', function ($filename) {
 Route::get('/test', function () {
     return Inertia::render('Test');
 });
+Route::get('/test-2', function () {
+    return Inertia::render('Test2');
+});
 Route::post('/compress', [AuthController::class, 'compress']);
 
 Route::get('/', function () {
@@ -80,11 +84,13 @@ Route::prefix('laboratorium')->name('laboratorium.')->group(function () {
     Route::post('/create', [LaboratoriumController::class, 'store'])->name('create');
     Route::post('/update', [LaboratoriumController::class, 'update'])->name('update');
     Route::post('/delete', [LaboratoriumController::class, 'destroy'])->name('delete');
+    Route::post('/upload-avatar', [LaboratoriumController::class, 'uploadAvatar'])->name('upload-avatar');
 });
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/create', [AdminController::class, 'store'])->name('create');
     Route::post('/update', [AdminController::class, 'update'])->name('update');
     Route::post('/delete', [AdminController::class, 'destroy'])->name('delete');
+    Route::post('/upload-avatar', [AdminController::class, 'uploadAvatar'])->name('upload-avatar');
 });
 Route::prefix('aslab')->name('aslab.')->group(function () {
     Route::post('/create', [AslabController::class, 'store'])->name('create');
@@ -169,6 +175,9 @@ Route::prefix('berita')->name('berita.')->group(function () {
     Route::post('/create', [BeritaController::class, 'store'])->name('create');
     Route::post('/update', [BeritaController::class, 'update'])->name('update');
     Route::post('/delete', [BeritaController::class, 'destroy'])->name('delete');
+});
+Route::prefix('jenis-nilai')->name('jenis-nilai.')->group(function () {
+    Route::post('/create', [JenisNilaiController::class, 'store'])->name('create');
 });
 //
 //Route::get('/kuis', function () {

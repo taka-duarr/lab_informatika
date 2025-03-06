@@ -5,7 +5,9 @@ namespace App\Http\Controllers;
 use App\Models\Laboratorium;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 
 class LaboratoriumController extends Controller
@@ -103,6 +105,47 @@ class LaboratoriumController extends Controller
             ]);
         } catch (QueryException $exception) {
             return $this->queryExceptionResponse($exception);
+        }
+    }
+    public function uploadAvatar(Request $request)
+    {
+        $validated = $request->validate([
+            'avatar' => 'required|file|mimes:jpg,jpeg,png|max:5120',
+            'id' => 'required|exists:laboratorium,id',
+        ]);
+
+        DB::beginTransaction();
+
+        try {
+            $laboratorium = Laboratorium::findOrFail($validated['id']);
+
+            if ($laboratorium->avatar) {
+                Storage::disk('laboratorium')->delete($laboratorium->avatar);
+            }
+
+            $extension = $request->file('avatar')->getClientOriginalExtension();
+            $randomString = Str::random(8);
+            $filename = Str::slug($laboratorium->nama . '-' . $randomString . '.' . $extension);
+
+            $avatarPath = $request->file('avatar')->storeAs('/', $filename, 'laboratorium');
+            $laboratorium->update(['avatar' => $avatarPath]);
+
+            DB::commit();
+
+            return response()->json([
+                'message' => 'Gambar berhasil diunggah!',
+                'avatar_url' => $avatarPath,
+            ], 200);
+        } catch (\Exception $exception) {
+            DB::rollBack();
+
+            if (isset($avatarPath)) {
+                Storage::disk('laboratorium')->delete($avatarPath);
+            }
+
+            return response()->json([
+                'message' => config('app.debug') ? $exception->getMessage() : 'Gagal mengunggah gambar..',
+            ], 500);
         }
     }
 }
