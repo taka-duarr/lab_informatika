@@ -27,4 +27,8 @@ class Laboratorium extends Model
     {
         return $this->belongsToMany(Dosen::class, 'dosen_laboratorium', 'laboratorium_id', 'dosen_id');
     }
+
+    public function jenis_praktikum() : HasMany {
+        return $this->hasMany(JenisPraktikum::class, 'laboratorium_id');
+    }
 }

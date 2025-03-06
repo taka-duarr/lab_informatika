@@ -80,6 +80,7 @@ import LogoJarkom from "@/assets/logo-jarkom-new.png";
 type Praktikan = {
     id: string;
     username: string;
+    avatar: string | null;
     nama: string;
     krs: string | null;
     pembayaran: string | null;
@@ -99,6 +100,22 @@ type Praktikum = {
     nama: string;
     tahun: number;
     praktikan: Praktikan[];
+    periode: {
+        id: string;
+        nama: string;
+    };
+    jenis: {
+        id: string;
+        nama: string;
+    };
+    laboratorium: {
+        id: string;
+        nama: string;
+    };
+    pertemuan: {
+        id: string;
+        nama: string;
+    }[];
 };
 export default function AdminPraktikumPraktikanIndexPage({
     auth,
@@ -1018,73 +1035,92 @@ export default function AdminPraktikumPraktikanIndexPage({
             console.log("Saving PDF kartu...");
             const doc = (
                 <Document>
-                    {Array.from({ length: 70 }).map((_, index) => (
-                        <Page
-                            size="A6"
-                            orientation="landscape"
-                            style={styles.page}
-                            key={index}
-                        >
-                            <View style={styles.header}>
-                                <Image style={styles.logo} src={MahiruCirle} />
-                                <View style={styles.titleContainer}>
-                                    <Text style={styles.titleText}>
-                                        Kartu Praktikum
-                                    </Text>
-                                    <Text style={styles.subtitleText}>
-                                        Jaringan Komputer XXXIX - 2024
-                                    </Text>
-                                    <Text style={styles.subtitleText}>
-                                        Laboratorium Jaringan Komputer
-                                    </Text>
+                    {praktikum.praktikan
+                        .filter((filt) => filt.aslab?.id)
+                        .map((praktikan, index) => (
+                            <Page
+                                size="A6"
+                                orientation="landscape"
+                                style={styles.page}
+                                key={index}
+                            >
+                                <View style={styles.header}>
+                                    <Image
+                                        style={styles.logo}
+                                        src={MahiruCirle}
+                                    />
+                                    <View style={styles.titleContainer}>
+                                        <Text style={styles.titleText}>
+                                            Kartu Praktikum
+                                        </Text>
+                                        <Text style={styles.subtitleText}>
+                                            {praktikum.nama}{" "}
+                                            {praktikum.periode.nama} -{" "}
+                                            {praktikum.tahun}
+                                        </Text>
+                                        <Text style={styles.subtitleText}>
+                                            Laboratorium{" "}
+                                            {praktikum.laboratorium.nama}
+                                        </Text>
+                                    </View>
+                                    <Image
+                                        style={styles.logo}
+                                        src={LogoJarkom}
+                                    />
                                 </View>
-                                <Image style={styles.logo} src={LogoJarkom} />
-                            </View>
-                            <View style={styles.divider} />
-                            <View style={styles.content}>
-                                <Image
-                                    src={MahiruStandart}
-                                    style={styles.profileImage}
-                                />
-                                <View style={styles.bioContainer}>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabel}>
-                                            Nama
-                                        </Text>
-                                        <Text>: Elaina Annisa Zahra</Text>
-                                    </View>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabel}>NPM</Text>
-                                        <Text>: 06.2024.1.01234</Text>
-                                    </View>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabel}>
-                                            Sesi
-                                        </Text>
-                                        <Text>: 06.2024.1.01234</Text>
-                                    </View>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabelWide}>
-                                            Asisten Pembimbing
-                                        </Text>
-                                        <Text>: Latiful Sirri</Text>
-                                    </View>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabelWide}>
-                                            Dosen Pembimbing
-                                        </Text>
-                                        <Text>: Cak Danang</Text>
+                                <View style={styles.divider} />
+                                <View style={styles.content}>
+                                    <Image
+                                        src={praktikan.avatar ?? MahiruStandart}
+                                        style={styles.profileImage}
+                                    />
+                                    <View style={styles.bioContainer}>
+                                        <View style={styles.bioRow}>
+                                            <Text style={styles.bioLabel}>
+                                                Nama
+                                            </Text>
+                                            <Text>: {praktikan.nama}</Text>
+                                        </View>
+                                        <View style={styles.bioRow}>
+                                            <Text style={styles.bioLabel}>
+                                                NPM
+                                            </Text>
+                                            <Text>: {praktikan.username}</Text>
+                                        </View>
+                                        <View style={styles.bioRow}>
+                                            <Text style={styles.bioLabel}>
+                                                Sesi
+                                            </Text>
+                                            <Text>
+                                                : {praktikan.sesi?.nama ?? ""}
+                                            </Text>
+                                        </View>
+                                        <View style={styles.bioRow}>
+                                            <Text style={styles.bioLabelWide}>
+                                                Asisten Pembimbing
+                                            </Text>
+                                            <Text>
+                                                : {praktikan.aslab?.nama ?? ""}
+                                            </Text>
+                                        </View>
+                                        <View style={styles.bioRow}>
+                                            <Text style={styles.bioLabelWide}>
+                                                Dosen Pembimbing
+                                            </Text>
+                                            <Text>: Cak Danang</Text>
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
-                            <View style={styles.tableWrapper}>
-                                <Text style={styles.tableHeader}>
-                                    Pelanggaran
-                                </Text>
-                                <View style={styles.table}>
-                                    <View style={styles.row}>
-                                        {Array.from({ length: 8 }).map(
-                                            (_, index) => (
+                                <View style={styles.tableWrapper}>
+                                    <Text style={styles.tableHeader}>
+                                        Pelanggaran
+                                    </Text>
+                                    <View style={styles.table}>
+                                        <View style={styles.row}>
+                                            {Array.from({
+                                                length: praktikum.pertemuan
+                                                    .length,
+                                            }).map((_, index) => (
                                                 <View
                                                     key={index}
                                                     style={styles.cell}
@@ -1093,23 +1129,23 @@ export default function AdminPraktikumPraktikanIndexPage({
                                                         Pertemuan {index + 1}
                                                     </Text>
                                                 </View>
-                                            )
-                                        )}
-                                    </View>
-                                    <View style={styles.row}>
-                                        {Array.from({ length: 8 }).map(
-                                            (_, index) => (
+                                            ))}
+                                        </View>
+                                        <View style={styles.row}>
+                                            {Array.from({
+                                                length: praktikum.pertemuan
+                                                    .length,
+                                            }).map((_, index) => (
                                                 <View
                                                     key={index}
                                                     style={styles.emptyCell}
                                                 />
-                                            )
-                                        )}
+                                            ))}
+                                        </View>
                                     </View>
                                 </View>
-                            </View>
-                        </Page>
-                    ))}
+                            </Page>
+                        ))}
                 </Document>
             );
             const asPdf = pdf();
@@ -1122,6 +1158,7 @@ export default function AdminPraktikumPraktikanIndexPage({
         }
     };
 
+    // console.log(praktikum);
     return (
         <>
             <AdminLayout auth={auth}>

@@ -452,12 +452,17 @@ class AdminPagesController extends Controller
         }
 
         try {
-            $praktikum = Praktikum::select('id', 'nama', 'tahun', 'jenis_praktikum_id')
+            $praktikum = Praktikum::select('id', 'nama', 'tahun', 'jenis_praktikum_id','periode_praktikum_id')
                 ->where('id', $idParam)
                 ->with([
-                    'jenis:id,laboratorium_id',
+                    'jenis:id,nama,laboratorium_id',
+                    'jenis.laboratorium:id,nama',
+                    'periode:id,nama',
+                    'pertemuan' => fn($query) => $query
+                        ->select('id', 'praktikum_id', 'nama')
+                        ->orderBy('nama', 'asc'),
                     'praktikan' => fn($query) => $query
-                        ->select('praktikan.id', 'praktikan.nama', 'praktikan.username')
+                        ->select('praktikan.id', 'praktikan.nama', 'praktikan.username','praktikan.avatar')
                         ->addSelect([
                             'krs' => 'praktikum_praktikan.krs',
                             'pembayaran' => 'praktikum_praktikan.pembayaran',
@@ -473,21 +478,32 @@ class AdminPagesController extends Controller
                 ])
                 ->first();
 
+                
+            
+
             if (!$praktikum) {
                 abort(404);
             }
+
+            // $pertemuan = Pertemuan::
 
 
             $laboratoriumId = $praktikum->jenis->laboratorium_id;
 
             return Inertia::render('Admin/AdminPraktikumPraktikanIndexPage', [
+                // 'laboratorium' => fn() => Laboratorium::select(['id','nama'])->where('id', $laboratoriumId)->first(),
                 'currentDate' => Carbon::now('Asia/Jakarta'),
                 'praktikum' => fn() => [
                     'id' => $praktikum->id,
                     'nama' => $praktikum->nama,
                     'tahun' => $praktikum->tahun,
+                    'laboratorium' => $praktikum->jenis->laboratorium,
+                    'jenis' => $praktikum->jenis->only('id','nama'),
+                    'periode' => $praktikum->periode,
+                    'pertemuan'=> $praktikum->pertemuan,
                     'praktikan' => $praktikum->praktikan->map(fn($p) => [
-                        'id' => $p->id,
+                        'id' => $p->id, 
+                        'avatar' => $p->avatar,
                         'nama' => $p->nama,
                         'username' => $p->username,
                         'krs' => $p->krs,
@@ -557,6 +573,7 @@ class AdminPagesController extends Controller
                     ]),
             ]);
         } catch (QueryException $exception) {
+            dd($exception->getMessage());
             abort(500);
         }
     }
