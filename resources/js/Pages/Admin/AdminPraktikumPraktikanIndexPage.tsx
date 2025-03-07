@@ -1132,7 +1132,7 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                             <View style={styles.divider} />
                             <View style={styles.content}>
                                 {praktikan.avatar ? (
-                                    <Image src={`${window.location.origin}/storage/${praktikan.avatar}`} style={styles.profileImage} />
+                                    <Image src={{ uri: `${window.location.origin}/storage/praktikan/${praktikan.avatar}`, method: 'GET', credentials: 'include' }} style={styles.profileImage} />
                                 ) : (
                                     <View style={{ ...styles.profileImage, height: 90, border: 1 }} />
                                 )}
