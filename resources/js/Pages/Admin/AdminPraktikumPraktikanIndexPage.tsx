@@ -1089,7 +1089,17 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
 
     const exportKartuPraktikum = async () => {
         try {
-            const praktikansVerified = praktikum.praktikan.filter((filt) => filt.aslab?.id);
+            const praktikansVerified = praktikum.praktikan
+                .filter((filt) => filt.aslab?.id)
+                .sort((a, b) => {
+                    if ((a.sesi?.nama ?? 0) < (b.sesi?.nama ?? 0)) return -1;
+                    if ((a.sesi?.nama ?? 0) > (b.sesi?.nama ?? 0)) return 1;
+
+                    if ((a.aslab?.nama ?? 0) < (b.aslab?.nama ?? 0)) return -1;
+                    if ((a.aslab?.nama ?? 0) > (b.aslab?.nama ?? 0)) return 1;
+
+                    return 0;
+                });
             if (praktikansVerified.length < 1) {
                 toast({
                     variant: "destructive",
