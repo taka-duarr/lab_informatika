@@ -1100,7 +1100,7 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
             }
             const doc = (
                 <Document>
-                    {praktikum.praktikan.map((praktikan, index) => (
+                    {praktikansVerified.map((praktikan, index) => (
                         <Page key={index} size="A6" orientation="landscape" style={styles.page}>
                             <View style={styles.header}>
                                 <Image style={styles.logo} src={LogoLabInformatika} />
