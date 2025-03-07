@@ -1000,6 +1000,7 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
         logo: {
             width: 35,
             height: 35,
+            backgroundColor: 'transparent'
         },
         titleContainer: {
             alignItems: "center",
@@ -1131,7 +1132,7 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                             <View style={styles.divider} />
                             <View style={styles.content}>
                                 {praktikan.avatar ? (
-                                    <Image src={praktikan.avatar} style={styles.profileImage} />
+                                    <Image src={`storage/praktikan/${praktikan.avatar}`} style={styles.profileImage} />
                                 ) : (
                                     <View style={{ ...styles.profileImage, height: 90, border: 1 }} />
                                 )}
