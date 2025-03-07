@@ -48,10 +48,6 @@ Route::get('/assets/{filename}', function ($filename) {
 Route::get('/test', function () {
     return Inertia::render('Test');
 });
-Route::get('/test-2', function () {
-    return Inertia::render('Test2');
-});
-Route::post('/compress', [AuthController::class, 'compress']);
 
 Route::get('/', function () {
     return Inertia::render('Welcome' , [

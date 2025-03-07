@@ -20,7 +20,7 @@ class DatabaseSeeder extends Seeder
             AdminSeeder::class,
             AslabSeeder::class,
             DosenSeeder::class,
-//            PraktikanSeeder::class,
+            LabelSeeder::class,
         ]);
     }
 }

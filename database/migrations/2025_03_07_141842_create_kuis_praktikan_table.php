@@ -11,14 +11,15 @@ return new class extends Migration
      */
     public function up(): void
     {
-        Schema::create('jawaban_kuis', function (Blueprint $table) {
+        Schema::create('kuis_praktikan', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('soal_kuis_id')->constrained('soal_kuis')->cascadeOnDelete();
+            $table->foreignUuid('kuis_id')->constrained('kuis')->cascadeOnDelete();
             $table->foreignUuid('praktikan_id')->constrained('praktikan')->cascadeOnDelete();
-            $table->string('jawaban');
-            $table->boolean('status')->nullable();
+            $table->integer('skor')->default(0);
+            $table->boolean('selesai')->default(false);
 
             $table->timestamps();
+            $table->unique(['kuis_id', 'praktikan_id']);
         });
     }
 
@@ -27,6 +28,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('jawaban_kuis');
+        Schema::dropIfExists('kuis_praktikan');
     }
 };

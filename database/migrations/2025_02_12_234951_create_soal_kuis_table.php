@@ -15,9 +15,9 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->foreignUuid('soal_id')->constrained('soal')->cascadeOnDelete();
             $table->foreignUuid('kuis_id')->constrained('kuis')->cascadeOnDelete();
-            $table->timestamps();
-
             $table->unique(['soal_id', 'kuis_id']);
+
+            $table->timestamps();
         });
 
     }
