@@ -125,7 +125,7 @@ class LaboratoriumController extends Controller
 
             $extension = $request->file('avatar')->getClientOriginalExtension();
             $randomString = Str::random(8);
-            $filename = Str::slug($laboratorium->nama . '-' . $randomString . '.' . $extension);
+            $filename = Str::slug($laboratorium->nama . '-' . $randomString) . '.' . $extension;
 
             $avatarPath = $request->file('avatar')->storeAs('/', $filename, 'laboratorium');
             $laboratorium->update(['avatar' => $avatarPath]);

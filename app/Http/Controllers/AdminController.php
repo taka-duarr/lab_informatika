@@ -98,7 +98,7 @@ class AdminController extends Controller
 
             $extension = $request->file('avatar')->getClientOriginalExtension();
             $randomString = Str::random(8);
-            $filename = Str::slug($admin->nama . '-' . $randomString . '.' . $extension);
+            $filename = Str::slug($admin->nama . '-' . $randomString) . '.' . $extension;
 
             $avatarPath = $request->file('avatar')->storeAs('/', $filename, 'admin');
             $admin->update(['avatar' => $avatarPath]);

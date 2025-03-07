@@ -292,7 +292,7 @@ class PraktikanController extends Controller
 
             $extension = $request->file('avatar')->getClientOriginalExtension();
             $randomString = Str::random(8);
-            $filename = Str::slug($praktikan->nama . '-' . $praktikan->username . '-' . $randomString . '.' . $extension);
+            $filename = Str::slug($praktikan->nama . '-' . $praktikan->username . '-' . $randomString) . '.' . $extension;
 
             $avatarPath = $request->file('avatar')->storeAs('/', $filename, 'praktikan');
             $praktikan->update(['avatar' => $avatarPath]);
