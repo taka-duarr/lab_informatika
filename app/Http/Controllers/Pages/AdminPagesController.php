@@ -129,7 +129,7 @@ class AdminPagesController extends Controller
             ]);
         } catch (QueryException $exception) {
 
-            dd($exception);
+            dd($exception->getMessage());
             abort(500);
         }
     }
@@ -280,6 +280,8 @@ class AdminPagesController extends Controller
                 'praktikan' => fn() => $praktikan->only(['id', 'nama', 'username', 'jenis_kelamin', 'avatar']),
             ]);
         } catch (QueryException $exception) {
+            dd($exception->getMessage());
+
             abort(500);
         }
     }
@@ -470,6 +472,7 @@ class AdminPagesController extends Controller
                 'periodePraktikums' => fn() => $periodePraktikums->sortBy(fn($periode) => $this->romanToInt($periode->nama))
             ]);
         } catch (QueryException $exception) {
+            dd($exception->getMessage());
             abort(500);
         }
     }
@@ -629,6 +632,8 @@ class AdminPagesController extends Controller
                     ]),
             ]);
         } catch (QueryException $exception) {
+            dd($exception->getMessage());
+
             abort(500);
         }
     }
@@ -727,6 +732,8 @@ class AdminPagesController extends Controller
                 'labels' => fn() => Label::select('id', 'nama')->orderBy('created_at', 'desc')->get(),
             ]);
         } catch (QueryException $exception) {
+            dd($exception->getMessage());
+
             abort(500);
         }
     }
@@ -819,6 +826,7 @@ class AdminPagesController extends Controller
                     ->get()
             ]);
         } catch (QueryException $exception) {
+            dd($exception->getMessage());
             abort(500);
         }
     }

@@ -3,11 +3,13 @@ import { Head, router } from "@inertiajs/react";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { NotificationCard } from "@/components/notification-card";
 import {
-    ArrowUpDown, Check,
+    ArrowUpDown,
+    Check,
     ChevronDown,
     CircleAlert,
     CircleCheckBig,
-    Clock, Copy,
+    Clock,
+    Copy,
     Download,
     FolderCheck,
     FolderX,
@@ -43,7 +45,7 @@ import {
     TooltipContent,
     TooltipProvider,
     TooltipTrigger,
-} from "@/components/ui/tooltip"
+} from "@/components/ui/tooltip";
 import { cn, parseSesiTime } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
@@ -128,7 +130,14 @@ type Praktikum = {
         nama: string;
     }[];
 };
-export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, praktikum, sesiPraktikums, aslabs, dosens }: PageProps<{
+export default function AdminPraktikumPraktikanIndexPage({
+    auth,
+    currentDate,
+    praktikum,
+    sesiPraktikums,
+    aslabs,
+    dosens,
+}: PageProps<{
     currentDate: string;
     praktikum: Praktikum;
     sesiPraktikums: {
@@ -208,7 +217,7 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
         isRandomDosen: false,
         onSubmit: false,
     };
-    const [ clipboard, setClipboard ] = useState<string>('');
+    const [clipboard, setClipboard] = useState<string>("");
     const handleSetClipboard = (value: string) => {
         setClipboard(value);
         navigator.clipboard.writeText(value);
@@ -445,7 +454,7 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
         );
         const isFullSesiPraktikum = sesiPraktikum
             ? sesiPraktikum.kuota !== null &&
-            (sesiPraktikum.sisa_kuota ?? 0) <= 0
+              (sesiPraktikum.sisa_kuota ?? 0) <= 0
             : false;
         setVerifikasiPraktikan((prevState) => ({
             ...prevState,
@@ -466,21 +475,37 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
             setVerifikasiPraktikan(verifikasiPraktikanInit);
         }
     };
-    const handleSubmitVerifikasiPraktikan = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmitVerifikasiPraktikan = (
+        event: FormEvent<HTMLFormElement>
+    ) => {
         event.preventDefault();
         setVerifikasiPraktikan((prevState) => ({
             ...prevState,
             onSubmit: true,
         }));
 
-        const { id, sesi_praktikum_id, aslab_id, isRandomAslab, dosen_id, isRandomDosen } = verifikasiPraktikan;
+        const {
+            id,
+            sesi_praktikum_id,
+            aslab_id,
+            isRandomAslab,
+            dosen_id,
+            isRandomDosen,
+        } = verifikasiPraktikan;
 
         let selectedAslabId = aslab_id;
         if (isRandomAslab) {
             if (aslabs.length > 0) {
-                const minKuota = Math.min(...aslabs.map((aslab) => aslab.kuota));
-                const minKuotaAslabs = aslabs.filter((aslab) => aslab.kuota === minKuota);
-                selectedAslabId = minKuotaAslabs[Math.floor(Math.random() * minKuotaAslabs.length)].id;
+                const minKuota = Math.min(
+                    ...aslabs.map((aslab) => aslab.kuota)
+                );
+                const minKuotaAslabs = aslabs.filter(
+                    (aslab) => aslab.kuota === minKuota
+                );
+                selectedAslabId =
+                    minKuotaAslabs[
+                        Math.floor(Math.random() * minKuotaAslabs.length)
+                    ].id;
             } else {
                 toast({
                     variant: "destructive",
@@ -499,14 +524,22 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
         let selectedDosenId = dosen_id;
         if (isRandomDosen) {
             if (dosens.length > 0) {
-                const minKuota = Math.min(...dosens.map((dosen) => dosen.kuota));
-                const minKuotaDosens = dosens.filter((dosen) => dosen.kuota === minKuota);
-                selectedDosenId = minKuotaDosens[Math.floor(Math.random() * minKuotaDosens.length)].id;
+                const minKuota = Math.min(
+                    ...dosens.map((dosen) => dosen.kuota)
+                );
+                const minKuotaDosens = dosens.filter(
+                    (dosen) => dosen.kuota === minKuota
+                );
+                selectedDosenId =
+                    minKuotaDosens[
+                        Math.floor(Math.random() * minKuotaDosens.length)
+                    ].id;
             } else {
                 toast({
                     variant: "destructive",
                     title: "Dosen tidak tersedia!",
-                    description: "Tidak ada data Dosen yang tersedia untuk dipilih.",
+                    description:
+                        "Tidak ada data Dosen yang tersedia untuk dipilih.",
                 });
                 setVerifikasiPraktikan((prevState) => ({
                     ...prevState,
@@ -1000,7 +1033,7 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
         logo: {
             width: 35,
             height: 35,
-            backgroundColor: 'transparent'
+            backgroundColor: "transparent",
         },
         titleContainer: {
             alignItems: "center",
@@ -1105,40 +1138,67 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                 toast({
                     variant: "destructive",
                     title: "Operasi dibatalkan",
-                    description: 'Belum ada Praktikan yang sudah terverifikasi !',
+                    description:
+                        "Belum ada Praktikan yang sudah terverifikasi !",
                 });
                 return;
             }
             const doc = (
                 <Document>
                     {praktikansVerified.map((praktikan, index) => (
-                        <Page key={index} size="A6" orientation="landscape" style={styles.page}>
+                        <Page
+                            key={index}
+                            size="A6"
+                            orientation="landscape"
+                            style={styles.page}
+                        >
                             <View style={styles.header}>
-                                <Image style={styles.logo} src={LogoLabInformatika} />
+                                <Image
+                                    style={styles.logo}
+                                    src={LogoLabInformatika}
+                                />
                                 <View style={styles.titleContainer}>
-                                    <Text style={styles.titleText}>Kartu Praktikum</Text>
-                                    <Text style={styles.subtitleText}>
-                                        {praktikum.nama} {praktikum.periode.nama} - {praktikum.tahun}
+                                    <Text style={styles.titleText}>
+                                        Kartu Praktikum
                                     </Text>
                                     <Text style={styles.subtitleText}>
-                                        Laboratorium {praktikum.laboratorium.nama}
+                                        {praktikum.nama} - {praktikum.tahun}
+                                    </Text>
+                                    <Text style={styles.subtitleText}>
+                                        Laboratorium{" "}
+                                        {praktikum.laboratorium.nama}
                                     </Text>
                                 </View>
                                 <Image
                                     style={styles.logo}
-                                    src={praktikum.laboratorium.avatar ? `/storage/laboratorium/${praktikum.laboratorium.avatar}` : LogoLabInformatika}
+                                    src={
+                                        praktikum.laboratorium.avatar
+                                            ? `/storage/laboratorium/${praktikum.laboratorium.avatar}`
+                                            : LogoLabInformatika
+                                    }
                                 />
                             </View>
                             <View style={styles.divider} />
                             <View style={styles.content}>
                                 {praktikan.avatar ? (
-                                    <Image src={{ uri: `${window.location.origin}/storage/praktikan/${praktikan.avatar}`, method: 'GET', credentials: 'include' }} style={styles.profileImage} />
+                                    <Image
+                                        src={`${window.location.origin}/storage/${praktikan.avatar}`}
+                                        style={styles.profileImage}
+                                    />
                                 ) : (
-                                    <View style={{ ...styles.profileImage, height: 90, border: 1 }} />
+                                    <View
+                                        style={{
+                                            ...styles.profileImage,
+                                            height: 90,
+                                            border: 1,
+                                        }}
+                                    />
                                 )}
                                 <View style={styles.bioContainer}>
                                     <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabel}>Nama</Text>
+                                        <Text style={styles.bioLabel}>
+                                            Nama
+                                        </Text>
                                         <Text>: {praktikan.nama}</Text>
                                     </View>
                                     <View style={styles.bioRow}>
@@ -1146,16 +1206,28 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                                         <Text>: {praktikan.username}</Text>
                                     </View>
                                     <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabel}>Sesi</Text>
-                                        <Text>: {praktikan.sesi?.nama ?? ""}</Text>
+                                        <Text style={styles.bioLabel}>
+                                            Sesi
+                                        </Text>
+                                        <Text>
+                                            : {praktikan.sesi?.nama ?? ""}
+                                        </Text>
                                     </View>
                                     <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabelWide}>Asisten Pembimbing</Text>
-                                        <Text>: {praktikan.aslab?.nama ?? ""}</Text>
+                                        <Text style={styles.bioLabelWide}>
+                                            Asisten Pembimbing
+                                        </Text>
+                                        <Text>
+                                            : {praktikan.aslab?.nama ?? ""}
+                                        </Text>
                                     </View>
                                     <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabelWide}>Dosen Pembimbing</Text>
-                                        <Text>: {praktikan.dosen?.nama ?? ""}</Text>
+                                        <Text style={styles.bioLabelWide}>
+                                            Dosen Pembimbing
+                                        </Text>
+                                        <Text>
+                                            : {praktikan.dosen?.nama ?? ""}
+                                        </Text>
                                     </View>
                                 </View>
                             </View>
@@ -1166,7 +1238,11 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                                 <View style={styles.table}>
                                     <View style={styles.row}>
                                         {Array.from({
-                                            length: praktikum.pertemuan.length < 1 ? 8 : praktikum.pertemuan.length,
+                                            length:
+                                                praktikum.pertemuan.length < 1
+                                                    ? 8
+                                                    : praktikum.pertemuan
+                                                          .length,
                                         }).map((_, index) => (
                                             <View
                                                 key={index}
@@ -1180,7 +1256,11 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                                     </View>
                                     <View style={styles.row}>
                                         {Array.from({
-                                            length: praktikum.pertemuan.length < 1 ? 8 : praktikum.pertemuan.length,
+                                            length:
+                                                praktikum.pertemuan.length < 1
+                                                    ? 8
+                                                    : praktikum.pertemuan
+                                                          .length,
                                         }).map((_, index) => (
                                             <View
                                                 key={index}
@@ -1197,7 +1277,10 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
             const asPdf = pdf();
             asPdf.updateContainer(doc);
             const pdfBlob = await asPdf.toBlob();
-            saveAs(pdfBlob, `kartu-praktikum-${praktikum.nama}-${praktikum.periode.nama}.pdf`);
+            saveAs(
+                pdfBlob,
+                `kartu-praktikum-${praktikum.nama}-${praktikum.periode.nama}.pdf`
+            );
         } catch (error) {
             console.error(error);
             alert("Error generating PDF");
@@ -1303,22 +1386,29 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                                         <TooltipProvider>
                                             <Tooltip delayDuration={100}>
                                                 <TooltipTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="w-7 h-7" onClick={ () => handleSetClipboard(sesi.id) }>
-                                                        { clipboard === sesi.id
-                                                            ? (
-                                                                <Check width={ 15 }/>
-                                                            ) : (
-                                                                <Copy width={ 15 }/>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="w-7 h-7"
+                                                        onClick={() =>
+                                                            handleSetClipboard(
+                                                                sesi.id
                                                             )
                                                         }
+                                                    >
+                                                        {clipboard ===
+                                                        sesi.id ? (
+                                                            <Check width={15} />
+                                                        ) : (
+                                                            <Copy width={15} />
+                                                        )}
                                                     </Button>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <p className="text-xs">
-                                                        { clipboard === sesi.id
-                                                            ? 'Berhasil disalin'
-                                                            : 'Salin ID Sesi'
-                                                        }
+                                                        {clipboard === sesi.id
+                                                            ? "Berhasil disalin"
+                                                            : "Salin ID Sesi"}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
@@ -1347,7 +1437,9 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                                 </div>
                             ))}
                             <Separator className="!my-4" />
-                            <h5 className="text-lg font-medium !my-4 ml-3.5">Asisten Laboratorium</h5>
+                            <h5 className="text-lg font-medium !my-4 ml-3.5">
+                                Asisten Laboratorium
+                            </h5>
                             {aslabs.map((aslab) => (
                                 <div
                                     key={aslab.id}
@@ -1357,27 +1449,35 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                                         <TooltipProvider>
                                             <Tooltip delayDuration={100}>
                                                 <TooltipTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="w-7 h-7" onClick={ () => handleSetClipboard(aslab.id) }>
-                                                        { clipboard === aslab.id
-                                                            ? (
-                                                                <Check width={ 15 }/>
-                                                            ) : (
-                                                                <Copy width={ 15 }/>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="w-7 h-7"
+                                                        onClick={() =>
+                                                            handleSetClipboard(
+                                                                aslab.id
                                                             )
                                                         }
+                                                    >
+                                                        {clipboard ===
+                                                        aslab.id ? (
+                                                            <Check width={15} />
+                                                        ) : (
+                                                            <Copy width={15} />
+                                                        )}
                                                     </Button>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <p className="text-xs">
-                                                        { clipboard === aslab.id
-                                                            ? 'Berhasil disalin'
-                                                            : 'Salin ID Aslab'
-                                                        }
+                                                        {clipboard === aslab.id
+                                                            ? "Berhasil disalin"
+                                                            : "Salin ID Aslab"}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
                                         </TooltipProvider>
-                                        <div className={`justify-between min-w-11 w-11 h-11 rounded-full overflow-hidden content-center ${
+                                        <div
+                                            className={`justify-between min-w-11 w-11 h-11 rounded-full overflow-hidden content-center ${
                                                 !aslab.avatar
                                                     ? "bg-gray-100 shadow"
                                                     : ""
@@ -1408,7 +1508,9 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                                 </div>
                             ))}
                             <Separator className="!my-4" />
-                            <h5 className="text-lg font-medium !my-4 ml-3.5">Dosen Laboratorium</h5>
+                            <h5 className="text-lg font-medium !my-4 ml-3.5">
+                                Dosen Laboratorium
+                            </h5>
                             {dosens.map((dosen) => (
                                 <div
                                     key={dosen.id}
@@ -1418,22 +1520,29 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                                         <TooltipProvider>
                                             <Tooltip delayDuration={100}>
                                                 <TooltipTrigger asChild>
-                                                    <Button variant="ghost" size="icon" className="w-7 h-7" onClick={ () => handleSetClipboard(dosen.id) }>
-                                                        { clipboard === dosen.id
-                                                            ? (
-                                                                <Check width={ 15 }/>
-                                                            ) : (
-                                                                <Copy width={ 15 }/>
+                                                    <Button
+                                                        variant="ghost"
+                                                        size="icon"
+                                                        className="w-7 h-7"
+                                                        onClick={() =>
+                                                            handleSetClipboard(
+                                                                dosen.id
                                                             )
                                                         }
+                                                    >
+                                                        {clipboard ===
+                                                        dosen.id ? (
+                                                            <Check width={15} />
+                                                        ) : (
+                                                            <Copy width={15} />
+                                                        )}
                                                     </Button>
                                                 </TooltipTrigger>
                                                 <TooltipContent>
                                                     <p className="text-xs">
-                                                        { clipboard === dosen.id
-                                                            ? 'Berhasil disalin'
-                                                            : 'Salin ID Dosen'
-                                                        }
+                                                        {clipboard === dosen.id
+                                                            ? "Berhasil disalin"
+                                                            : "Salin ID Dosen"}
                                                     </p>
                                                 </TooltipContent>
                                             </Tooltip>
@@ -1555,11 +1664,15 @@ export default function AdminPraktikumPraktikanIndexPage({ auth, currentDate, pr
                             <DropdownMenuLabel>Ekspor Excel</DropdownMenuLabel>
                             <DropdownMenuSeparator />
                             <DropdownMenuItem
-                                onClick={() => exportAbsensiPraktikum(praktikum)}
+                                onClick={() =>
+                                    exportAbsensiPraktikum(praktikum)
+                                }
                             >
                                 Absensi Praktikum
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => exportKartuPraktikum()}>
+                            <DropdownMenuItem
+                                onClick={() => exportKartuPraktikum()}
+                            >
                                 Kartu Praktikum
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
