@@ -1182,7 +1182,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                             <View style={styles.content}>
                                 {praktikan.avatar ? (
                                     <Image
-                                        src={`${window.location.origin}/storage/${praktikan.avatar}`}
+                                        src={{ uri: `${window.location.origin}/storage/${praktikan.avatar}`, method: 'GET', credentials: 'include' }}
                                         style={styles.profileImage}
                                     />
                                 ) : (
