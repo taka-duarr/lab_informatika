@@ -72,18 +72,8 @@ import { PageProps } from "@/types";
 import { Badge } from "@/components/ui/badge";
 import DataTable from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
-import { saveAs } from "file-saver";
-import {
-    Document,
-    Image,
-    Page,
-    pdf,
-    StyleSheet,
-    Text,
-    View,
-} from "@react-pdf/renderer";
-import { LogoLabInformatika } from "@/lib/StaticImagesLib";
 import * as React from "react";
+import { exportKartuPraktikum } from "@/components/kartu-praktikum";
 
 type Praktikan = {
     id: string;
@@ -1017,274 +1007,49 @@ export default function AdminPraktikumPraktikanIndexPage({
         }
     }, [uploadContents]);
 
-    const styles = StyleSheet.create({
-        page: {
-            flexDirection: "column",
-            backgroundColor: "#fff",
-            padding: 16,
-        },
-        header: {
-            width: "100%",
-            flexDirection: "row",
-            justifyContent: "space-between",
-            alignItems: "center",
-            gap: 10,
-        },
-        logo: {
-            width: 35,
-            height: 35,
-            backgroundColor: "transparent",
-        },
-        titleContainer: {
-            alignItems: "center",
-        },
-        titleText: {
-            fontFamily: "Helvetica-Bold",
-            fontSize: 14.5,
-        },
-        subtitleText: {
-            fontSize: 9,
-        },
-        divider: {
-            backgroundColor: "#000",
-            width: "100%",
-            height: 1,
-            marginVertical: 10,
-        },
-        content: {
-            flexDirection: "row",
-            flex: 1,
-            gap: 8,
-        },
-        profileImage: {
-            width: 90,
-            aspectRatio: "3 / 4",
-            objectFit: "cover",
-            objectPosition: "center",
-        },
-        bioContainer: {
-            gap: 5,
-            fontSize: 8.5,
-        },
-        bioRow: {
-            flexDirection: "row",
-            gap: 2,
-        },
-        bioLabel: {
-            fontFamily: "Helvetica-Bold",
-            fontWeight: "bold",
-            width: 38,
-        },
-        bioLabelWide: {
-            fontFamily: "Helvetica-Bold",
-            fontWeight: "bold",
-            width: 90,
-        },
-        tableWrapper: {
-            marginTop: 12,
-            border: "0.5px solid #333",
-            marginBottom: 20,
-        },
-        tableHeader: {
-            width: "100%",
-            textAlign: "center",
-            fontFamily: "Helvetica-Bold",
-            fontSize: 10.5,
-            fontWeight: "extrabold",
-            padding: 4,
-            border: "1px solid #333",
-        },
-        table: {
-            width: "100%",
-            textAlign: "center",
-        },
-        row: {
-            flexDirection: "row",
-            alignItems: "center",
-            justifyContent: "center",
-        },
-        cell: {
-            border: "0.5px solid #333",
-            padding: 2.5,
-            flex: 1,
-            fontFamily: "Helvetica-Bold",
-            fontSize: 6,
-            fontWeight: "bold",
-            display: "flex",
-            justifyContent: "center",
-            alignItems: "center",
-        },
-        emptyCell: {
-            border: "0.5px solid #333",
-            padding: 20,
-            flexGrow: 1,
-        },
-    });
+    const exportKartu = async () => {
+        const praktikansVerified = praktikum.praktikan
+            .filter((filt) => filt.aslab?.id)
+            .sort((a, b) => {
+                if ((a.sesi?.nama ?? 0) < (b.sesi?.nama ?? 0)) return -1;
+                if ((a.sesi?.nama ?? 0) > (b.sesi?.nama ?? 0)) return 1;
 
-    const exportKartuPraktikum = async () => {
-        try {
-            const praktikansVerified = praktikum.praktikan
-                .filter((filt) => filt.aslab?.id)
-                .sort((a, b) => {
-                    if ((a.sesi?.nama ?? 0) < (b.sesi?.nama ?? 0)) return -1;
-                    if ((a.sesi?.nama ?? 0) > (b.sesi?.nama ?? 0)) return 1;
+                if ((a.aslab?.nama ?? 0) < (b.aslab?.nama ?? 0)) return -1;
+                if ((a.aslab?.nama ?? 0) > (b.aslab?.nama ?? 0)) return 1;
 
-                    if ((a.aslab?.nama ?? 0) < (b.aslab?.nama ?? 0)) return -1;
-                    if ((a.aslab?.nama ?? 0) > (b.aslab?.nama ?? 0)) return 1;
+                return 0;
+            });
+        if (praktikansVerified.length < 1) {
+            toast({
+                variant: "destructive",
+                title: "Operasi dibatalkan",
+                description:
+                    "Belum ada Praktikan yang sudah terverifikasi !",
+            });
+            return;
+        }
+        const praktikumPraktikansData = {
+            ...praktikum,
+            praktikan: praktikansVerified
+        };
 
-                    return 0;
+        exportKartuPraktikum(praktikumPraktikansData)
+            .then((res) => {
+                toast({
+                    variant: "default",
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil!",
+                    description: res.message,
                 });
-            if (praktikansVerified.length < 1) {
+            })
+            .catch((err: { message: string } ) => {
+                const errMsg = err?.message ?? 'Error tidak diketahui terjadi..'
                 toast({
                     variant: "destructive",
                     title: "Operasi dibatalkan",
-                    description:
-                        "Belum ada Praktikan yang sudah terverifikasi !",
+                    description: errMsg
                 });
-                return;
-            }
-            const doc = (
-                <Document>
-                    {praktikansVerified.map((praktikan, index) => (
-                        <Page
-                            key={index}
-                            size="A6"
-                            orientation="landscape"
-                            style={styles.page}
-                        >
-                            <View style={styles.header}>
-                                <Image
-                                    style={styles.logo}
-                                    src={LogoLabInformatika}
-                                />
-                                <View style={styles.titleContainer}>
-                                    <Text style={styles.titleText}>
-                                        Kartu Praktikum
-                                    </Text>
-                                    <Text style={styles.subtitleText}>
-                                        {praktikum.nama} - {praktikum.tahun}
-                                    </Text>
-                                    <Text style={styles.subtitleText}>
-                                        Laboratorium{" "}
-                                        {praktikum.laboratorium.nama}
-                                    </Text>
-                                </View>
-                                <Image
-                                    style={styles.logo}
-                                    src={
-                                        praktikum.laboratorium.avatar
-                                            ? `/storage/laboratorium/${praktikum.laboratorium.avatar}`
-                                            : LogoLabInformatika
-                                    }
-                                />
-                            </View>
-                            <View style={styles.divider} />
-                            <View style={styles.content}>
-                                {praktikan.avatar ? (
-                                    <Image
-                                        src={{ uri: `${window.location.origin}/storage/praktikan/${praktikan.avatar}`, method: 'GET', credentials: 'include' }}
-                                        style={styles.profileImage}
-                                    />
-                                ) : (
-                                    <View
-                                        style={{
-                                            ...styles.profileImage,
-                                            height: 90,
-                                            border: 1,
-                                        }}
-                                    />
-                                )}
-                                <View style={styles.bioContainer}>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabel}>
-                                            Nama
-                                        </Text>
-                                        <Text>: {praktikan.nama}</Text>
-                                    </View>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabel}>NPM</Text>
-                                        <Text>: {praktikan.username}</Text>
-                                    </View>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabel}>
-                                            Sesi
-                                        </Text>
-                                        <Text>
-                                            : {praktikan.sesi?.nama ?? ""}
-                                        </Text>
-                                    </View>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabelWide}>
-                                            Asisten Pembimbing
-                                        </Text>
-                                        <Text>
-                                            : {praktikan.aslab?.nama ?? ""}
-                                        </Text>
-                                    </View>
-                                    <View style={styles.bioRow}>
-                                        <Text style={styles.bioLabelWide}>
-                                            Dosen Pembimbing
-                                        </Text>
-                                        <Text>
-                                            : {praktikan.dosen?.nama ?? ""}
-                                        </Text>
-                                    </View>
-                                </View>
-                            </View>
-                            <View style={styles.tableWrapper}>
-                                <Text style={styles.tableHeader}>
-                                    Pelanggaran
-                                </Text>
-                                <View style={styles.table}>
-                                    <View style={styles.row}>
-                                        {Array.from({
-                                            length:
-                                                praktikum.pertemuan.length < 1
-                                                    ? 8
-                                                    : praktikum.pertemuan
-                                                          .length,
-                                        }).map((_, index) => (
-                                            <View
-                                                key={index}
-                                                style={styles.cell}
-                                            >
-                                                <Text>
-                                                    Pertemuan {index + 1}
-                                                </Text>
-                                            </View>
-                                        ))}
-                                    </View>
-                                    <View style={styles.row}>
-                                        {Array.from({
-                                            length:
-                                                praktikum.pertemuan.length < 1
-                                                    ? 8
-                                                    : praktikum.pertemuan
-                                                          .length,
-                                        }).map((_, index) => (
-                                            <View
-                                                key={index}
-                                                style={styles.emptyCell}
-                                            />
-                                        ))}
-                                    </View>
-                                </View>
-                            </View>
-                        </Page>
-                    ))}
-                </Document>
-            );
-            const asPdf = pdf();
-            asPdf.updateContainer(doc);
-            const pdfBlob = await asPdf.toBlob();
-            saveAs(
-                pdfBlob,
-                `kartu-praktikum-${praktikum.nama}-${praktikum.periode.nama}.pdf`
-            );
-        } catch (error) {
-            console.error(error);
-            alert("Error generating PDF");
-        }
+            });
     };
 
     return (
@@ -1671,7 +1436,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                                 Absensi Praktikum
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                                onClick={() => exportKartuPraktikum()}
+                                onClick={async () => await exportKartu()}
                             >
                                 Kartu Praktikum
                             </DropdownMenuItem>

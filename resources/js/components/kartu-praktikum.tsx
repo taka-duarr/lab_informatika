@@ -1,100 +1,301 @@
-import { Document, Page, Text, View, Image, StyleSheet } from '@react-pdf/renderer';
+import { Document, Image, Page, pdf, StyleSheet, Text, View } from "@react-pdf/renderer";
+import { LogoLabInformatika } from "@/lib/StaticImagesLib";
+import { saveAs } from "file-saver";
+import * as React from "react";
 
+type Praktikan = {
+    id: string;
+    username: string;
+    avatar: string | null;
+    nama: string;
+    aslab: {
+        id: string;
+        nama: string;
+    } | null;
+    dosen: {
+        id: string;
+        nama: string;
+    } | null;
+    sesi: {
+        id: string;
+        nama: string;
+    } | null;
+}
+type Praktikum = {
+    id: string;
+    nama: string;
+    tahun: number;
+    praktikan: Praktikan[];
+    periode: {
+        id: string;
+        nama: string;
+    };
+    jenis: {
+        id: string;
+        nama: string;
+    };
+    laboratorium: {
+        id: string;
+        nama: string;
+        avatar: string | null;
+    };
+    pertemuan: {
+        id: string;
+        nama: string;
+    }[];
+}
 const styles = StyleSheet.create({
     page: {
-        flexDirection: 'row',
-        backgroundColor: '#fff',
-        padding: 20,
+        flexDirection: "column",
+        backgroundColor: "#fff",
+        padding: 16,
     },
-    leftColumn: {
-        width: '30%',
-        paddingRight: 20,
+    header: {
+        width: "100%",
+        flexDirection: "row",
+        justifyContent: "space-between",
+        alignItems: "center",
+        gap: 10,
     },
-    rightColumn: {
-        width: '70%',
+    logo: {
+        width: 35,
+        height: 35,
+        backgroundColor: "transparent",
     },
-    title: {
-        fontSize: 24,
-        fontWeight: 'bold',
-        textAlign: 'center',
-        marginBottom: 10,
+    titleContainer: {
+        alignItems: "center",
     },
-    subtitle: {
-        fontSize: 14,
-        textAlign: 'center',
-        marginBottom: 5,
+    titleText: {
+        fontFamily: "Helvetica-Bold",
+        fontSize: 14.5,
     },
-    text: {
-        fontSize: 12,
-        marginBottom: 4,
+    subtitleText: {
+        fontSize: 9,
+    },
+    divider: {
+        backgroundColor: "#000",
+        width: "100%",
+        height: 1,
+        marginVertical: 10,
+    },
+    content: {
+        flexDirection: "row",
+        flex: 1,
+        gap: 8,
+    },
+    profileImage: {
+        width: 90,
+        aspectRatio: "3 / 4",
+        objectFit: "cover",
+        objectPosition: "center",
+    },
+    bioContainer: {
+        gap: 5,
+        fontSize: 8.5,
+    },
+    bioRow: {
+        flexDirection: "row",
+        gap: 2,
+    },
+    bioLabel: {
+        fontFamily: "Helvetica-Bold",
+        fontWeight: "bold",
+        width: 38,
+    },
+    bioLabelWide: {
+        fontFamily: "Helvetica-Bold",
+        fontWeight: "bold",
+        width: 90,
+    },
+    tableWrapper: {
+        marginTop: 12,
+        border: "0.5px solid #333",
+        marginBottom: 20,
+    },
+    tableHeader: {
+        width: "100%",
+        textAlign: "center",
+        fontFamily: "Helvetica-Bold",
+        fontSize: 10.5,
+        fontWeight: "extrabold",
+        padding: 4,
+        border: "1px solid #333",
     },
     table: {
-        display: 'flex',
-        width: '100%',
-        borderStyle: 'solid',
-        borderWidth: 1,
-        borderColor: '#000',
-        marginTop: 10,
+        width: "100%",
+        textAlign: "center",
     },
     row: {
-        flexDirection: 'row',
+        flexDirection: "row",
+        alignItems: "center",
+        justifyContent: "center",
     },
     cell: {
-        borderStyle: 'solid',
-        borderWidth: 1,
-        borderColor: '#000',
-        padding: 5,
-        flexGrow: 1,
-        textAlign: 'center',
+        border: "0.5px solid #333",
+        padding: 2.5,
+        flex: 1,
+        fontFamily: "Helvetica-Bold",
+        fontSize: 6,
+        fontWeight: "bold",
+        display: "flex",
+        justifyContent: "center",
+        alignItems: "center",
     },
-    image: {
-        width: 100,
-        height: 133,
-        borderRadius: 5,
-        border: '1px solid #000',
+    emptyCell: {
+        border: "0.5px solid #333",
+        padding: 20,
+        flexGrow: 1,
     },
 });
-const KartuPraktikum = () => {
-    return (
-        <Document>
-            <Page size="A6" orientation="landscape" style={styles.page}>
-                <View>
-                    <Text style={styles.title}>Kartu Praktikum</Text>
-                    <Text style={styles.subtitle}>Pemrograman Terstruktur - 2024</Text>
-                    <Text style={styles.subtitle}>Laboratorium Bahasa Pemrograman</Text>
-                </View>
-                <View style={styles.leftColumn}>
-                    <Image
-                        style={styles.image}
-                        src="https://images.unsplash.com/photo-1597589827317-4c6d6e0a90bd?q=80&w=1480&auto=format&fit=crop&ixlib=rb-4.0.3&ixid=M3wxMjA3fDB8MHxwaG90by1wYWdlfHx8fGVufDB8fHx8fA%3D%3D"
-                    />
-                </View>
-                <View style={styles.rightColumn}>
-                    <Text style={styles.text}>Nama: Rakha Ananta Baskoro</Text>
-                    <Text style={styles.text}>NPM: 06.2024.1.07842</Text>
-                    <Text style={styles.text}>Sesi: Jum'at, 10.00 - 11.30</Text>
-                    <Text style={styles.text}>Asisten Pembimbing: Ahmad Maulana Ismaindra</Text>
-                    <Text style={styles.text}>Dosen Pembimbing: Citra Nurina Prabiantissa, S.ST., M.Tr.Kom.</Text>
-
-                    <View style={styles.table}>
-                        <View style={styles.row}>
-                            <Text style={styles.cell}>Modul 1</Text>
-                            <Text style={styles.cell}>Modul 2</Text>
-                            <Text style={styles.cell}>Modul 3</Text>
-                            <Text style={styles.cell}>Modul 4</Text>
+export const exportKartuPraktikum = async (praktikum: Praktikum): Promise<{
+    message: string
+}> => {
+    try {
+        const doc = (
+            <Document>
+                {praktikum.praktikan.map((praktikan, index) => (
+                    <Page
+                        key={index}
+                        size="A6"
+                        orientation="landscape"
+                        style={styles.page}
+                    >
+                        <View style={styles.header}>
+                            <Image
+                                style={styles.logo}
+                                src={LogoLabInformatika}
+                            />
+                            <View style={styles.titleContainer}>
+                                <Text style={styles.titleText}>
+                                    Kartu Praktikum
+                                </Text>
+                                <Text style={styles.subtitleText}>
+                                    {praktikum.nama} - {praktikum.tahun}
+                                </Text>
+                                <Text style={styles.subtitleText}>
+                                    Laboratorium{" "}
+                                    {praktikum.laboratorium.nama}
+                                </Text>
+                            </View>
+                            <Image
+                                style={styles.logo}
+                                src={
+                                    praktikum.laboratorium.avatar
+                                        ? `/storage/laboratorium/${praktikum.laboratorium.avatar}`
+                                        : LogoLabInformatika
+                                }
+                            />
                         </View>
-                        <View style={styles.row}>
-                            <Text style={styles.cell}>-</Text>
-                            <Text style={styles.cell}>-</Text>
-                            <Text style={styles.cell}>-</Text>
-                            <Text style={styles.cell}>-</Text>
+                        <View style={styles.divider} />
+                        <View style={styles.content}>
+                            {praktikan.avatar ? (
+                                <Image
+                                    src={{ uri: `${window.location.origin}/storage/praktikan/${praktikan.avatar}`, method: 'GET', credentials: 'include' }}
+                                    style={styles.profileImage}
+                                />
+                            ) : (
+                                <View
+                                    style={{
+                                        ...styles.profileImage,
+                                        height: 90,
+                                        border: 1,
+                                    }}
+                                />
+                            )}
+                            <View style={styles.bioContainer}>
+                                <View style={styles.bioRow}>
+                                    <Text style={styles.bioLabel}>
+                                        Nama
+                                    </Text>
+                                    <Text>: {praktikan.nama}</Text>
+                                </View>
+                                <View style={styles.bioRow}>
+                                    <Text style={styles.bioLabel}>NPM</Text>
+                                    <Text>: {praktikan.username}</Text>
+                                </View>
+                                <View style={styles.bioRow}>
+                                    <Text style={styles.bioLabel}>
+                                        Sesi
+                                    </Text>
+                                    <Text>
+                                        : {praktikan.sesi?.nama ?? ""}
+                                    </Text>
+                                </View>
+                                <View style={styles.bioRow}>
+                                    <Text style={styles.bioLabelWide}>
+                                        Asisten Pembimbing
+                                    </Text>
+                                    <Text>
+                                        : {praktikan.aslab?.nama ?? ""}
+                                    </Text>
+                                </View>
+                                <View style={styles.bioRow}>
+                                    <Text style={styles.bioLabelWide}>
+                                        Dosen Pembimbing
+                                    </Text>
+                                    <Text>
+                                        : {praktikan.dosen?.nama ?? ""}
+                                    </Text>
+                                </View>
+                            </View>
                         </View>
-                    </View>
-                </View>
-            </Page>
-        </Document>
-    );
+                        <View style={styles.tableWrapper}>
+                            <Text style={styles.tableHeader}>
+                                Pelanggaran
+                            </Text>
+                            <View style={styles.table}>
+                                <View style={styles.row}>
+                                    {Array.from({
+                                        length:
+                                            praktikum.pertemuan.length < 1
+                                                ? 8
+                                                : praktikum.pertemuan
+                                                    .length,
+                                    }).map((_, index) => (
+                                        <View
+                                            key={index}
+                                            style={styles.cell}
+                                        >
+                                            <Text>
+                                                Pertemuan {index + 1}
+                                            </Text>
+                                        </View>
+                                    ))}
+                                </View>
+                                <View style={styles.row}>
+                                    {Array.from({
+                                        length:
+                                            praktikum.pertemuan.length < 1
+                                                ? 8
+                                                : praktikum.pertemuan
+                                                    .length,
+                                    }).map((_, index) => (
+                                        <View
+                                            key={index}
+                                            style={styles.emptyCell}
+                                        />
+                                    ))}
+                                </View>
+                            </View>
+                        </View>
+                    </Page>
+                ))}
+            </Document>
+        );
+        const asPdf = pdf();
+        asPdf.updateContainer(doc);
+        const pdfBlob = await asPdf.toBlob();
+        saveAs(
+            pdfBlob,
+            `kartu-praktikum-${praktikum.nama}-${praktikum.periode.nama}.pdf`
+        );
+        return {
+            message: 'Berhasil mengeskpor Kartu Praktikum!'
+        };
+    } catch (error) {
+        console.error(error);
+        return {
+            message: 'Gagal mengeskpor Kartu Praktikum! cek console dan laporkan ke Developer'
+        };
+    }
 };
-
-export default KartuPraktikum;
-
