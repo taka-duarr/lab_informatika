@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class JenisNilai extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'jenis_nilai';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

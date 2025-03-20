@@ -17,7 +17,6 @@ return new class extends Migration
             $table->text('pilihan_jawaban');
             $table->string('kunci_jawaban');
             $table->timestamps();
-            $table->softDeletes();
         });
 
     }

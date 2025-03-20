@@ -19,12 +19,10 @@ import { Head, router } from "@inertiajs/react";
 import { PageProps, PaginationData } from "@/types";
 import { useToast } from "@/hooks/use-toast";
 import axios, { AxiosError } from "axios";
-import { cn } from "@/lib/utils";
+import { cn, kuisDateTime, parseSesiTime } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-import { format } from "date-fns";
-import { id as localeId } from "date-fns/locale";
 import {
     AlertDialog,
     AlertDialogCancel,
@@ -37,14 +35,28 @@ import DataTable from "@/components/data-table";
 
 type Kuis = {
     id: string;
-    kuis_nama: string;
-    pertemuan_nama: string;
-    praktikum_nama: string;
+    nama: string;
     waktu_mulai: string;
     waktu_selesai: string;
-};
-export default function AdminKuisIndexPage({ auth, pagination }: PageProps<{
+    sesi_praktikum: {
+        id: string;
+        nama: string;
+        hari: string;
+        waktu_mulai: string;
+        waktu_selesai: string;
+    };
+    pertemuan: {
+        id: string;
+        nama: string;
+        praktikum: {
+            id: string;
+            nama: string;
+        };
+    };
+}
+export default function AdminKuisIndexPage({ auth, pagination, currentDate }: PageProps<{
     pagination: PaginationData<Kuis[]>;
+    currentDate: string;
 }>) {
     const { toast } = useToast();
     type DeleteForm = {
@@ -64,7 +76,7 @@ export default function AdminKuisIndexPage({ auth, pagination }: PageProps<{
 
     const columns: ColumnDef<Kuis>[] = [
         {
-            accessorKey: "kuis_nama",
+            accessorKey: "nama",
             header: ({ column }) => {
                 return (
                     <Button
@@ -77,38 +89,51 @@ export default function AdminKuisIndexPage({ auth, pagination }: PageProps<{
                     </Button>
                 )
             },
-            cell: ({ row }) => <div className="capitalize min-w-52 px-2">{row.getValue("kuis_nama")}</div>,
+            cell: ({ row }) => <div className="capitalize min-w-52 px-2">{row.getValue("nama")}</div>,
         },
         {
-            accessorKey: "praktikum_nama",
+            accessorKey: "pertemuan.praktikum.nama",
             header: () => <div className="select-none">Praktikum</div>,
-            cell: ({ row }) => <div className="capitalize min-w-36">{row.getValue("praktikum_nama") ?? '-'}</div>,
-        },
-        {
-            accessorKey: "pertemuan_nama",
-            header: () => <div className="select-none">Pertemuan</div>,
-            cell: ({ row }) => <div className="capitalize min-w-28">{row.getValue("pertemuan_nama") ?? '-'}</div>,
-        },
-        {
-            accessorKey: "waktu_mulai",
-            header: () => <div className="select-none">Waktu Mulai</div>,
             cell: ({ row }) => {
-                const waktuMulai = format(new Date(row.original.waktu_mulai), "PPP hh:mm", { locale: localeId });
                 return (
-                    <div className="capitalize min-w-36">
-                        { waktuMulai }
+                    <div className="min-w-36">
+                        { row.original.pertemuan.praktikum.nama }
                     </div>
-                );
-            }
+                )
+            },
         },
         {
-            accessorKey: "waktu_selesai",
-            header: () => <div className="select-none">Waktu Selesai</div>,
+            accessorKey: "pertemuan.nama",
+            header: () => <div className="select-none">Pertemuan</div>,
             cell: ({ row }) => {
-                const waktuSelesai = format(new Date(row.original.waktu_selesai), "PPP hh:mm", { locale: localeId });
+                return (
+                    <div className="min-w-28">
+                        { row.original.pertemuan.nama }
+                    </div>
+                )
+            },
+        },
+        {
+            accessorKey: "sesi_praktikum.nama",
+            header: () => <div className="select-none">Sesi Praktikum</div>,
+            cell: ({ row }) => {
+                const sesi = row.original.sesi_praktikum;
+                return (
+                    <div className="capitalize min-w-28 flex flex-col md:flex-row flex-wrap gap-x-0.5">
+                        <p>{ sesi ? `${sesi.nama} - ${sesi.hari} ` : '-'}</p>
+                        <p>{ sesi ? `(${parseSesiTime(sesi.waktu_mulai, currentDate)} - ${parseSesiTime(sesi.waktu_selesai, currentDate)})` : ""}</p>
+                    </div>
+                )
+            },
+        },
+        {
+            id: "waktu",
+            accessorKey: "waktu_mulai",
+            header: () => <div className="select-none">Waktu Pelaksanaan</div>,
+            cell: ({ row }) => {
                 return (
                     <div className="capitalize min-w-36">
-                        { waktuSelesai }
+                        { kuisDateTime(row.original.waktu_mulai, row.original.waktu_selesai) }
                     </div>
                 );
             }
@@ -136,7 +161,7 @@ export default function AdminKuisIndexPage({ auth, pagination }: PageProps<{
                                 setDeleteForm((prevState) => ({
                                     ...prevState,
                                     id: originalRow.id,
-                                    nama: originalRow.kuis_nama
+                                    nama: originalRow.nama
                                 }));
                             } }>
                                 <Trash2 /> Hapus data
@@ -198,6 +223,8 @@ export default function AdminKuisIndexPage({ auth, pagination }: PageProps<{
                 });
             });
     };
+
+    console.log(pagination);
 
     return (
         <AdminLayout auth={auth}>

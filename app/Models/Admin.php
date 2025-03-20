@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Admin extends Authenticatable
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'admin';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

@@ -105,15 +105,28 @@ class PraktikumPraktikanController extends Controller
     public function storeMass(Request $request)
     {
         $validated = $request->validate([
-            'praktikan_ids' => 'required|array',
-            'praktikan_ids.*' => 'uuid',
+            'praktikans' => 'required|array',
+            'praktikans.*.id' => 'uuid|exists:praktikan,id',
+            'praktikans.*.aslab_id' => 'nullable|uuid|exists:aslab,id',
+            'praktikans.*.dosen_id' => 'nullable|uuid|exists:dosen,id',
+            'praktikans.*.sesi_praktikum_id' => 'nullable|uuid|exists:sesi_praktikum,id',
             'praktikum_id' => 'required|uuid|exists:praktikum,id',
         ]);
 
         DB::beginTransaction();
         try {
             $praktikum = Praktikum::findOrFail($validated['praktikum_id']);
-            $praktikum->praktikan()->sync($validated['praktikan_ids']);
+
+            $pivotData = collect($validated['praktikans'])->mapWithKeys(fn($data) => [
+                $data['id'] => [
+                    'aslab_id' => $data['aslab_id'] ?? null,
+                    'dosen_id' => $data['dosen_id'] ?? null,
+                    'sesi_praktikum_id' => $data['sesi_praktikum_id'] ?? null,
+                    'terverifikasi' => true,
+                ]
+            ])->toArray();
+
+            $praktikum->praktikan()->sync($pivotData);
 
             DB::commit();
             return Response::json([
@@ -128,9 +141,7 @@ class PraktikumPraktikanController extends Controller
         } catch (\Exception $e) {
             DB::rollBack();
             return Response::json([
-                'message' => config('app.debug')
-                    ? $e->getMessage()
-                    : 'Server gagal memproses permintaan.',
+                'message' => config('app.debug') ? $e->getMessage() : 'Server gagal memproses permintaan.',
             ], 500);
         }
     }

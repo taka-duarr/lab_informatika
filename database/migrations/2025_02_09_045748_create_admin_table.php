@@ -19,7 +19,6 @@ return new class extends Migration
             $table->string('avatar')->nullable();
             $table->foreignUuid('laboratorium_id')->nullable()->constrained('laboratorium');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

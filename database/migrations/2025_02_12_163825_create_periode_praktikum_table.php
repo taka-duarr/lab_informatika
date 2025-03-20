@@ -16,7 +16,6 @@ return new class extends Migration
             $table->string('nama')->unique();
             $table->foreignUuid('laboratorium_id')->constrained('laboratorium');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

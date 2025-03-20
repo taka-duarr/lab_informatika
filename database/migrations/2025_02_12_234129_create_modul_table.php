@@ -15,11 +15,10 @@ return new class extends Migration
             $table->uuid('id')->primary();
             $table->string('nama');
             $table->string('topik');
-            $table->foreignUuid('pertemuan_id')->constrained('pertemuan')->cascadeOnDelete();
+            $table->foreignUuid('pertemuan_id')->constrained('pertemuan');
 
             $table->unique(['pertemuan_id', 'nama']);
             $table->timestamps();
-            $table->softDeletes();
         });
 
     }

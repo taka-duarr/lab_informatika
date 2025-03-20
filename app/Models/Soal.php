@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Soal extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'soal';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
@@ -21,5 +21,8 @@ class Soal extends Model
     {
         return $this->belongsToMany(Kuis::class, 'soal_kuis', 'soal_id', 'kuis_id');
     }
-
+    public function soal_kuis()
+    {
+        return $this->hasMany(SoalKuis::class, 'soal_id');
+    }
 }

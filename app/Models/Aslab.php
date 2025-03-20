@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Aslab extends Authenticatable
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'aslab';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

@@ -33,7 +33,7 @@ type Praktikum = {
         id: string;
         nama: string;
     } | null;
-    sesi: {
+    sesi_praktikum: {
         id: string;
         nama: string;
         kuota: number | null;
@@ -241,8 +241,8 @@ export default function PraktikanPraktikumCreatePage({ auth, jenisPraktikums, cu
                                                 jenis.praktikum.filter((praktikum) => praktikum.id === createForm.praktikum_id)
                                             )
                                             .map((praktikum) => {
-                                                return praktikum.sesi.length > 0 ? (
-                                                    praktikum.sesi.map((sesi) => (
+                                                return praktikum.sesi_praktikum.length > 0 ? (
+                                                    praktikum.sesi_praktikum.map((sesi) => (
                                                         <SelectItem
                                                             key={sesi.id}
                                                             value={sesi.id}

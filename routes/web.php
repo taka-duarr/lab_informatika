@@ -5,9 +5,11 @@ use App\Http\Controllers\AslabController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeritaController;
 use App\Http\Controllers\DosenController;
+use App\Http\Controllers\JawabanKuisController;
 use App\Http\Controllers\JenisNilaiController;
 use App\Http\Controllers\JenisPraktikumController;
 use App\Http\Controllers\KuisController;
+use App\Http\Controllers\KuisPraktikanController;
 use App\Http\Controllers\LabelController;
 use App\Http\Controllers\LaboratoriumController;
 use App\Http\Controllers\ModulController;
@@ -165,6 +167,19 @@ Route::prefix('kuis')->name('kuis.')->group(function () {
     Route::post('/update', [KuisController::class, 'update'])->name('update');
     Route::post('/delete', [KuisController::class, 'destroy'])->name('delete');
 });
+Route::prefix('kuis-praktikan')->name('kuis-praktikan.')->group(function () {
+    Route::post('/create', [KuisPraktikanController::class, 'store'])->name('create');
+    Route::post('/update', [KuisPraktikanController::class, 'update'])->name('update');
+    Route::post('/delete', [KuisPraktikanController::class, 'destroy'])->name('delete');
+    Route::post('/submit-end', [KuisPraktikanController::class, 'submitEnd'])->name('submit-end');
+});
+Route::prefix('jawaban-kuis')->name('jawaban-kuis.')->group(function () {
+    Route::post('/create', [JawabanKuisController::class, 'store'])->name('create');
+    Route::post('/update', [JawabanKuisController::class, 'update'])->name('update');
+    Route::post('/delete', [JawabanKuisController::class, 'destroy'])->name('delete');
+    Route::post('/upsert', [JawabanKuisController::class, 'upsert'])->name('upsert');
+});
+
 Route::prefix('berita')->name('berita.')->group(function () {
     Route::get('/', [BeritaController::class, 'index'])->name('index');
     Route::get('/{slug}', [BeritaController::class, 'show'])->name('show');
@@ -175,12 +190,12 @@ Route::prefix('berita')->name('berita.')->group(function () {
 Route::prefix('jenis-nilai')->name('jenis-nilai.')->group(function () {
     Route::post('/create', [JenisNilaiController::class, 'store'])->name('create');
 });
-//
-//Route::get('/kuis', function () {
-//    return Inertia::render('KuisTest', [
-//        'soals' => \App\Models\Soal::select('id','pertanyaan','pilihan_jawaban')->limit(50)->get(),
-//    ]);
-//});
+
+Route::get('/kuis', function () {
+    return Inertia::render('KuisTest', [
+        'soals' => \App\Models\Soal::select('id','pertanyaan','pilihan_jawaban')->limit(50)->get(),
+    ]);
+});
 //Route::get('/test-nilai', function () {
 //    return \Inertia\Inertia::render('Admin/AdminNilaiIndexPage');
 //});

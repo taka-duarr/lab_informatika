@@ -1,6 +1,6 @@
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
-import { ArrowRight, BookOpenText, FolderSync } from "lucide-react";
+import { ArrowRight, BookOpenText, FolderSync, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import { MahiruCirle } from "@/lib/StaticImagesLib";
@@ -22,6 +22,7 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
         nama: string;
         username: string;
         jabatan: string;
+        avatar: string | null;
     }[];
     kuis: {
         id: string;
@@ -33,18 +34,22 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
     }[];
 }>) {
     const chartDataPraktikum = [
-        { praktikum: "Sistem Operasi XXXVI", lulus: 90, gugur: 7 },
-        { praktikum: "Jaringan Komputer XXXVI", lulus: 83, gugur: 2 },
-        { praktikum: "Sistem Operasi XXXVII", lulus: 85, gugur: 21 },
-        { praktikum: "Jaringan Komputer XXXVII", lulus: 93, gugur: 3 },
-        { praktikum: "Sistem Operasi XXXVIII", lulus: 80, gugur: 8 },
-        { praktikum: "Jaringan Komputer XXXVIII", lulus: 0, gugur: 0 },
+        { praktikum: "Sistem Operasi XXXVI", terverifikasi: 97, lulus: 90, gugur: 7 },
+        { praktikum: "Jaringan Komputer XXXVI", terverifikasi: 85, lulus: 83, gugur: 2 },
+        { praktikum: "Sistem Operasi XXXVII", terverifikasi: 106, lulus: 85, gugur: 21 },
+        { praktikum: "Jaringan Komputer XXXVII", terverifikasi: 96, lulus: 93, gugur: 3 },
+        { praktikum: "Sistem Operasi XXXVIII", terverifikasi: 88, lulus: 80, gugur: 8 },
+        { praktikum: "Jaringan Komputer XXXVIII", terverifikasi: 0, lulus: 0, gugur: 0 },
     ];
 
     const chartConfig = {
+        terverifikasi: {
+            label: "Terverifikasi",
+            color: "#2563eb",
+        },
         lulus: {
             label: "Lulus",
-            color: "#2563eb",
+            color: "#02df50",
         },
         gugur: {
             label: "Gugur",
@@ -56,7 +61,7 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
         <>
             <AdminLayout auth={auth}>
                 <Head title="Admin - Dashboard" />
-                <div className="flex flex-col lg:flex-row gap-3">
+                <div className="flex flex-col lg:flex-row gap-3 text-green-600">
                     <Card className="flex flex-col w-full lg:w-2/3 lg:min-w-[26rem] h-[27rem] lg:h-[32rem] overflow-y-auto rounded">
                         <CardHeader>
                             <CardTitle>Jadwal Kuis</CardTitle>
@@ -80,7 +85,7 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                                             </div>
                                             <TooltipProvider>
                                                 <Tooltip>
-                                                    <TooltipTrigger>
+                                                    <TooltipTrigger onClick={() => router.visit(route('admin.kuis.update', { q: kuis.id }))}>
                                                         <FolderSync/>
                                                     </TooltipTrigger>
                                                     <TooltipContent>
@@ -90,8 +95,7 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                                             </TooltipProvider>
                                         </div>
                                     ))) : (
-                                        <div
-                                            className="flex items-center space-x-4 rounded-md border p-3 truncate [&_p]:truncate">
+                                        <div className="flex items-center space-x-4 rounded-md border p-3 truncate [&_p]:truncate">
                                             <p className="text-sm font-medium text-muted-foreground/80">
                                                 Tidak ada kuis mendatang
                                             </p>
@@ -117,10 +121,16 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                             <CardContent className="grid gap-4">
                                 {
                                     aslabs.map((aslab, index) => ((
-                                        <div key={ index }
-                                             className="flex items-center space-x-4 rounded-md border p-4 truncate [&_p]:truncate">
-                                            <div className="h-7">
-                                                <img src={ MahiruCirle } alt="profile" width={ 30 }/>
+                                        <div key={ index } className="flex items-center space-x-4 rounded-md border p-4 truncate [&_p]:truncate">
+                                            <div className={ `w-8 h-8 rounded-full overflow-hidden content-center ${!aslab.avatar ? 'bg-gray-100 shadow' : ''}` }>
+                                                { aslab.avatar ? (
+                                                    <img
+                                                        src={`/storage/aslab/${aslab.avatar}`}
+                                                        alt={ `aslab-avatar-${aslab.username}` }
+                                                    />
+                                                ) : (
+                                                    <UserRound className="mx-auto" />
+                                                )}
                                             </div>
                                             <div className="space-y-1 flex-1 truncate overflow-hidden">
                                                 <p className="text-sm font-medium">
@@ -170,6 +180,7 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                                     />
                                     <ChartTooltip content={ <ChartTooltipContent/> }/>
                                     <ChartLegend content={ <ChartLegendContent/> }/>
+                                    <Bar dataKey="terverifikasi" fill="var(--color-terverifikasi)" radius={ 4 }/>
                                     <Bar dataKey="lulus" fill="var(--color-lulus)" radius={ 4 }/>
                                     <Bar dataKey="gugur" fill="var(--color-gugur)" radius={ 4 }/>
                                 </BarChart>

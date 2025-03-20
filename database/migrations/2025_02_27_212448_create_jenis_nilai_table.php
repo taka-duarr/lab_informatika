@@ -17,7 +17,6 @@ return new class extends Migration
             $table->integer('urutan');
             $table->boolean('aktif')->default(true);
             $table->foreignUuid('laboratorium_id')->constrained('laboratorium');
-            $table->softDeletes();
             $table->timestamps();
         });
     }

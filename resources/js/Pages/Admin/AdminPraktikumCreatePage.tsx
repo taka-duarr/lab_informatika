@@ -7,7 +7,7 @@ import { CardDescription, CardTitle } from "@/components/ui/card";
 import { cn, romanToNumber } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { Check, Loader2, X } from "lucide-react";
+import { Check, Loader2, Save, X } from "lucide-react";
 import { z } from "zod";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/hooks/use-toast";
@@ -200,7 +200,6 @@ export default function AdminPraktikumCreatePage({ auth, currentDate, laboratori
         )
     };
 
-    console.log(createForm)
     return (
         <>
             <AdminLayout auth={auth}>
@@ -275,13 +274,18 @@ export default function AdminPraktikumCreatePage({ auth, currentDate, laboratori
                             </div>
                         </div>
                     </div>
-                    <Button type="submit"
-                            disabled={ createForm.onSubmit || !createForm.nama || !createForm.jenis_praktikum_id || !createForm.periode_praktikum_id }>
+                    <Button
+                        type="submit"
+                        disabled={ createForm.onSubmit || !createForm.nama || !createForm.jenis_praktikum_id || !createForm.periode_praktikum_id }
+                        className="min-w-28 ml-auto"
+                    >
                         { createForm.onSubmit
                             ? (
                                 <>Memproses <Loader2 className="animate-spin"/></>
                             ) : (
-                                <span>Simpan</span>
+                                <>
+                                    Simpan <Save />
+                                </>
                             )
                         }
                     </Button>

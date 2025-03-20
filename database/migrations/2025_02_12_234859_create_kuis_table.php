@@ -17,10 +17,10 @@ return new class extends Migration
             $table->text('deskripsi');
             $table->dateTime('waktu_mulai');
             $table->dateTime('waktu_selesai');
+            $table->string('kode')->nullable();
 
-            $table->foreignUuid('pertemuan_id')->constrained('pertemuan')->cascadeOnDelete();
-            $table->index(['waktu_mulai', 'waktu_selesai']);
-            $table->softDeletes();
+            $table->foreignUuid('pertemuan_id')->constrained('pertemuan');
+            $table->foreignUuid('sesi_praktikum_id')->nullable()->constrained('sesi_praktikum');
             $table->timestamps();
         });
 

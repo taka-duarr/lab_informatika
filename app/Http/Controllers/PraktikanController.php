@@ -5,7 +5,6 @@ namespace App\Http\Controllers;
 use App\Models\BanList;
 use App\Models\Praktikan;
 use Illuminate\Database\QueryException;
-use Illuminate\Http\Client\RequestException;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
@@ -16,6 +15,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Str;
+use Intervention\Image\Laravel\Facades\Image;
 
 class PraktikanController extends Controller
 {
@@ -290,18 +290,21 @@ class PraktikanController extends Controller
                 Storage::disk('praktikan')->delete($praktikan->avatar);
             }
 
+            $upload = $request->file('avatar');
+
             $extension = $request->file('avatar')->getClientOriginalExtension();
             $randomString = Str::random(8);
             $filename = Str::slug($praktikan->nama . '-' . $praktikan->username . '-' . $randomString) . '.' . $extension;
 
-            $avatarPath = $request->file('avatar')->storeAs('/', $filename, 'praktikan');
-            $praktikan->update(['avatar' => $avatarPath]);
+            $image = Image::read($upload)->toJpeg(70);
+            Storage::disk('praktikan')->put($filename, $image);
+            $praktikan->update(['avatar' => $filename]);
 
             DB::commit();
 
             return response()->json([
                 'message' => 'Avatar berhasil diunggah!',
-                'avatar_url' => $avatarPath,
+                'avatar_url' => $filename,
             ], 200);
         } catch (\Exception $exception) {
             DB::rollBack();

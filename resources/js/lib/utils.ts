@@ -1,6 +1,6 @@
 import { clsx, type ClassValue } from "clsx";
 import { twMerge } from "tailwind-merge";
-import { format, parse as dateParse } from "date-fns";
+import { differenceInMinutes, format, isSameDay, parse, isBefore, isAfter } from "date-fns";
 import { id as localeId } from "date-fns/locale";
 export function cn(...inputs: ClassValue[]) {
     return twMerge(clsx(inputs))
@@ -23,10 +23,33 @@ export const romanToNumber = (roman: string): number => {
     return num;
 };
 export const parseSesiTime = (time: string, currentDate: string | Date): string => {
-    const date = dateParse(time, 'HH:mm:ss', new Date(currentDate));
+    const date = parse(time, 'HH:mm:ss', new Date(currentDate));
     return format(date, 'HH:mm', {
         locale: localeId
     });
+};
+export const kuisDuration = (start: string, end: string): number => {
+    const startTime = parse(start, "yyyy-MM-dd HH:mm:ss", new Date());
+    const endTime = parse(end, "yyyy-MM-dd HH:mm:ss", new Date());
+
+    return differenceInMinutes(endTime, startTime);
+};
+export const kuisDateTime = (start: string, end: string) => {
+    const startTime = parse(start, "yyyy-MM-dd HH:mm:ss", new Date());
+    const endTime = parse(end, "yyyy-MM-dd HH:mm:ss", new Date());
+
+    if (isSameDay(startTime, endTime)) {
+        return `${format(startTime, "d MMMM yyyy", { locale: localeId })} Pukul ${format(startTime, "HH:mm")} - ${format(endTime, "HH:mm")}`;
+    } else {
+        return `${format(endTime, "d MMMM yyyy", { locale: localeId })} Pukul ${format(startTime, "HH:mm")} - ${format(endTime, "HH:mm", { locale: localeId })}`;
+    }
+};
+export const kuisIsOpen = (start: string, end: string, current: string): boolean => {
+    const startTime = parse(start, "yyyy-MM-dd HH:mm:ss", new Date(current), { locale: localeId });
+    const endTime = parse(end, "yyyy-MM-dd HH:mm:ss", new Date(current), { locale: localeId });
+    const currentTime = parse(current, "yyyy-MM-dd HH:mm:ss", new Date(current), { locale: localeId });
+
+    return (isBefore(currentTime, endTime) && isAfter(currentTime, startTime));
 };
 
 //

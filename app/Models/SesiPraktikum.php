@@ -5,11 +5,12 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class SesiPraktikum extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'sesi_praktikum';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
@@ -18,5 +19,8 @@ class SesiPraktikum extends Model
     {
         return $this->BelongsTo(Praktikum::class, 'praktikum_id');
     }
-
+    public function kuis(): HasMany
+    {
+        return $this->hasMany(Kuis::class, 'sesi_praktikum_id');
+    }
 }

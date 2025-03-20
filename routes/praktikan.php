@@ -11,5 +11,10 @@ Route::prefix('praktikan')->name('praktikan.')->middleware('guard:praktikan')->g
         Route::get('/', [PraktikanPagesController::class, 'praktikumIndexPage'])->name('index');
         Route::get('/register', [PraktikanPagesController::class, 'praktikumCreatePage'])->name('create');
     });
-
+    Route::prefix('kuis')->name('kuis.')->group(function () {
+        Route::get('/', [PraktikanPagesController::class, 'kuisIndexPage'])->name('index');
+        Route::get('/history', [PraktikanPagesController::class, 'kuisHistoryPage'])->name('history');
+        Route::get('/exam/{id}', [PraktikanPagesController::class, 'kuisExamPage'])->name('exam');
+        Route::get('/result/{id}', [PraktikanPagesController::class, 'kuisResultPage'])->name('result');
+    });
 });

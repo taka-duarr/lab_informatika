@@ -20,9 +20,8 @@ return new class extends Migration
             $table->boolean('aktif')->default(true);
             $table->string('username')->unique();
             $table->string('password');
-            $table->foreignUuid('laboratorium_id')->constrained('laboratorium')->cascadeOnDelete();
+            $table->foreignUuid('laboratorium_id')->constrained('laboratorium');
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

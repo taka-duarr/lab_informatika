@@ -15,7 +15,7 @@ import {
     Loader2,
     MoveRight,
     Pencil,
-    Plus,
+    Plus, Save,
     Trash2, UsersRound,
     X
 } from "lucide-react";
@@ -64,7 +64,7 @@ type Praktikum = {
         nama: string;
         modul: Modul[];
     }[];
-    sesi: Sesi[];
+    sesi_praktikum: Sesi[];
 };
 export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPraktikums, periodePraktikums, currentDate }: PageProps<{
     praktikum: Praktikum;
@@ -267,6 +267,10 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
     const parseSesiTime = (time: string) => {
         return parse(time, 'HH:mm:ss', new Date(currentDate));
     };
+    const handleOpenCreateSesi = (open: boolean) => {
+        setOpenCreateSesi(open);
+        setCreateSesi(createSesiInit);
+    }
     const handleSubmitCreateSesi = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setCreateSesi((prevState) => ({ ...prevState, onSubmit: true }));
@@ -321,14 +325,10 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
                 });
             });
     };
-    const handleOpenUpdateSesi = (sesi: Sesi) => {
-        setUpdateSesi(mapToUpdateSesi(sesi));
-        setOpenUpdateSesi(true);
+    const handleOpenUpdateSesi = (open: boolean, initState: UpdateSesi = updateSesiInit) => {
+        setOpenUpdateSesi(open);
+        setUpdateSesi(initState);
     };
-    const handleCancelUpdateSesi = () => {
-        setUpdateSesi(updateSesiInit);
-        setOpenUpdateSesi(false);
-    }
     const handleSubmitUpdateSesi = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setUpdateSesi((prevState) => ({ ...prevState, onSubmit: true }));
@@ -978,12 +978,18 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
                             </div>
                         </div>
                     </div>
-                    <Button type="submit" disabled={ updateForm.onSubmit || !updateForm.nama || !updateForm.jenis_praktikum_id || !updateForm.periode_praktikum_id || !isOnChange }>
+                    <Button
+                        type="submit"
+                        disabled={ updateForm.onSubmit || !updateForm.nama || !updateForm.jenis_praktikum_id || !updateForm.periode_praktikum_id || !isOnChange }
+                        className="min-w-28 ml-auto"
+                    >
                         { updateForm.onSubmit
                             ? (
                                 <>Memproses <Loader2 className="animate-spin"/></>
                             ) : (
-                                <span>Simpan</span>
+                                <>
+                                    Simpan <Save />
+                                </>
                             )
                         }
                     </Button>
@@ -996,15 +1002,15 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
                         <h3 className="text-lg font-semibold mb-4">
                             Sesi Praktikum
                         </h3>
-                        {praktikum.sesi.length > 0 && (
-                            <Button size="sm" className="-mt-3" onClick={() => setOpenCreateSesi(true)}>
+                        {praktikum.sesi_praktikum.length > 0 && (
+                            <Button size="sm" className="-mt-3" onClick={() => handleOpenCreateSesi(true)}>
                                 <span className="hidden lg:block">Sesi</span>
                                 <Plus/>
                             </Button>
                         )}
                     </div>
                     <div className="space-y-4">
-                        { praktikum.sesi.length > 0 ? praktikum.sesi.map((sesi) => (
+                        { praktikum.sesi_praktikum.length > 0 ? praktikum.sesi_praktikum.map((sesi) => (
                             <Card key={ sesi.id } className="rounded-sm shadow-none border-muted-foreground/40 !py-1">
                                 <div className="flex flex-row gap-2 justify-between">
                                     <div className="flex flex-col px-6 py-3.5">
@@ -1026,7 +1032,7 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
                                         <Button size="icon" variant="ghost" className="group hover:bg-red-500/85" onClick={() => handleOpenDeleteSesi({ id: sesi.id, nama: sesi.nama })}>
                                             <Trash2 className="text-red-600 group-hover:text-white transition-colors" />
                                         </Button>
-                                        <Button size="icon" variant="ghost" className="group hover:bg-blue-500/85" onClick={() => handleOpenUpdateSesi(sesi)} disabled={!!updateSesi.id}>
+                                        <Button size="icon" variant="ghost" className="group hover:bg-blue-500/85" onClick={() => handleOpenUpdateSesi(true, mapToUpdateSesi(sesi))} disabled={!!updateSesi.id}>
                                             <Pencil className="text-blue-600 group-hover:text-white transition-colors" />
                                         </Button>
                                     </div>
@@ -1035,7 +1041,7 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
                         )) : (
                             <Card className="h-32 rounded-sm shadow-none border-muted-foreground/40 flex flex-col items-center justify-center gap-3">
                                 <p className="text-sm">Belum ada data sesi praktikum</p>
-                                <Button size="sm" className="mt-4" onClick={ () => setOpenCreateSesi(true) }>
+                                <Button size="sm" className="mt-4" onClick={() => handleOpenCreateSesi(true)}>
                                     Tambahkan <Plus/>
                                 </Button>
                             </Card>
@@ -1191,8 +1197,8 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
                 </CardContent>
 
                 {/*START OF SESI MODALS*/}
-                <AlertDialog open={ openCreateSesi } onOpenChange={ setOpenCreateSesi }>
-                    <AlertDialogContent className="max-w-[90%] sm:max-w-[425px] rounded" onOpenAutoFocus={ (e) => e.preventDefault() }>
+                <AlertDialog open={ openCreateSesi } onOpenChange={ handleOpenCreateSesi }>
+                    <AlertDialogContent className="my-alert-dialog-content" onOpenAutoFocus={ (e) => e.preventDefault() }>
                         <AlertDialogHeader>
                             <AlertDialogTitle>
                                 Tambah Sesi Praktikum
@@ -1331,8 +1337,8 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
                         <AlertDialogCancel>Batal</AlertDialogCancel>
                     </AlertDialogContent>
                 </AlertDialog>
-                <AlertDialog open={ openUpdateSesi } onOpenChange={ setOpenUpdateSesi }>
-                    <AlertDialogContent className="max-w-[90%] sm:max-w-[425px] rounded" onOpenAutoFocus={ (e) => e.preventDefault() }>
+                <AlertDialog open={ openUpdateSesi } onOpenChange={ handleOpenUpdateSesi }>
+                    <AlertDialogContent className="my-alert-dialog-content" onOpenAutoFocus={ (e) => e.preventDefault() }>
                         <AlertDialogHeader>
                             <AlertDialogTitle>
                                 Update Sesi Praktikum

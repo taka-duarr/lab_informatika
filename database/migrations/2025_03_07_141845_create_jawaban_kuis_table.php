@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('jawaban_kuis', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('soal_kuis_id')->constrained('soal_kuis')->cascadeOnDelete();
-            $table->foreignUuid('praktikan_id')->constrained('praktikan')->cascadeOnDelete();
+            $table->foreignUuid('soal_id')->constrained('soal')->cascadeOnDelete();
+            $table->foreignUuid('kuis_praktikan_id')->constrained('kuis_praktikan')->cascadeOnDelete();
             $table->string('jawaban');
             $table->boolean('status')->nullable();
 

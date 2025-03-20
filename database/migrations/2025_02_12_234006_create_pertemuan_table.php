@@ -14,11 +14,10 @@ return new class extends Migration
         Schema::create('pertemuan', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->string('nama');
-            $table->foreignUuid('praktikum_id')->constrained('praktikum')->cascadeOnDelete();
+            $table->foreignUuid('praktikum_id')->constrained('praktikum');
 
             $table->unique(['praktikum_id', 'nama']);
             $table->timestamps();
-            $table->softDeletes();
         });
     }
 

@@ -12,8 +12,8 @@ return new class extends Migration
     public function up(): void
     {
         Schema::create('praktikum_praktikan', function (Blueprint $table) {
-            $table->foreignUuid('praktikum_id')->constrained('praktikum')->cascadeOnDelete();
-            $table->foreignUuid('praktikan_id')->constrained('praktikan')->cascadeOnDelete();
+            $table->foreignUuid('praktikum_id')->constrained('praktikum');
+            $table->foreignUuid('praktikan_id')->constrained('praktikan');
             $table->foreignUuid('aslab_id')->nullable()->constrained('aslab')->nullOnDelete();
             $table->foreignUuid('dosen_id')->nullable()->constrained('dosen')->nullOnDelete();
             $table->foreignUuid('sesi_praktikum_id')->nullable()->constrained('sesi_praktikum')->nullOnDelete();
@@ -26,7 +26,6 @@ return new class extends Migration
 
             $table->primary(['praktikum_id', 'praktikan_id']);
             $table->timestamps();
-            $table->softDeletes();
         });
 
     }

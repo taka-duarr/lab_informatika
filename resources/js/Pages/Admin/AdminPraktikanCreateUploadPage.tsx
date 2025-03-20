@@ -322,7 +322,7 @@ export default function AdminPraktikanCreateUploadPage({ auth }: PageProps) {
                         <div
                             className="w-full mx-auto flex gap-1 items-center justify-center text-center text-sm font-medium">
                             Tidak memiliki file?
-                            <a href={ route('assets', 'template-upload-praktikum-praktikan.xlsx') } className="hover:text-blue-600 flex items-center gap-0.5" target="_blank">
+                            <a href={ route('assets', 'template-upload-praktikan.xlsx') } className="hover:text-blue-600 flex items-center gap-0.5" target="_blank">
                                 Unduh template<Download width={ 18 }/>
                             </a>
                         </div>
@@ -339,7 +339,7 @@ export default function AdminPraktikanCreateUploadPage({ auth }: PageProps) {
                     <Button
                         onClick={ handleSubmitUploadContents }
                         disabled={ onSubmitUploadContents || uploadContents.length === 0 || uploadFile.onLoad }
-                        className={ `${ uploadContents.length > 1 && !uploadFile.onLoad  ? 'inline-flex' : 'hidden' }` }
+                        className={ `${ uploadContents.length > 0 && !uploadFile.onLoad  ? 'inline-flex' : 'hidden' }` }
                     >
                         { onSubmitUploadContents ? (
                             <div className="flex items-center space-x-2">

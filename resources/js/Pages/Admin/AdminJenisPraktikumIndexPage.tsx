@@ -370,8 +370,8 @@ export default function AdminJenisPraktikumIndexPage({ auth, pagination, laborat
                             <AlertDialogTitle>
                                 Tambah Jenis Praktikum
                             </AlertDialogTitle>
-                            <AlertDialogDescription>
-                                ...
+                            <AlertDialogDescription className="text-foreground">
+                                Menambahkan Jenis Praktikum baru, sesuai dengan nama Mata Kuliah Praktikum. contoh: <strong>Sistem Operasi</strong>
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <form className={ cn("grid items-start gap-4") } onSubmit={ handleCreateFormSubmit }>

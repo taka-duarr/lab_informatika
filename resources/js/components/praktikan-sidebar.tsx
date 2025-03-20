@@ -52,16 +52,16 @@ const data: {
             title: "Kuis",
             url: "#",
             items: [
-                // {
-                //     title: "Mulai Kuis",
-                //     url: route('admin.kuis.label.index'),
-                //     route: 'admin.kuis.label.index'
-                // },
-                // {
-                //     title: "Histori Kuis",
-                //     url: route('admin.kuis.soal.index'),
-                //     route: 'admin.kuis.soal.index'
-                // },
+                {
+                    title: "Kuis mendatang",
+                    url: route('praktikan.kuis.index'),
+                    route: 'praktikan.kuis.index'
+                },
+                {
+                    title: "Histori Kuis",
+                    url: route('praktikan.kuis.history'),
+                    route: 'praktikan.kuis.history'
+                },
             ],
         },
         {

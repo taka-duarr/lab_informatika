@@ -13,8 +13,8 @@ return new class extends Migration
     {
         Schema::create('kuis_praktikan', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('kuis_id')->constrained('kuis')->cascadeOnDelete();
-            $table->foreignUuid('praktikan_id')->constrained('praktikan')->cascadeOnDelete();
+            $table->foreignUuid('kuis_id')->constrained('kuis');
+            $table->foreignUuid('praktikan_id')->constrained('praktikan');
             $table->integer('skor')->default(0);
             $table->boolean('selesai')->default(false);
 

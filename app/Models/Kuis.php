@@ -4,11 +4,13 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
+use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Kuis extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
 
     protected $table = 'kuis';
     protected $guarded = ['id'];
@@ -21,5 +23,20 @@ class Kuis extends Model
     {
         return $this->belongsToMany(Soal::class, 'soal_kuis', 'kuis_id', 'soal_id');
     }
-
+    public function praktikum()
+    {
+        return $this->hasOneThrough(Praktikum::class, Pertemuan::class, 'id', 'id', 'pertemuan_id', 'praktikum_id');
+    }
+    public function kuis_praktikan(): HasMany
+    {
+        return $this->hasMany(KuisPraktikan::class);
+    }
+    public function sesi_praktikum(): BelongsTo
+    {
+        return $this->belongsTo(SesiPraktikum::class, 'sesi_praktikum_id');
+    }
+    public function soal_kuis()
+    {
+        return $this->hasMany(SoalKuis::class, 'kuis_id');
+    }
 }

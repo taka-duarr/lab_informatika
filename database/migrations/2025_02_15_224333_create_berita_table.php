@@ -18,11 +18,9 @@ return new class extends Migration
             $table->string('deskripsi');
             $table->text('prasyarat');
             $table->text('konten');
-
             $table->foreignUuid('admin_id')->nullable()->constrained('admin')->nullOnDelete();
             $table->foreignUuid('laboratorium_id')->nullable()->constrained('laboratorium')->nullOnDelete();
             $table->foreignUuid('jenis_praktikum_id')->nullable()->constrained('jenis_praktikum')->nullOnDelete();
-            $table->softDeletes();
             $table->timestamps();
         });
     }

@@ -11,7 +11,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Praktikum extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'praktikum';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
@@ -31,7 +31,7 @@ class Praktikum extends Model
     {
         return $this->hasMany(Pertemuan::class, 'praktikum_id');
     }
-    public function sesi(): HasMany
+    public function sesi_praktikum(): HasMany
     {
         return $this->hasMany(SesiPraktikum::class, 'praktikum_id');
     }

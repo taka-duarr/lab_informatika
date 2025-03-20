@@ -3,7 +3,7 @@ import { FormEvent, useEffect, useState } from "react";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { Head, router } from "@inertiajs/react";
 import { CardDescription, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, parseSesiTime } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowBigLeft, Loader2, RefreshCcw } from "lucide-react";
@@ -35,6 +35,14 @@ export default function AdminKuisCreatePage({ auth, praktikums, labels }: PagePr
             nama: string;
             praktikum_id: string;
         }[];
+        sesi_praktikum: {
+            id: string;
+            nama: string;
+            hari: string;
+            waktu_mulai: string;
+            waktu_selesai: string;
+            praktikum_id: string;
+        }[];
     }[];
     labels: {
         id: string;
@@ -48,6 +56,8 @@ export default function AdminKuisCreatePage({ auth, praktikums, labels }: PagePr
         waktu_mulai: Date | undefined;
         waktu_selesai: Date | undefined;
         pertemuan_id: string;
+        praktikum_id: string;
+        sesi_praktikum_id: string;
         onSubmit: boolean;
     };
     type DataSoalKuis = {
@@ -78,6 +88,8 @@ export default function AdminKuisCreatePage({ auth, praktikums, labels }: PagePr
         waktu_mulai: undefined,
         waktu_selesai: undefined,
         pertemuan_id: '',
+        praktikum_id: '',
+        sesi_praktikum_id: '',
         onSubmit: false
     };
     const soalKuisInit: SoalKuis = {
@@ -190,7 +202,7 @@ export default function AdminKuisCreatePage({ auth, praktikums, labels }: PagePr
     const handleCreateFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setCreateForm((prevState) => ({ ...prevState, onSubmit: true }));
-        const { nama, pertemuan_id, deskripsi, waktu_mulai, waktu_selesai } = createForm;
+        const { nama, deskripsi, waktu_mulai, waktu_selesai, pertemuan_id, sesi_praktikum_id } = createForm;
         const createSchema = z.object({
             nama: z.string({ message: 'Format nama Kuis tidak valid! '}).min(1, { message: 'Nama Kuis wajib diisi!' }),
             pertemuan_id: z.string({ message: 'Format Pertemuan Kuis tidak valid! '}).min(1, { message: 'Pertemuan untuk Kuis belum dipilih!' }),
@@ -217,9 +229,10 @@ export default function AdminKuisCreatePage({ auth, praktikums, labels }: PagePr
         axios.post<{
             message: string;
         }>(route('kuis.create'), {
-            pertemuan_id: pertemuan_id, //UUID Pertemuan
-            nama: nama, //NAMA (STRING)
-            deskripsi: JSON.stringify(deskripsi), //string
+            pertemuan_id: pertemuan_id,
+            sesi_praktikum_id: sesi_praktikum_id,
+            nama: nama,
+            deskripsi: JSON.stringify(deskripsi),
             waktu_mulai: waktu_mulai, //DATETIME JS
             waktu_selesai: waktu_selesai, //DATETIME JS
             labels: soalKuis.data.selected.map((selected) => selected.value) //ARRAY DARI UUID SOAL YANG DIPILIH (jika tdk ada yang dipilih maka cmn Array kosong)
@@ -264,6 +277,37 @@ export default function AdminKuisCreatePage({ auth, praktikums, labels }: PagePr
         }
     }, [createForm.pertemuan_id]);
 
+    const SelectSesiPraktikum = () => {
+        const sesiPraktikumsFiltered = praktikums.find((praktikum) => praktikum.id === createForm.praktikum_id)?.sesi_praktikum.filter((filt) => filt.praktikum_id === createForm.praktikum_id );
+
+        return (
+            <>
+                <Label className="flex-1 min-w-72 grid gap-2">
+                    Sesi Praktikum
+                    <Select disabled={ !createForm.pertemuan_id } value={ createForm.sesi_praktikum_id } onValueChange={ (val) => handleFormChange('sesi_praktikum_id', val) }>
+                        <SelectTrigger>
+                            <SelectValue placeholder={ createForm.pertemuan_id ? "Pilih Sesi Praktikum" : "Pilih Pertemuan Praktikum terlebih dahulu..." } />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {
+                                sesiPraktikumsFiltered && sesiPraktikumsFiltered.length > 0
+                                    ? sesiPraktikumsFiltered.map((sesi, index) => ((
+                                        <SelectItem key={ index } value={ sesi.id }>
+                                            { sesi.nama } ( { sesi.hari }, { parseSesiTime(sesi.waktu_mulai, new Date()) } - { parseSesiTime(sesi.waktu_selesai, new Date()) } )
+                                        </SelectItem>
+                                    ))) : (
+                                        <SelectItem value="null" disabled>
+                                            Tidak ada Sesi Praktikum terdaftar untuk Praktikum dari Pertemuan yang dipilih
+                                        </SelectItem>
+                                    )
+                            }
+                        </SelectContent>
+                    </Select>
+                </Label>
+            </>
+        );
+    };
+
     return (
         <>
             <AdminLayout auth={auth}>
@@ -278,26 +322,36 @@ export default function AdminKuisCreatePage({ auth, praktikums, labels }: PagePr
                     Menambahkan data Kuis baru
                 </CardDescription>
                 <form className={ cn("grid items-start gap-4") } onSubmit={ handleCreateFormSubmit }>
-                    <div className="grid gap-2">
-                        <Label>Pertemuan Praktikum</Label>
-                        <Select onValueChange={ (val) => handleFormChange('pertemuan_id', val) }>
-                            <SelectTrigger className="min-w-80">
-                                <SelectValue placeholder="Pilih pertemuan"/>
-                            </SelectTrigger>
-                            <SelectContent>
-                                { praktikums.map((praktikum, index) => ((
-                                    <SelectGroup key={ index }>
-                                        <SelectLabel>{ praktikum.nama }</SelectLabel>
-                                        {
-                                            praktikum.pertemuan.map((pertemuan) => ((
-                                                <SelectItem key={ pertemuan.id } value={ pertemuan.id }>{ `${ praktikum.nama } - ${ pertemuan.nama }` }</SelectItem>
-                                            )))
-                                        }
-                                    </SelectGroup>
-                                )))
+                    <div className="flex flex-col md:flex-row gap-3 flex-wrap md:items-center">
+                        <div className="flex-1 min-w-72 grid gap-2">
+                            <Label>Pertemuan Praktikum</Label>
+                            <Select onValueChange={ (val) => {
+                                const idsVal = val.split('@');
+                                if (idsVal.length > 1) {
+                                    handleFormChange('pertemuan_id', idsVal[0]);
+                                    handleFormChange('praktikum_id', idsVal[1]);
+                                    (createForm.sesi_praktikum_id) && handleFormChange('sesi_praktikum_id', '');
                                 }
-                            </SelectContent>
-                        </Select>
+                            } }>
+                                <SelectTrigger className="min-w-80">
+                                    <SelectValue placeholder="Pilih pertemuan"/>
+                                </SelectTrigger>
+                                <SelectContent>
+                                    { praktikums.map((praktikum, index) => ((
+                                        <SelectGroup key={ index }>
+                                            <SelectLabel>{ praktikum.nama }</SelectLabel>
+                                            {
+                                                praktikum.pertemuan.map((pertemuan) => ((
+                                                    <SelectItem key={ pertemuan.id } value={ `${pertemuan.id}@${praktikum.id}` }>{ `${ praktikum.nama } - ${ pertemuan.nama }` }</SelectItem>
+                                                )))
+                                            }
+                                        </SelectGroup>
+                                    )))
+                                    }
+                                </SelectContent>
+                            </Select>
+                        </div>
+                        <SelectSesiPraktikum />
                     </div>
                     <div className="grid gap-2 min-w-80">
                         <Label htmlFor="nama">Nama Kuis</Label>

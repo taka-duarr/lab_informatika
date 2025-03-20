@@ -13,10 +13,10 @@ return new class extends Migration
     {
         Schema::create('soal_kuis', function (Blueprint $table) {
             $table->uuid('id')->primary();
-            $table->foreignUuid('soal_id')->constrained('soal')->cascadeOnDelete();
-            $table->foreignUuid('kuis_id')->constrained('kuis')->cascadeOnDelete();
-            $table->unique(['soal_id', 'kuis_id']);
+            $table->foreignUuid('soal_id')->constrained('soal');
+            $table->foreignUuid('kuis_id')->constrained('kuis');
 
+            $table->unique(['soal_id', 'kuis_id']);
             $table->timestamps();
         });
 

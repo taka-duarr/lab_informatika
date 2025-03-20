@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Modul extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'modul';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

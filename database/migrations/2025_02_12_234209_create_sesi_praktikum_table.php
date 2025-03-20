@@ -20,7 +20,6 @@ return new class extends Migration
             $table->integer('kuota')->nullable();
             $table->foreignUuid('praktikum_id')->constrained('praktikum');
             $table->timestamps();
-            $table->softDeletes();
         });
 
     }

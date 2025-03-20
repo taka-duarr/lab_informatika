@@ -28,8 +28,9 @@ export const AppLayout = ({ auth, children }: PageProps<{
                 <header className="px-4 lg:px-6 h-14 flex items-center">
                     <Link className="p-2 flex items-center justify-center gap-1.5 font-semibold bg-none hover:bg-muted transition-colors ease-in-out duration-150 rounded-md" href="/">
                         <img src={ LogoJarkom } alt="logo-jarkom" width={30} className="rounded-full"/>
-                        <span className="sr-only">Laboratorium Jaringan Komputer ITATS</span>
-                        <p>LABORATORIUM INFORMATIKA ITATS</p>
+                        <span className="sr-only">Laboratorium Informatika ITATS</span>
+                        <p className="hidden md:block">LABORATORIUM INFORMATIKA ITATS</p>
+                        <p className="block md:hidden">LAB.INFORMATIKA ITATS</p>
                     </Link>
                     <nav className="ml-auto flex gap-4 sm:gap-6">
                         <ProfileDropdown auth={auth} />

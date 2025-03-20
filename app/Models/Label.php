@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Label extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'label';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

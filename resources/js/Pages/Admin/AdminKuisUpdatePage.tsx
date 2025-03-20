@@ -3,7 +3,7 @@ import { FormEvent, useState } from "react";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { Head, router } from "@inertiajs/react";
 import { CardDescription, CardTitle } from "@/components/ui/card";
-import { cn } from "@/lib/utils";
+import { cn, parseSesiTime } from "@/lib/utils";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
 import { ArrowBigLeft, Loader2, RefreshCcw } from "lucide-react";
@@ -36,6 +36,14 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
             nama: string;
             praktikum_id: string;
         }[];
+        sesi_praktikum: {
+            id: string;
+            nama: string;
+            hari: string;
+            waktu_mulai: string;
+            waktu_selesai: string;
+            praktikum_id: string;
+        }[];
     }[];
     labels: {
         id: string;
@@ -47,7 +55,9 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
         deskripsi: string;
         waktu_mulai: string;
         waktu_selesai: string;
+        praktikum_id: string;
         pertemuan_id: string;
+        sesi_praktikum_id: string | null;
         soal: {
             id: string;
             pertanyaan: string;
@@ -61,6 +71,8 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
         waktu_mulai: Date | undefined;
         waktu_selesai: Date | undefined;
         pertemuan_id: string;
+        praktikum_id: string;
+        sesi_praktikum_id: string;
         onSubmit: boolean;
     };
     type DataSoalKuis = {
@@ -91,6 +103,8 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
         waktu_mulai: new Date(kuis.waktu_mulai),
         waktu_selesai: new Date(kuis.waktu_selesai),
         pertemuan_id: kuis.pertemuan_id,
+        praktikum_id: kuis.praktikum_id,
+        sesi_praktikum_id: kuis.sesi_praktikum_id ?? '',
         onSubmit: false
     };
     const soalKuisInit: SoalKuis = {
@@ -225,19 +239,21 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
                 });
             });
     };
-    const handleCreateFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+    const handleUpdateFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setUpdateForm((prevState) => ({ ...prevState, onSubmit: true }));
-        const { nama, pertemuan_id, deskripsi, waktu_mulai, waktu_selesai } = updateForm;
+        const { nama, pertemuan_id, sesi_praktikum_id, deskripsi, waktu_mulai, waktu_selesai } = updateForm;
         const updateSchema = z.object({
             nama: z.string({ message: 'Format nama Kuis tidak valid! '}).min(1, { message: 'Nama Kuis wajib diisi!' }),
             pertemuan_id: z.string({ message: 'Format Pertemuan Kuis tidak valid! '}).min(1, { message: 'Pertemuan untuk Kuis belum dipilih!' }),
+            sesi_praktikum_id: z.string({ message: 'Format Sesi Praktikum Kuis tidak valid! '}).min(1, { message: 'Sesi Praktikum untuk Kuis belum dipilih!' }),
             waktu_mulai: z.date({ message: 'Format Tanggal mulai kuis tidak valid! '}),
             waktu_selesai: z.date({ message: 'Format Tanggal mulai kuis tidak valid! '})
         });
         const updateParse = updateSchema.safeParse({
             nama: nama,
             pertemuan_id: pertemuan_id,
+            sesi_praktikum_id: sesi_praktikum_id,
             waktu_mulai: waktu_mulai,
             waktu_selesai: waktu_selesai
         });
@@ -286,6 +302,39 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
             });
     };
 
+    const SelectSesiPraktikum = () => {
+        const sesiPraktikumsFiltered = praktikums.find((praktikum) => praktikum.id === updateForm.praktikum_id)?.sesi_praktikum.filter((filt) => filt.praktikum_id === updateForm.praktikum_id );
+
+        return (
+            <>
+                <Label className="flex-1 min-w-72 grid gap-2">
+                    Sesi Praktikum
+                    <Select disabled={ !updateForm.pertemuan_id } value={ updateForm.sesi_praktikum_id } onValueChange={ (val) => handleFormChange('sesi_praktikum_id', val) }>
+                        <SelectTrigger>
+                            <SelectValue placeholder={ updateForm.pertemuan_id ? "Pilih Sesi Praktikum" : "Pilih Pertemuan Praktikum terlebih dahulu..." } />
+                        </SelectTrigger>
+                        <SelectContent>
+                            {
+                                sesiPraktikumsFiltered && sesiPraktikumsFiltered.length > 0
+                                    ? sesiPraktikumsFiltered.map((sesi, index) => ((
+                                        <SelectItem key={ index } value={ sesi.id }>
+                                            { sesi.nama } ( { sesi.hari }, { parseSesiTime(sesi.waktu_mulai, new Date()) } - { parseSesiTime(sesi.waktu_selesai, new Date()) } )
+                                        </SelectItem>
+                                    ))) : (
+                                        <SelectItem value="null" disabled>
+                                            Tidak ada Sesi Praktikum terdaftar untuk Praktikum dari Pertemuan yang dipilih
+                                        </SelectItem>
+                                    )
+                            }
+                        </SelectContent>
+                    </Select>
+                </Label>
+            </>
+        );
+    };
+
+    console.log(kuis)
+
     return (
         <>
             <AdminLayout auth={auth}>
@@ -299,10 +348,17 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
                 <CardDescription>
                     ...
                 </CardDescription>
-                <form className={ cn("grid items-start gap-4") } onSubmit={ handleCreateFormSubmit }>
-                    <div className="grid gap-2">
+                <form className={ cn("grid items-start gap-4") } onSubmit={ handleUpdateFormSubmit }>
+                    <div className="flex-1 min-w-72 grid gap-2">
                         <Label>Pertemuan Praktikum</Label>
-                        <Select value={updateForm.pertemuan_id} onValueChange={ (val) => handleFormChange('pertemuan_id', val) }>
+                        <Select value={`${updateForm.pertemuan_id}@${updateForm.praktikum_id}`} onValueChange={ (val) => {
+                            const idsVal = val.split('@');
+                            if (idsVal.length > 1) {
+                                handleFormChange('pertemuan_id', idsVal[0]);
+                                handleFormChange('praktikum_id', idsVal[1]);
+                                (updateForm.sesi_praktikum_id) && handleFormChange('sesi_praktikum_id', '');
+                            }
+                        } }>
                             <SelectTrigger className="min-w-80">
                                 <SelectValue placeholder="Pilih pertemuan"/>
                             </SelectTrigger>
@@ -312,7 +368,7 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
                                         <SelectLabel>{ praktikum.nama }</SelectLabel>
                                         {
                                             praktikum.pertemuan.map((pertemuan) => ((
-                                                <SelectItem key={ pertemuan.id } value={ pertemuan.id }>{ `${ praktikum.nama } - ${ pertemuan.nama }` }</SelectItem>
+                                                <SelectItem key={ pertemuan.id } value={ `${pertemuan.id}@${praktikum.id}` }>{ `${ praktikum.nama } - ${ pertemuan.nama }` }</SelectItem>
                                             )))
                                         }
                                     </SelectGroup>
@@ -320,6 +376,7 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
                                 }
                             </SelectContent>
                         </Select>
+                        <SelectSesiPraktikum />
                     </div>
                     <div className="grid gap-2 min-w-80">
                         <Label htmlFor="nama">Nama Kuis</Label>
@@ -349,6 +406,7 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
                     <div className="grid gap-2 min-w-80 w-full">
                         <Label>Waktu Mulai Pelaksanaan Kuis</Label>
                         <DateTimePicker
+                            initialDate={updateForm.waktu_mulai}
                             onChange={(date) => {
                                 if (date) {
                                     handleFormChange('waktu_mulai', date)
@@ -359,6 +417,7 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
                     <div className="grid gap-2 min-w-80 w-full">
                         <Label>Waktu Akhir Pelaksanaan Kuis</Label>
                         <DateTimePicker
+                            initialDate={updateForm.waktu_selesai}
                             onChange={(date) => {
                                 if (date) {
                                     handleFormChange('waktu_selesai', date)

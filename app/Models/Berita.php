@@ -9,7 +9,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 
 class Berita extends Model
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'berita';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

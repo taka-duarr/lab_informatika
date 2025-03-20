@@ -9,7 +9,7 @@ use Illuminate\Foundation\Auth\User as Authenticatable;
 
 class Dosen extends Authenticatable
 {
-    use HasUuids, SoftDeletes;
+    use HasUuids;
     protected $table = 'dosen';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

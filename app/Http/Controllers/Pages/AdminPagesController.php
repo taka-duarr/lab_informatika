@@ -35,13 +35,17 @@ class AdminPagesController extends Controller
         if (!$authAdmin) {
             abort(401);
         }
-//        $kuis = Kuis::with(['pertemuan.praktikum:id,nama'])
-//            ->where('waktu_mulai', '>', Carbon::now('Asia/Jakarta'))
-//            ->orderBy('waktu_mulai', 'asc')
-//            ->get(['id', 'nama', 'waktu_mulai', 'waktu_selesai', 'pertemuan_id']);
+        $kuis = Kuis::with(['pertemuan.praktikum:id,nama'])
+            ->where('waktu_mulai', '>', Carbon::now('Asia/Jakarta'))
+            ->orderBy('waktu_mulai', 'asc')
+            ->get(['id', 'nama', 'waktu_mulai', 'waktu_selesai', 'pertemuan_id']);
 
-        $queryAslab = Aslab::select('aslab.id', 'aslab.nama', 'aslab.username', 'aslab.jabatan', 'aslab.laboratorium_id')
+        $queryAslab = Aslab::select(['aslab.id', 'aslab.nama', 'aslab.avatar', 'aslab.username', 'aslab.jabatan', 'aslab.laboratorium_id'])
             ->where('aslab.aktif', true);
+        $queryPraktikum = Praktikum::select(['nama as praktikum'])
+            ->with(['praktikan'])
+            ->get();
+//        dd($queryPraktikum);
 
         if ($authAdmin->laboratorium_id) {
             $queryAslab->where('aslab.laboratorium_id', $authAdmin->laboratorium_id);
@@ -56,19 +60,18 @@ class AdminPagesController extends Controller
 
         return Inertia::render('Admin/AdminDashboardPage', [
             'aslabs' => fn() => $queryAslab->get(),
-//            'kuis' => fn() => $kuis->map(function ($item) {
-//                return [
-//                    'id' => $item->id,
-//                    'nama' => $item->nama,
-//                    'waktu_mulai' => $item->waktu_mulai,
-//                    'waktu_selesai' => $item->waktu_selesai,
-//                    'praktikum' => [
-//                        'id' => $item->pertemuan->praktikum->id,
-//                        'nama' => $item->pertemuan->praktikum->nama,
-//                    ],
-//                ];
-//            }),
-            'kuis' => []
+            'kuis' => fn() => $kuis->map(function ($item) {
+                return [
+                    'id' => $item->id,
+                    'nama' => $item->nama,
+                    'waktu_mulai' => $item->waktu_mulai,
+                    'waktu_selesai' => $item->waktu_selesai,
+                    'praktikum' => [
+                        'id' => $item->pertemuan->praktikum->id,
+                        'nama' => $item->pertemuan->praktikum->nama,
+                    ],
+                ];
+            }),
         ]);
     }
     public function laboratoriumIndexPage(Request $request)
@@ -128,8 +131,6 @@ class AdminPagesController extends Controller
                 'laboratorium' => fn() => $laboratorium->only(['id', 'nama', 'avatar', 'jenis_nilai']),
             ]);
         } catch (QueryException $exception) {
-
-            dd($exception->getMessage());
             abort(500);
         }
     }
@@ -280,8 +281,6 @@ class AdminPagesController extends Controller
                 'praktikan' => fn() => $praktikan->only(['id', 'nama', 'username', 'jenis_kelamin', 'avatar']),
             ]);
         } catch (QueryException $exception) {
-            dd($exception->getMessage());
-
             abort(500);
         }
     }
@@ -434,7 +433,7 @@ class AdminPagesController extends Controller
                 'pertemuan.modul' => fn($query) => $query
                     ->select('id', 'pertemuan_id', 'nama', 'topik')
                     ->orderBy('nama', 'asc'),
-                'sesi' => fn($query) => $query
+                'sesi_praktikum' => fn($query) => $query
                     ->select('id', 'nama', 'kuota', 'hari', 'waktu_mulai', 'waktu_selesai', 'praktikum_id')
                     ->orderBy('nama', 'asc')
             ])->find($idParam);
@@ -466,13 +465,12 @@ class AdminPagesController extends Controller
                     'jenis',
                     'periode',
                     'pertemuan',
-                    'sesi'
+                    'sesi_praktikum'
                 ]),
                 'jenisPraktikums' => fn() => $jenisPraktikums,
                 'periodePraktikums' => fn() => $periodePraktikums->sortBy(fn($periode) => $this->romanToInt($periode->nama))
             ]);
         } catch (QueryException $exception) {
-            dd($exception->getMessage());
             abort(500);
         }
     }
@@ -595,7 +593,7 @@ class AdminPagesController extends Controller
                         $join->on('aslab.id', '=', 'praktikum_praktikan.aslab_id')
                             ->where('praktikum_praktikan.praktikum_id', '=', $idParam);
                     })
-                    ->when($laboratoriumId, fn($query) => $query->where('aslab.laboratorium_id', $laboratoriumId)) // Filter dengan laboratorium_id jika ada
+                    ->when($laboratoriumId, fn($query) => $query->where('aslab.laboratorium_id', $laboratoriumId))
                     ->where('aslab.aktif', true)
                     ->groupBy('aslab.id', 'aslab.nama', 'aslab.username')
                     ->orderBy('aslab.username', 'asc')
@@ -632,8 +630,6 @@ class AdminPagesController extends Controller
                     ]),
             ]);
         } catch (QueryException $exception) {
-            dd($exception->getMessage());
-
             abort(500);
         }
     }
@@ -732,8 +728,6 @@ class AdminPagesController extends Controller
                 'labels' => fn() => Label::select('id', 'nama')->orderBy('created_at', 'desc')->get(),
             ]);
         } catch (QueryException $exception) {
-            dd($exception->getMessage());
-
             abort(500);
         }
     }
@@ -744,27 +738,39 @@ class AdminPagesController extends Controller
             abort(401);
         }
 
+        $laboratoriumId = Auth::guard('admin')->user()->laboratorium_id;
+
         $query = Kuis::select([
-            'kuis.id as id',
-            'kuis.nama as kuis_nama',
+            'kuis.id',
+            'kuis.nama',
             'kuis.waktu_mulai',
             'kuis.waktu_selesai',
-            'pertemuan.id as pertemuan_id',
-            'pertemuan.nama as pertemuan_nama',
-            'praktikum.id as praktikum_id',
-            'praktikum.nama as praktikum_nama',
-            DB::raw('(SELECT COUNT(*) FROM soal_kuis WHERE soal_kuis.kuis_id = kuis.id) as jumlah_soal')
+            'kuis.pertemuan_id',
+            'kuis.sesi_praktikum_id',
         ])
-            ->leftJoin('pertemuan', 'kuis.pertemuan_id', '=', 'pertemuan.id')
-            ->leftJoin('praktikum', 'pertemuan.praktikum_id', '=', 'praktikum.id')
+            ->with([
+                'sesi_praktikum:id,nama,hari,waktu_mulai,waktu_selesai',
+                'pertemuan:id,nama,praktikum_id',
+                'pertemuan.praktikum:id,nama',
+            ])
             ->orderBy('kuis.created_at', 'desc');
+
+        if ($laboratoriumId) {
+            $query->whereHas('pertemuan.praktikum.jenis', function ($q) use ($laboratoriumId) {
+                $q->where('laboratorium_id', $laboratoriumId);
+            });
+        }
 
         $search = $request->query('search');
         if ($search) {
             $query->where(function ($q) use ($search) {
-                $q->where('kuis.nama', 'like', '%' . $search . '%')
-                    ->orWhere('pertemuan.nama', 'like', '%' . $search . '%')
-                    ->orWhere('praktikum.nama', 'like', '%' . $search . '%');
+                $q->where('kuis.nama', 'like', "%$search%")
+                    ->orWhereHas('pertemuan', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%$search%");
+                    })
+                    ->orWhereHas('pertemuan.praktikum', function ($q) use ($search) {
+                        $q->where('nama', 'like', "%$search%");
+                    });
             });
         }
 
@@ -772,7 +778,8 @@ class AdminPagesController extends Controller
         $kuis = $query->paginate($viewPerPage)->withQueryString();
 
         return Inertia::render('Admin/AdminKuisIndexPage', [
-            'pagination' => $kuis
+            'pagination' => fn() => $kuis,
+            'currentDate' => Carbon::now('Asia/Jakarta')
         ]);
     }
     public function kuisCreatePage()
@@ -781,14 +788,25 @@ class AdminPagesController extends Controller
         if (!$authAdmin) {
             abort(401);
         }
+        $laboratoriumId = $authAdmin->laboratorium_id;
 
         return Inertia::render('Admin/AdminKuisCreatePage', [
             'currentDate' => Carbon::now('Asia/Jakarta')->toDateTimeString(),
             'labels' => fn() => Label::select('id', 'nama')->orderBy('created_at', 'desc')->get(),
             'praktikums' => fn() => Praktikum::select('id','nama')
                 ->where('praktikum.status', true)
-                ->with('pertemuan:id,nama,praktikum_id')
-                ->get()
+                ->when($laboratoriumId, function ($query) use ($laboratoriumId) {
+                    $query->whereHas('jenis_praktikum', function ($query) use ($laboratoriumId) {
+                        $query->where('laboratorium_id', $laboratoriumId);
+                    });
+                })                ->with([
+                    'pertemuan:id,nama,praktikum_id',
+                    'sesi_praktikum' => function ($query) {
+                        $query->select(['id','nama','hari','waktu_mulai','waktu_selesai','praktikum_id']);
+                        $query->orderBy('sesi_praktikum.nama', 'asc');
+                    }
+                ])
+                ->get(),
         ]);
     }
     public function kuisUpdatePage(Request $request)
@@ -803,8 +821,13 @@ class AdminPagesController extends Controller
             abort(404);
         }
 
+        $laboratoriumId = $authAdmin->laboratorium_id;
+
         try {
-            $kuis = Kuis::with('soal:id,pertanyaan')->findOrFail($idParam);
+            $kuis = Kuis::with([
+                'soal:id,pertanyaan',
+                'pertemuan:id,nama,praktikum_id'
+            ])->findOrFail($idParam);
 
             return Inertia::render('Admin/AdminKuisUpdatePage', [
                 'kuis' => fn() => [
@@ -813,20 +836,32 @@ class AdminPagesController extends Controller
                     'deskripsi' => $kuis->deskripsi,
                     'waktu_mulai' => $kuis->waktu_mulai,
                     'waktu_selesai' => $kuis->waktu_selesai,
+                    'praktikum_id' => $kuis->pertemuan->praktikum_id,
                     'pertemuan_id' => $kuis->pertemuan_id,
+                    'sesi_praktikum_id' => $kuis->sesi_praktikum_id,
                     'soal' => $kuis->soal->map(fn ($item) => [
                         'id' => $item->id,
                         'pertanyaan' => $item->pertanyaan,
-                    ])
+                    ]),
                 ],
                 'labels' => fn() => Label::select('id', 'nama')->orderBy('created_at', 'desc')->get(),
                 'praktikums' => fn() => Praktikum::select('id','nama')
                     ->where('praktikum.status', true)
-                    ->with('pertemuan:id,nama,praktikum_id')
-                    ->get()
+                    ->when($laboratoriumId, function ($query) use ($laboratoriumId) {
+                        $query->whereHas('jenis_praktikum', function ($query) use ($laboratoriumId) {
+                            $query->where('laboratorium_id', $laboratoriumId);
+                        });
+                    })
+                    ->with([
+                        'pertemuan:id,nama,praktikum_id',
+                        'sesi_praktikum' => function ($query) {
+                            $query->select(['id','nama','hari','waktu_mulai','waktu_selesai','praktikum_id']);
+                            $query->orderBy('sesi_praktikum.nama', 'asc');
+                        }
+                    ])
+                    ->get(),
             ]);
         } catch (QueryException $exception) {
-            dd($exception->getMessage());
             abort(500);
         }
     }
