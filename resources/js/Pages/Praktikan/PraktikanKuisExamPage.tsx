@@ -296,7 +296,6 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
         <>
             { submitEnd.onSubmit && (
                 <OverlayLoader
-                    show={submitEnd.onSubmit}
                     textContent={submitEnd.message}
                     subTextContent={submitEnd.subMessage}
                     withLoader={!submitEnd.onError}
