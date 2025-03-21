@@ -595,7 +595,7 @@ class AdminPagesController extends Controller
                     })
                     ->when($laboratoriumId, fn($query) => $query->where('aslab.laboratorium_id', $laboratoriumId))
                     ->where('aslab.aktif', true)
-                    ->groupBy('aslab.id', 'aslab.nama', 'aslab.username')
+                    ->groupBy('aslab.id', 'aslab.nama', 'aslab.username', 'aslab.avatar')
                     ->orderBy('aslab.username', 'asc')
                     ->get()
                     ->map(fn($aslab) => [
