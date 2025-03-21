@@ -409,6 +409,7 @@ class PraktikanController extends Controller
             }
 
             $url = env('API_VERIFY_NPM');
+            $apiKey = env('KEY_VERIFY_NPM');
 
             if (empty($url)) {
                 return Response::json([
@@ -417,7 +418,7 @@ class PraktikanController extends Controller
             }
 
             $response = Http::withHeaders([
-                'X-API-KEY' => env('KEY_VERIFY_NPM'),
+                'x-api-key' => $apiKey,
             ])->post($url, [
                 'npm' => $validated['npm'],
             ]);
