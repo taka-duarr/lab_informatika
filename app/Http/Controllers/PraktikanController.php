@@ -416,7 +416,11 @@ class PraktikanController extends Controller
                 ], 500);
             }
 
-            $response = Http::post($url, ['npm' => $validated['npm']]);
+            $response = Http::withHeaders([
+                'X-API-KEY' => env('KEY_VERIFY_NPM'),
+            ])->post($url, [
+                'npm' => $validated['npm'],
+            ]);
 
             if ($response->successful()) {
                 return Response::json([
