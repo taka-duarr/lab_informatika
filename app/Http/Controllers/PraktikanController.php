@@ -180,22 +180,11 @@ class PraktikanController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'id' => 'required|exists:praktikan,id',
-            'nama' => 'required|string|min:1',
-            'username' => 'required|string|min:1|regex:/^\d{2}\.\d{4}\.\d{1}\.\d{5}$/|unique:praktikan,username,' . $request->id,
             'jenis_kelamin' => 'nullable|in:Laki-Laki,Perempuan',
-        ], [
-            'username.required' => 'NPM wajib diisi',
-            'username.string' => 'Format NPM tidak sesuai',
-            'username.min' => 'NPM Wajib diisi',
-            'username.regex' => 'Format NPM tidak sesuai 06.xxxx.1.xxxxx',
-            'username.unique' => 'NPM sudah terdaftar!',
         ]);
 
         try {
             Praktikan::where('id', $validated['id'])->update([
-                'nama' => $validated['nama'],
-                'username' => $validated['username'],
                 'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
             ]);
 

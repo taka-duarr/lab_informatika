@@ -104,9 +104,6 @@ export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
         axios.post<{
             message: string;
         }>(route('praktikan.update'), {
-            id: praktikan.id,
-            nama: praktikan.nama,
-            username: praktikan.username,
             jenis_kelamin: jenis_kelamin ?? null
         })
             .then((res) => {
@@ -143,7 +140,6 @@ export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
         axios.post<{
             message: string;
         }>(route('praktikan.update-password'), {
-            id: praktikan.id,
             password: password,
             repeat_password: repeatPassword
         })
