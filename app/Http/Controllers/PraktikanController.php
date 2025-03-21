@@ -183,8 +183,16 @@ class PraktikanController extends Controller
             'jenis_kelamin' => 'nullable|in:Laki-Laki,Perempuan',
         ]);
 
+        $authPraktikan = Auth::guard('praktikan')->user();
+
+        if (!$authPraktikan) {
+            return Response::json([
+                'message' => 'Bruh...!',
+            ], 403);
+        }
+
         try {
-            Praktikan::where('id', $validated['id'])->update([
+            Praktikan::where('id', $authPraktikan->id)->update([
                 'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
             ]);
 
@@ -199,22 +207,19 @@ class PraktikanController extends Controller
     {
         try {
             $validated = $request->validate([
-                'id' => 'nullable|exists:praktikan,id',
                 'password' => 'required|string|min:6',
                 'repeat_password' => 'required|string|same:password',
             ]);
 
             $authPraktikan = Auth::guard('praktikan')->user();
 
-            if (!$validated['id'] && !$authPraktikan) {
+            if (!$authPraktikan) {
                 return Response::json([
                     'message' => 'Bruh...!',
                 ], 403);
             }
 
-            $praktikanId = $validated['id'] ?? $authPraktikan->id;
-
-            Praktikan::where('id', $praktikanId)->update([
+            Praktikan::where('id', $authPraktikan->id)->update([
                 'password' => Hash::make($validated['password'], ['rounds' => 12]),
             ]);
 
