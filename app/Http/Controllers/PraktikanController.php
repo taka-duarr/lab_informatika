@@ -418,7 +418,7 @@ class PraktikanController extends Controller
             }
 
             $response = Http::withHeaders([
-                'x-api-key' => $apiKey,
+                'x_api_key' => $apiKey,
             ])->post($url, [
                 'npm' => $validated['npm'],
             ]);
