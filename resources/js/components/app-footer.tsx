@@ -19,7 +19,7 @@ export const Footer = () => {
                         Layanan
                     </Link>
                     <Link className="text-xs hover:underline underline-offset-4" href="#">
-                        Kebijakan Data
+                        FAQ
                     </Link>
                 </nav>
             </footer>

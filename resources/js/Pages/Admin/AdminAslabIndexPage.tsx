@@ -10,7 +10,7 @@ import {
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import {
-    ColumnDef, Row,
+    CellContext, ColumnDef, HeaderContext,
 } from "@tanstack/react-table"
 import { ArrowUpDown, MoreHorizontal, Pencil, Trash2, Plus, Loader2, UserRound, Check, X } from "lucide-react"
 import { FormEvent, useState } from "react";
@@ -213,9 +213,25 @@ export default function AdminAslabIndexPage({ auth, pagination, laboratoriums }:
         },
         ...(!auth.user?.laboratorium_id ? [
             {
+
                 accessorKey: "laboratorium",
-                header: () => <div className="select-none">Laboratorium</div>,
-                cell: ({ row }: { row: Row<Aslab>}) => <div className="w-44">{row.original.laboratorium.nama}</div>,
+                header: ({ column }: HeaderContext<Aslab, unknown>) => {
+                    return (
+                        <Button
+                            variant="ghost"
+                            onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                            className="w-full justify-start"
+                        >
+                            Laboratorium
+                            <ArrowUpDown />
+                        </Button>
+                    );
+                },
+                cell: ({ row }: CellContext<Aslab, unknown>) => (
+                    <div className="min-w-20 ml-4">
+                        { row.original.laboratorium.nama }
+                    </div>
+                ),
             },
         ] : [] ),
         {
@@ -492,10 +508,6 @@ export default function AdminAslabIndexPage({ auth, pagination, laboratoriums }:
     const handleOpenUpdateFormChange = (open: boolean) => {
         setOpenUpdateForm(open);
         setCreateForm(updateFormInit);
-    };
-    const handleDeleteFormCancel = () => {
-        setOpenDeleteForm(false);
-        setDeleteForm(deleteFormInit);
     };
 
     return (

@@ -3,6 +3,7 @@ import { Head, router } from "@inertiajs/react";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { NotificationCard } from "@/components/notification-card";
 import {
+    AlertCircle,
     ArrowUpDown,
     Check,
     ChevronDown,
@@ -72,6 +73,7 @@ import DataTable from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
 import * as React from "react";
 import { exportKartuPraktikum } from "@/components/kartu-praktikum";
+import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
 
 type Praktikan = {
     id: string;
@@ -694,53 +696,37 @@ export default function AdminPraktikumPraktikanIndexPage({
         },
         {
             accessorFn: (row) => row.aslab?.nama || "-",
-            id: "aslab.nama",
-            header: ({ column }) => {
+            id: "aslab.dosen",
+            header: () => {
                 return (
-                    <Button
-                        variant="ghost"
-                        onClick={() =>
-                            column.toggleSorting(column.getIsSorted() === "asc")
-                        }
-                        className="min-w-48 justify-start"
-                    >
-                        Asisten Laboratorium
-                        <ArrowUpDown />
-                    </Button>
+                    <div className="ml-2">
+                        Aslab / Dosen
+                    </div>
                 );
             },
             cell: ({ row }) => {
                 const aslab = row.original.aslab;
-                return (
-                    <div className="min-w-48 max-w-60 truncate ml-4">
-                        <p>{aslab ? `${aslab.nama}` : "-"}</p>
-                    </div>
-                );
-            },
-        },
-        {
-            accessorFn: (row) => row.dosen?.nama || "-",
-            id: "dosen.nama",
-            header: ({ column }) => {
-                return (
-                    <Button
-                        variant="ghost"
-                        onClick={() =>
-                            column.toggleSorting(column.getIsSorted() === "asc")
-                        }
-                        className="min-w-48 justify-start"
-                    >
-                        Dosen Pembimbing
-                        <ArrowUpDown />
-                    </Button>
-                );
-            },
-            cell: ({ row }) => {
                 const dosen = row.original.dosen;
                 return (
-                    <div className="min-w-48 max-w-60 truncate ml-4">
-                        <p>{dosen ? `${dosen.nama}` : "-"}</p>
-                    </div>
+                    <Popover modal={true}>
+                        <PopoverTrigger asChild className="w-min mx-auto items-center">
+                            <AlertCircle strokeWidth={2.2} className="cursor-pointer" />
+                        </PopoverTrigger>
+                        <PopoverContent className="w-auto">
+                            <div className="px-2 text-sm font-medium">
+                                <p className="text-center">{row.original.nama} - {row.original.username}</p>
+                                <Separator className="my-2 h-0.5 bg-primary/70" />
+                                <div className="flex ">
+                                    <p className="w-36">Asisten Laboratorium</p>
+                                    <p>{aslab ? `: ${aslab.nama}` : ": -"}</p>
+                                </div>
+                                <div className="flex ">
+                                    <p className="w-36">Dosen Pembimbing</p>
+                                    <p>{dosen ? `: ${dosen.nama}` : ": -"}</p>
+                                </div>
+                            </div>
+                        </PopoverContent>
+                    </Popover>
                 );
             },
         },

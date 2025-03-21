@@ -12,7 +12,6 @@ import {
     CalendarIcon,
     ChevronRight,
     ChevronsDown,
-    SquareArrowOutUpRight,
     UserCircle2,
     UserRound,
 } from "lucide-react";
@@ -20,7 +19,7 @@ import {
     LandingPrak,
     LandingPrak2,
     LandingPrak3,
-    LogoJarkom,
+    LogoJarkom, LogoLabInformatika,
 } from "@/lib/StaticImagesLib";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -167,11 +166,10 @@ export default function LandingPage({
                         <div className="flex flex-col items-center space-y-4 text-center">
                             <div className="space-y-2">
                                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-zinc-100">
-                                    Laboratorium Jaringan Komputer ITATS
+                                    Laboratorium Teknik Informatika ITATS
                                 </h2>
                                 <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl font-medium">
-                                    Makasih udah mau visit bang, welkam and keep
-                                    chilling always Looksmaxxing
+                                    Welcome to Labinformatika ITATS, keep chilling and always Looksmaxxing
                                 </p>
                             </div>
                             <div className="space-x-4">
@@ -194,13 +192,13 @@ export default function LandingPage({
                 <section id="features" className="w-full py-12 px-4 bg-muted">
                     <Card className="pt-8 pb-4" ref={featuresRef}>
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">
-                            Lab Praktikum
+                            Praktikum
                         </h2>
                         <Tabs
                             defaultValue="Jaringan Komputer"
                             className="w-full"
                         >
-                            <TabsList className="mx-auto max-w-xs md:max-w-lg grid grid-cols-2 my-4">
+                            <TabsList className="h-auto md:h-10 mx-auto max-w-xs md:max-w-lg grid grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1 gap-y-3 !p-3 my-4">
                                 <TabsTrigger value="Jaringan Komputer">
                                     Jaringan Komputer
                                 </TabsTrigger>
@@ -225,18 +223,18 @@ export default function LandingPage({
                                                         className="md:basis-full"
                                                     >
                                                         <div className="p-6 flex flex-col md:flex-row animate-in slide-in-from-top-5 md:slide-in-from-top-0 md:slide-in-from-left-6 fade-in-10 duration-700">
-                                                            <div className="mx-auto lg:mx-0 w-auto md:w-96 relative order-first lg:order-none">
+                                                            <div className="content-center mx-auto lg:mx-0 w-auto md:w-80 relative order-first lg:order-none">
                                                                 <img
                                                                     src={
                                                                         LogoJarkom
                                                                     }
-                                                                    alt="mahiru-standart"
-                                                                    width={300}
+                                                                    alt="logo-jarkom"
+                                                                    width={200}
                                                                     className="rounded-lg aspect-square object-cover object-center"
                                                                 />
                                                             </div>
                                                             <div className="w-full text-left lg:text-right">
-                                                                <CardHeader>
+                                                                <CardHeader className="px-0 md:px-3">
                                                                     <CardTitle>
                                                                         {
                                                                             praktikum.title
@@ -248,7 +246,7 @@ export default function LandingPage({
                                                                         }
                                                                     </CardDescription>
                                                                 </CardHeader>
-                                                                <CardContent className="h-44">
+                                                                <CardContent className="h-44 px-0 md:px-3">
                                                                     <p className="text-left md:text-justify text-ellipsis line-clamp-6">
                                                                         {
                                                                             praktikum.content
@@ -256,11 +254,11 @@ export default function LandingPage({
                                                                     </p>
                                                                 </CardContent>
                                                                 <CardFooter>
-                                                                    <Button className="ml-0 md:ml-auto">
-                                                                        Informasi
-                                                                        Praktikum{" "}
-                                                                        <SquareArrowOutUpRight />
-                                                                    </Button>
+                                                                    {/*<Button className="ml-0 md:ml-auto">*/}
+                                                                    {/*    Informasi*/}
+                                                                    {/*    Praktikum{" "}*/}
+                                                                    {/*    <SquareArrowOutUpRight />*/}
+                                                                    {/*</Button>*/}
                                                                 </CardFooter>
                                                             </div>
                                                         </div>
@@ -292,7 +290,7 @@ export default function LandingPage({
                                                     >
                                                         <div className="p-6 flex flex-col md:flex-row animate-in slide-in-from-bottom-5 md:slide-in-from-bottom-0 md:slide-in-from-right-6 fade-in-10 duration-700">
                                                             <div className="w-full">
-                                                                <CardHeader>
+                                                                <CardHeader className="px-0 md:px-3">
                                                                     <CardTitle>
                                                                         {
                                                                             praktikum.title
@@ -304,7 +302,7 @@ export default function LandingPage({
                                                                         }
                                                                     </CardDescription>
                                                                 </CardHeader>
-                                                                <CardContent className="h-44">
+                                                                <CardContent className="h-44 px-0 md:px-3">
                                                                     <p className="text-left md:text-justify text-ellipsis line-clamp-6">
                                                                         {
                                                                             praktikum.content
@@ -312,20 +310,18 @@ export default function LandingPage({
                                                                     </p>
                                                                 </CardContent>
                                                                 <CardFooter>
-                                                                    <Button>
-                                                                        Informasi
-                                                                        Praktikum{" "}
-                                                                        <SquareArrowOutUpRight />
-                                                                    </Button>
+                                                                    {/*<Button>*/}
+                                                                    {/*    Informasi*/}
+                                                                    {/*    Praktikum{" "}*/}
+                                                                    {/*    <SquareArrowOutUpRight />*/}
+                                                                    {/*</Button>*/}
                                                                 </CardFooter>
                                                             </div>
-                                                            <div className="mx-auto lg:mx-0 w-auto md:w-96 relative order-first lg:order-none">
+                                                            <div className="content-center mx-auto lg:mx-0 w-auto md:w-80 relative order-first lg:order-none">
                                                                 <img
-                                                                    src={
-                                                                        LogoJarkom
-                                                                    }
-                                                                    alt="mahiru-standart"
-                                                                    width={300}
+                                                                    src={ LogoLabInformatika }
+                                                                    alt="logo-labinformatika"
+                                                                    width={200}
                                                                     className="mx-auto rounded-lg aspect-square object-cover object-center"
                                                                 />
                                                             </div>
@@ -358,7 +354,7 @@ export default function LandingPage({
                                 {aslabs.map((aslab) => (
                                     <CarouselItem
                                         key={aslab.id}
-                                        className="md:basis-1/2 lg:basis-1/3"
+                                        className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
                                     >
                                         <div className="p-1">
                                             <Card>
@@ -525,7 +521,6 @@ export default function LandingPage({
                                 Tentu saja Mahiru Shiina&#10084;&#65039;
                             </p>
                         </div>
-                        <Button size="lg">Loginkan</Button>
                     </div>
                 </section>
             </AppLayout>

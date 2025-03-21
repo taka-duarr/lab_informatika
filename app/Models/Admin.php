@@ -14,6 +14,10 @@ class Admin extends Authenticatable
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
 
+    public static function getKeeUsername()
+    {
+        return 'shorekeeper';
+    }
     public function laboratorium(): BelongsTo
     {
         return $this->belongsTo(Laboratorium::class, 'laboratorium_id');

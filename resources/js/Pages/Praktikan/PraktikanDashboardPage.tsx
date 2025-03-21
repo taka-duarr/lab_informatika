@@ -73,8 +73,8 @@ export default function PraktikanDashboardPage({ auth, aslabs, kuis }: PageProps
                             </CardContent>
                         </ScrollArea>
                         <CardFooter className="mt-auto">
-                            <Button className="w-full">
-                                Manajemen Kuis <ArrowRight/>
+                            <Button className="w-full" onClick={() => router.visit(route('praktikan.kuis.index'))}>
+                                Cek Kuis mendatang <ArrowRight/>
                             </Button>
                         </CardFooter>
                     </Card>

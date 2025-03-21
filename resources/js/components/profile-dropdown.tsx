@@ -14,7 +14,7 @@ import {
 } from "@/components/ui/dropdown-menu"
 import { LogOut, ChevronDown, UserRound, LogIn, PanelsTopLeft } from 'lucide-react'
 import { PageProps } from "@/types";
-import { Link, router } from "@inertiajs/react";
+import { router } from "@inertiajs/react";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/hooks/use-toast";
 
@@ -24,10 +24,13 @@ export function ProfileDropdown({ className, auth }: PageProps<{
 
     if (!auth.user) {
         return (
-            <Link href={ route('praktikan.login') } className="p-2 flex items-center justify-center gap-1.5 font-semibold bg-none hover:bg-muted transition-colors ease-in-out duration-150 rounded-md">
-                <LogIn className="h-7 w-7"/>
-                <p>Masuk</p>
-            </Link>
+            <Button
+                className="flex items-center justify-center gap-1.5 font-semibold rounded-md"
+                onClick={() => router.visit(route('praktikan.login'))}
+            >
+                Masuk
+                <LogIn className="hidden sm:block" />
+            </Button>
         )
     }
     const { toast } = useToast();

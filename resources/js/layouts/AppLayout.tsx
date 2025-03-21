@@ -2,7 +2,7 @@ import { useState, useEffect, ReactNode } from 'react';
 import { Bell } from 'lucide-react';
 import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogDescription, DialogFooter } from "@/components/ui/dialog";
 import { Button } from "@/components/ui/button";
-import { Electro, Glacio, Havoc, LogoJarkom, Spectro } from "@/lib/StaticImagesLib";
+import { Glacio, Havoc, LogoLabInformatika, Spectro } from "@/lib/StaticImagesLib";
 import Cookies from "js-cookie";
 import { Link } from "@inertiajs/react";
 import { ProfileDropdown } from "@/components/profile-dropdown";
@@ -18,7 +18,7 @@ export const AppLayout = ({ auth, children }: PageProps<{
         const hasVisited = Cookies.get("visited");
         if (!hasVisited) {
             setIsOpen(true)
-            Cookies.set('visited', 'YRSKA')
+            Cookies.set('visited', 'YORUSHIKA', { expires: 365 });
         }
     }, []);
 
@@ -27,7 +27,7 @@ export const AppLayout = ({ auth, children }: PageProps<{
             <div className="flex flex-col min-h-screen">
                 <header className="px-4 lg:px-6 h-14 flex items-center">
                     <Link className="p-2 flex items-center justify-center gap-1.5 font-semibold bg-none hover:bg-muted transition-colors ease-in-out duration-150 rounded-md" href="/">
-                        <img src={ LogoJarkom } alt="logo-jarkom" width={30} className="rounded-full"/>
+                        <img src={ LogoLabInformatika } alt="logo-jarkom" width={30} className="rounded-full"/>
                         <span className="sr-only">Laboratorium Informatika ITATS</span>
                         <p className="hidden md:block">LABORATORIUM INFORMATIKA ITATS</p>
                         <p className="block md:hidden">LAB.INFORMATIKA ITATS</p>
@@ -42,17 +42,16 @@ export const AppLayout = ({ auth, children }: PageProps<{
                 <Footer />
             </div>
             <Dialog open={isOpen} onOpenChange={setIsOpen}>
-                <DialogContent className="sm:max-w-[425px]">
+                <DialogContent className="max-w-[90%] sm:max-w-[500px] rounded">
                     <DialogHeader>
                         <DialogTitle className="flex items-center gap-2">
                             <Bell className="h-6 w-6 text-blue-600" />
-                            Selamat Datang di Jarkom Jaya!
+                            Selamat Datang di new Labinformatika ITATS!
                         </DialogTitle>
                         <DialogDescription className="!mt-4 text-gray-900 font-medium">
-                            Website ini masih dalam pengembangan, mohon masukan dan sarannya juga untuk pengembangan website ini😁
+                            Setelah puluhan entah ratusan kali melawan rasa malas mengoding akhirnya kelar juga😁
                             <br/>
-                            <br/>
-                            Untuk keperluan testing, sudah ada beberapa fitur yang sudah bisa digunakan
+                            Fitur yang tersedia untuk saat ini yaitu :
                         </DialogDescription>
                     </DialogHeader>
                     <ul className="pb-4 space-y-3">
@@ -75,7 +74,7 @@ export const AppLayout = ({ auth, children }: PageProps<{
                                 className="col-span-1"
                             />
                             <p className="col-span-11">
-                                <strong>Halaman Praktikan</strong>, memerlukan autentikasi (login) untuk menggunakan beberapa fitur seperti Profil, dan Registrasi Praktikum
+                                <strong>Halaman Praktikan</strong>, memerlukan autentikasi (login) untuk menggunakan beberapa fitur seperti pengerjaan Kuis, Profil, dan Registrasi Praktikum yang tentu saja mendukung sepenuhnya pendaftaran paperless.
                             </p>
                         </li>
                         <li className="grid grid-cols-12 gap-1 text-sm text-gray-800">
@@ -86,21 +85,19 @@ export const AppLayout = ({ auth, children }: PageProps<{
                                 className="col-span-1"
                             />
                             <p className="col-span-11">
-                                <strong>Halaman Aslab,</strong>, bentar.. masih Malas
-                            </p>
-                        </li>
-                        <li className="grid grid-cols-12 gap-1 text-sm text-gray-800">
-                            <img
-                                src={ Electro }
-                                width={ 40 }
-                                alt="spectro"
-                                className="col-span-1"
-                            />
-                            <p className="col-span-11">
-                                <strong>Manajemen Nilai Praktikum,</strong>, modar ketimpa JOIN JOIN JOIN
+                                <strong>Halaman Aslab & Dosen,</strong>, OnGoing...
                             </p>
                         </li>
                     </ul>
+                    <DialogDescription className="-mt-4 text-gray-900 font-medium">
+                        Special Thanks to :
+                        <ul className="list-inside list-disc">
+                            <li>Bapak Danang Haryo Sulaksono, S.ST., M.T.</li>
+                            <li>Bapak Muchamad Kurniawan, S.Kom.,M.Kom.</li>
+                            <li>Bapak Septyawan Rosetya Wardhana S.Kom.,M.Kom.</li>
+                            <li>Our beloved condolences, PSI Niqqas</li>
+                        </ul>
+                    </DialogDescription>
                     <DialogFooter>
                         <Button onClick={ () => setIsOpen(false) } className="w-full">
                             Oke mint

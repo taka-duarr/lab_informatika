@@ -206,6 +206,36 @@ class PraktikanController extends Controller
             return $this->queryExceptionResponse($exception);
         }
     }
+    public function updatePassword(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'id' => 'nullable|exists:praktikan,id',
+                'password' => 'required|string|min:6',
+                'repeat_password' => 'required|string|same:password',
+            ]);
+
+            $authPraktikan = Auth::guard('praktikan')->user();
+
+            if (!$validated['id'] && !$authPraktikan) {
+                return Response::json([
+                    'message' => 'Bruh...!',
+                ], 403);
+            }
+
+            $praktikanId = $validated['id'] ?? $authPraktikan->id;
+
+            Praktikan::where('id', $praktikanId)->update([
+                'password' => Hash::make($validated['password'], ['rounds' => 12]),
+            ]);
+
+            return Response::json([
+                'message' => 'Password berhasil diperbarui',
+            ]);
+        } catch (QueryException $exception) {
+            return $this->queryExceptionResponse($exception);
+        }
+    }
 
     /**
      * Remove the specified resource from storage.

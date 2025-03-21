@@ -1,7 +1,7 @@
 "use client"
 import { saveAs } from 'file-saver';
 import { Document, Image, Page, pdf, StyleSheet, Text, View } from "@react-pdf/renderer";
-import { Button } from "@/components/ui/button";
+import * as ReactPDF from "@react-pdf/renderer";
 import { MahiruCirle, MahiruStandart } from "@/lib/StaticImagesLib";
 import LogoJarkom from "@/assets/logo-jarkom-new.png";
 
@@ -109,51 +109,52 @@ export default function Test() {
         }
     });
 
+    const doc = (
+        <Document>
+            {Array.from({ length: 70 }).map((_, index) => ((
+                <Page size="A6" orientation="landscape" style={styles.page} key={index}>
+                    <View style={styles.header}>
+                        <Image style={styles.logo} src={MahiruCirle} />
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.titleText}>Kartu Praktikum</Text>
+                            <Text style={styles.subtitleText}>Jaringan Komputer XXXIX - 2024</Text>
+                            <Text style={styles.subtitleText}>Laboratorium Jaringan Komputer</Text>
+                        </View>
+                        <Image style={styles.logo} src={LogoJarkom} />
+                    </View>
+                    <View style={styles.divider} />
+                    <View style={styles.content}>
+                        <Image src={MahiruStandart} style={styles.profileImage} />
+                        <View style={styles.bioContainer}>
+                            <View style={styles.bioRow}><Text style={styles.bioLabel}>Nama</Text><Text>: Elaina Annisa Zahra</Text></View>
+                            <View style={styles.bioRow}><Text style={styles.bioLabel}>NPM</Text><Text>: 06.2024.1.01234</Text></View>
+                            <View style={styles.bioRow}><Text style={styles.bioLabel}>Sesi</Text><Text>: 06.2024.1.01234</Text></View>
+                            <View style={styles.bioRow}><Text style={styles.bioLabelWide}>Asisten Pembimbing</Text><Text>: Latiful Sirri</Text></View>
+                            <View style={styles.bioRow}><Text style={styles.bioLabelWide}>Dosen Pembimbing</Text><Text>: Cak Danang</Text></View>
+                        </View>
+                    </View>
+                    <View style={styles.tableWrapper}>
+                        <Text style={styles.tableHeader}>Pelanggaran</Text>
+                        <View style={styles.table}>
+                            <View style={styles.row}>
+                                {Array.from({ length: 8 }).map((_, index) => (
+                                    <View key={index} style={styles.cell}><Text>Pertemuan {index + 1}</Text></View>
+                                ))}
+                            </View>
+                            <View style={styles.row}>
+                                {Array.from({ length: 8 }).map((_, index) => (
+                                    <View key={index} style={styles.emptyCell} />
+                                ))}
+                            </View>
+                        </View>
+                    </View>
+                </Page>
+            )))}
+        </Document>
+    );
+
     const savePDF = async () => {
         try {
-            const doc = (
-                <Document>
-                    {Array.from({ length: 70 }).map((_, index) => ((
-                        <Page size="A6" orientation="landscape" style={styles.page} key={index}>
-                            <View style={styles.header}>
-                                <Image style={styles.logo} src={MahiruCirle} />
-                                <View style={styles.titleContainer}>
-                                    <Text style={styles.titleText}>Kartu Praktikum</Text>
-                                    <Text style={styles.subtitleText}>Jaringan Komputer XXXIX - 2024</Text>
-                                    <Text style={styles.subtitleText}>Laboratorium Jaringan Komputer</Text>
-                                </View>
-                                <Image style={styles.logo} src={LogoJarkom} />
-                            </View>
-                            <View style={styles.divider} />
-                            <View style={styles.content}>
-                                <Image src={MahiruStandart} style={styles.profileImage} />
-                                <View style={styles.bioContainer}>
-                                    <View style={styles.bioRow}><Text style={styles.bioLabel}>Nama</Text><Text>: Elaina Annisa Zahra</Text></View>
-                                    <View style={styles.bioRow}><Text style={styles.bioLabel}>NPM</Text><Text>: 06.2024.1.01234</Text></View>
-                                    <View style={styles.bioRow}><Text style={styles.bioLabel}>Sesi</Text><Text>: 06.2024.1.01234</Text></View>
-                                    <View style={styles.bioRow}><Text style={styles.bioLabelWide}>Asisten Pembimbing</Text><Text>: Latiful Sirri</Text></View>
-                                    <View style={styles.bioRow}><Text style={styles.bioLabelWide}>Dosen Pembimbing</Text><Text>: Cak Danang</Text></View>
-                                </View>
-                            </View>
-                            <View style={styles.tableWrapper}>
-                                <Text style={styles.tableHeader}>Pelanggaran</Text>
-                                <View style={styles.table}>
-                                    <View style={styles.row}>
-                                        {Array.from({ length: 8 }).map((_, index) => (
-                                            <View key={index} style={styles.cell}><Text>Pertemuan {index + 1}</Text></View>
-                                        ))}
-                                    </View>
-                                    <View style={styles.row}>
-                                        {Array.from({ length: 8 }).map((_, index) => (
-                                            <View key={index} style={styles.emptyCell} />
-                                        ))}
-                                    </View>
-                                </View>
-                            </View>
-                        </Page>
-                    )))}
-                </Document>
-            );
             const asPdf = pdf();
             asPdf.updateContainer(doc);
             const pdfBlob = await asPdf.toBlob();
@@ -164,5 +165,47 @@ export default function Test() {
         }
     };
 
-    return <Button onClick={savePDF}>Download</Button>;
+    return (
+        <Document>
+            {Array.from({ length: 70 }).map((_, index) => ((
+                <Page size="A6" orientation="landscape" style={styles.page} key={index}>
+                    <View style={styles.header}>
+                        <Image style={styles.logo} src={MahiruCirle} />
+                        <View style={styles.titleContainer}>
+                            <Text style={styles.titleText}>Kartu Praktikum</Text>
+                            <Text style={styles.subtitleText}>Jaringan Komputer XXXIX - 2024</Text>
+                            <Text style={styles.subtitleText}>Laboratorium Jaringan Komputer</Text>
+                        </View>
+                        <Image style={styles.logo} src={LogoJarkom} />
+                    </View>
+                    <View style={styles.divider} />
+                    <View style={styles.content}>
+                        <Image src={MahiruStandart} style={styles.profileImage} />
+                        <View style={styles.bioContainer}>
+                            <View style={styles.bioRow}><Text style={styles.bioLabel}>Nama</Text><Text>: Elaina Annisa Zahra</Text></View>
+                            <View style={styles.bioRow}><Text style={styles.bioLabel}>NPM</Text><Text>: 06.2024.1.01234</Text></View>
+                            <View style={styles.bioRow}><Text style={styles.bioLabel}>Sesi</Text><Text>: 06.2024.1.01234</Text></View>
+                            <View style={styles.bioRow}><Text style={styles.bioLabelWide}>Asisten Pembimbing</Text><Text>: Latiful Sirri</Text></View>
+                            <View style={styles.bioRow}><Text style={styles.bioLabelWide}>Dosen Pembimbing</Text><Text>: Cak Danang</Text></View>
+                        </View>
+                    </View>
+                    <View style={styles.tableWrapper}>
+                        <Text style={styles.tableHeader}>Pelanggaran</Text>
+                        <View style={styles.table}>
+                            <View style={styles.row}>
+                                {Array.from({ length: 8 }).map((_, index) => (
+                                    <View key={index} style={styles.cell}><Text>Pertemuan {index + 1}</Text></View>
+                                ))}
+                            </View>
+                            <View style={styles.row}>
+                                {Array.from({ length: 8 }).map((_, index) => (
+                                    <View key={index} style={styles.emptyCell} />
+                                ))}
+                            </View>
+                        </View>
+                    </View>
+                </Page>
+            )))}
+        </Document>
+    );
 }

@@ -3,7 +3,7 @@ import { Input } from "@/components/ui/input"
 import { Label } from "@/components/ui/label"
 import { CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card"
 import { Check, Eye, EyeOff, Loader2, LoaderCircle } from "lucide-react";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import { useToast } from "@/hooks/use-toast";
 import React, { ChangeEvent, FormEvent, useEffect, useState } from "react";
 import axios, { AxiosError, AxiosProgressEvent } from "axios";
@@ -348,6 +348,17 @@ export default function PraktikanRegistrationPage() {
                                 <CardDescription className="mt-2">
                                     <span className="text-red-600 font-bold text-sm">*</span>Password minimal 6 karakter
                                 </CardDescription>
+                                <div className="space-y-2">
+                                    <Label htmlFor="nama-preview">Nama Mahasiswa</Label>
+                                    <Input
+                                        id="nama-preview"
+                                        name="nama-preview"
+                                        type="text"
+                                        placeholder="Nama Mahasiswa"
+                                        value={ createForm.nama }
+                                        readOnly
+                                    />
+                                </div>
                                 <div className="grid gap-2">
                                     <Label htmlFor="password">Password</Label>
                                     <div className="relative">
@@ -557,11 +568,10 @@ export default function PraktikanRegistrationPage() {
                         </p>
                         {step === 1 && (
                             <div className="!-mb-4 flex flex-row gap-1 justify-end text-sm">
-                                <p>Sudah punya akun?</p>
-                                <Link href={ route('praktikan.login') }
-                                      className="font-semibold underline-offset-2 hover:underline">
+                                <p className="content-center">Sudah punya akun?</p>
+                                <Button variant="link" className="font-semibold underline-offset-2 hover:underline !px-2" onClick={() => router.visit(route('praktikan.login'))}>
                                     Loginkan!
-                                </Link>
+                                </Button>
                             </div>
                         )}
                     </CardFooter>
