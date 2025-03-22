@@ -1,25 +1,54 @@
-import { memo, useState } from "react";
+"use client"
+
+import { memo, useState, useMemo } from "react"
 import {
-    ColumnDef,
+    type ColumnDef,
     flexRender,
     getCoreRowModel,
     getSortedRowModel,
-    SortingState,
-    useReactTable
-} from "@tanstack/react-table";
-import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
-import { ViewPerPage } from "@/components/view-per-page";
-import { PaginationData } from "@/types";
-import { LaravelPagination } from "@/components/laravel-pagination";
+    type SortingState,
+    useReactTable,
+} from "@tanstack/react-table"
+import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table"
+import { ViewPerPage } from "@/components/view-per-page"
+import type { PaginationData } from "@/types"
+import { LaravelPagination } from "@/components/laravel-pagination"
 
-const DataTable = <TData,>({ columns, data, pagination, showViewPerPage = true }: {
-    columns: ColumnDef<TData>[];
-    data: TData[];
-    pagination?: PaginationData<TData[]>;
-    showViewPerPage?: boolean;
+const DataTable = <TData,>({
+                               columns: userColumns,
+                               data,
+                               pagination,
+                               showViewPerPage = true,
+                               withNumber = false,
+                           }: {
+    columns: ColumnDef<TData>[]
+    data: TData[]
+    pagination?: PaginationData<TData[]>
+    showViewPerPage?: boolean
+    withNumber?: boolean
 }) => {
-    const [sorting, setSorting] = useState<SortingState>([]);
-    const [rowSelection, setRowSelection] = useState({});
+    const [sorting, setSorting] = useState<SortingState>([])
+    const [rowSelection, setRowSelection] = useState({})
+
+    // Create columns with number column if withNumber is true
+    const columns = useMemo(() => {
+        if (!withNumber) return userColumns
+
+        const numberColumn: ColumnDef<TData> = {
+            id: "index",
+            header: () => <div className="text-center">No.</div>,
+            cell: ({ table, row }) => {
+                // Get the row's position in the sorted/filtered data
+                const rowIndex = table.getSortedRowModel().rows.findIndex((r) => r.id === row.id)
+                const from = pagination?.from || 1
+
+                return <div className="text-center">{from + rowIndex}</div>
+            },
+            enableSorting: false,
+        }
+
+        return [numberColumn, ...userColumns]
+    }, [userColumns, withNumber, pagination?.from])
 
     const table = useReactTable({
         data,
@@ -29,7 +58,7 @@ const DataTable = <TData,>({ columns, data, pagination, showViewPerPage = true }
         getSortedRowModel: getSortedRowModel(),
         onRowSelectionChange: setRowSelection,
         state: { sorting, rowSelection },
-    });
+    })
 
     return (
         <>
@@ -51,9 +80,7 @@ const DataTable = <TData,>({ columns, data, pagination, showViewPerPage = true }
                             table.getRowModel().rows.map((row) => (
                                 <TableRow key={row.id} data-state={row.getIsSelected() && "selected"}>
                                     {row.getVisibleCells().map((cell) => (
-                                        <TableCell key={cell.id}>
-                                            {flexRender(cell.column.columnDef.cell, cell.getContext())}
-                                        </TableCell>
+                                        <TableCell key={cell.id}>{flexRender(cell.column.columnDef.cell, cell.getContext())}</TableCell>
                                     ))}
                                 </TableRow>
                             ))
@@ -67,14 +94,11 @@ const DataTable = <TData,>({ columns, data, pagination, showViewPerPage = true }
                     </TableBody>
                 </Table>
             </div>
-            {showViewPerPage && (
-                <ViewPerPage className="flex-1 pb-0.5" />
-            )}
-            {pagination && (
-                <LaravelPagination pagination={pagination} />
-            )}
+            {showViewPerPage && <ViewPerPage className="flex-1 pb-0.5" />}
+            {pagination && <LaravelPagination pagination={pagination} />}
         </>
-    );
-};
+    )
+}
 
-export default memo(DataTable) as typeof DataTable;
+export default memo(DataTable) as typeof DataTable
+

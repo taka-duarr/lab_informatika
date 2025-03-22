@@ -848,7 +848,7 @@ class AdminPagesController extends Controller
                 'praktikums' => fn() => Praktikum::select('id','nama')
                     ->where('praktikum.status', true)
                     ->when($laboratoriumId, function ($query) use ($laboratoriumId) {
-                        $query->whereHas('jenis_praktikum', function ($query) use ($laboratoriumId) {
+                        $query->whereHas('jenis', function ($query) use ($laboratoriumId) {
                             $query->where('laboratorium_id', $laboratoriumId);
                         });
                     })

@@ -17,6 +17,7 @@ use App\Http\Controllers\Pages\AdminPagesController;
 use App\Http\Controllers\Pages\AslabPagesController;
 use App\Http\Controllers\Pages\DosenPagesController;
 use App\Http\Controllers\Pages\PraktikanPagesController;
+use App\Http\Controllers\Pages\UniversalPagesController;
 use App\Http\Controllers\PeriodePraktikumController;
 use App\Http\Controllers\PertemuanController;
 use App\Http\Controllers\PraktikanController;
@@ -51,12 +52,7 @@ Route::get('/test', function () {
     return Inertia::render('Test');
 });
 
-Route::get('/', function () {
-    return Inertia::render('Welcome' , [
-        'aslabs' => fn() => Aslab::select(['id', 'nama', 'username', 'jabatan', 'avatar', 'laboratorium_id'])->with('laboratorium:id,nama')->where('aktif', true)->orderBy('username', 'asc')->get(),
-        'beritas' => fn() => Berita::select(['id', 'judul', 'slug', 'deskripsi', 'updated_at', 'admin_id', 'laboratorium_id'])->with(['admin:id,nama', 'laboratorium:id,nama'])->orderBy('updated_at', 'desc')->get()
-    ]);
-});
+Route::get('/', [UniversalPagesController::class, 'welcome']);
 Route::get('/hall-of-fames', function () {return Inertia::render('HallOfFamesPage');})->name('hall-of-fames');
 Route::get('/ban-list', [PraktikanPagesController::class, 'banListPage'])->name('ban-list');
 

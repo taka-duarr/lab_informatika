@@ -84,21 +84,6 @@ export default function AdminPraktikanIndexPage({ auth, pagination }: PageProps<
 
     const columns: ColumnDef<Praktikan>[] = [
         {
-            accessorKey: "nomor",
-            header: () => {
-                return (
-                    <div className="ml-3 w-3 h-5 justify-start">
-                        No.
-                    </div>
-                );
-            },
-            cell: ({ row }) => (
-                <div className="ml-3.5 w-3">
-                    { pagination.from + row.index }
-                </div>
-            ),
-        },
-        {
             accessorKey: "nama",
             header: ({ column }) => {
                 return (
@@ -402,6 +387,7 @@ export default function AdminPraktikanIndexPage({ auth, pagination }: PageProps<
                 columns={columns}
                 data={pagination.data}
                 pagination={pagination}
+                withNumber={true}
             />
 
             {/*--UPDATE-FORM--*/}

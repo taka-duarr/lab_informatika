@@ -30,7 +30,6 @@ export const AppLayout = ({ auth, children }: PageProps<{
                         <img src={ LogoLabInformatika } alt="logo-jarkom" width={30} className="rounded-full"/>
                         <span className="sr-only">Laboratorium Informatika ITATS</span>
                         <p className="hidden md:block">LABORATORIUM INFORMATIKA ITATS</p>
-                        <p className="block md:hidden">LAB.INFORMATIKA ITATS</p>
                     </Link>
                     <nav className="ml-auto flex gap-4 sm:gap-6">
                         <ProfileDropdown auth={auth} />

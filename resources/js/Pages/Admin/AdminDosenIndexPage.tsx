@@ -441,6 +441,7 @@ export default function AdminDosenIndexPage({ auth, pagination, laboratoriums }:
                 columns={columns}
                 data={pagination.data}
                 pagination={pagination}
+                withNumber={true}
             />
 
             {/*--UPDATE-FORM--*/}

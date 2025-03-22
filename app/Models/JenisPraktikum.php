@@ -5,6 +5,7 @@ namespace App\Models;
 use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
+use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -22,5 +23,9 @@ class JenisPraktikum extends Model
     public function praktikum(): HasMany
     {
         return $this->hasMany(Praktikum::class, 'jenis_praktikum_id');
+    }
+    public function aslab(): BelongsToMany
+    {
+        return $this->belongsToMany(JenisPraktikum::class, 'aslab_jenis_praktikum', 'aslab_id', 'jenis_praktikum_id');
     }
 }

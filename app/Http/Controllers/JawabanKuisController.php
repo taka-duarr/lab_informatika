@@ -3,8 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\Models\JawabanKuis;
+use App\Models\KuisPraktikan;
+use App\Models\SoalKuis;
+use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Response;
 
@@ -83,10 +87,42 @@ class JawabanKuisController extends Controller
                 'kuis_praktikan_id' => 'required|uuid|exists:kuis_praktikan,id',
             ]);
 
-            $jawabanKuis = JawabanKuis::updateOrCreate(
+            $kuisPraktikan = KuisPraktikan::with('kuis:id,waktu_mulai,waktu_selesai')
+                ->where('id', $validated['kuis_praktikan_id'])
+                ->where('praktikan_id', $authPraktikan->id)
+                ->firstOrFail();
+
+            if ($kuisPraktikan->selesai) {
+                return Response::json([
+                    'message' => 'Are you. Sure...?'
+                ], 403);
+            }
+
+            $now = Carbon::now('Asia/Jakarta');
+
+            if (
+                $kuisPraktikan->kuis->waktu_mulai > $now ||
+                $kuisPraktikan->kuis->waktu_selesai < $now
+            ) {
+                return Response::json([
+                    'message' => 'Kuis sedang tidak berlangsung.'
+                ], 403);
+            }
+
+            $soalAda = SoalKuis::where('kuis_id', $kuisPraktikan->kuis_id)
+                ->where('soal_id', $validated['soal_id'])
+                ->exists();
+
+            if (!$soalAda) {
+                return Response::json([
+                    'message' => 'Soal ini tidak termasuk dalam kuis yang sedang dikerjakan.'
+                ], 403);
+            }
+
+            $jawaban = JawabanKuis::updateOrCreate(
                 [
                     'soal_id' => $validated['soal_id'],
-                    'kuis_praktikan_id' => $validated['kuis_praktikan_id'],
+                    'kuis_praktikan_id' => $kuisPraktikan->id,
                 ],
                 [
                     'jawaban' => $validated['jawaban'],
@@ -95,10 +131,14 @@ class JawabanKuisController extends Controller
 
             return Response::json([
                 'message' => 'Jawaban berhasil disimpan!',
-                'data' => $jawabanKuis
+                'data' => $jawaban
             ]);
-        } catch (QueryException $exception) {
-            return $this->queryExceptionResponse($exception);
+        } catch (ModelNotFoundException $modelNotFoundException) {
+            return Response::json([
+                'message' => 'Kuis tidak ditemukan atau bukan milikmu.'
+            ], 403);
+        } catch (QueryException $queryException) {
+            return $this->queryExceptionResponse($queryException);
         }
     }
 }

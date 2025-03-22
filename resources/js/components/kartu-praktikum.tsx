@@ -2,7 +2,9 @@ import { Document, Image, Page, pdf, StyleSheet, Text, View } from "@react-pdf/r
 import { LogoLabInformatika } from "@/lib/StaticImagesLib";
 import { saveAs } from "file-saver";
 import * as React from "react";
+import { Buffer } from 'buffer';
 
+window.Buffer = Buffer;
 type Praktikan = {
     id: string;
     username: string;
@@ -85,7 +87,7 @@ const styles = StyleSheet.create({
     },
     profileImage: {
         width: 90,
-        aspectRatio: "3 / 4",
+        height: 120,
         objectFit: "cover",
         objectPosition: "center",
     },
@@ -197,7 +199,6 @@ export const exportKartuPraktikum = async (praktikum: Praktikum): Promise<{
                                 <View
                                     style={{
                                         ...styles.profileImage,
-                                        height: 90,
                                         border: 1,
                                     }}
                                 />

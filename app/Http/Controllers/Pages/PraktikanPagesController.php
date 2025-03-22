@@ -40,35 +40,34 @@ class PraktikanPagesController extends Controller
             'aslabs' => fn() => Aslab::select(['aslab.id', 'aslab.nama', 'aslab.avatar', 'aslab.username', 'aslab.jabatan', 'aslab.laboratorium_id'])
                 ->where('aslab.aktif', true)
                 ->get(),
-            'kuis' => fn() => Kuis::select([
-                'id',
-                'nama',
-                'waktu_mulai',
-                'waktu_selesai',
-                'pertemuan_id'
-            ])
-                ->where('waktu_mulai', '>', $now)
-                ->whereDoesntHave('kuis_praktikan', function ($query) use ($authPraktikan) {
+            'kuis' => fn() => Kuis::select(['id', 'nama', 'waktu_mulai', 'waktu_selesai', 'pertemuan_id'])
+                ->whereHas('pertemuan.praktikum.praktikan', function ($query) use ($authPraktikan) {
                     $query->where('praktikan_id', $authPraktikan->id)
-                        ->where('selesai', true);
+                        ->where('terverifikasi', true)
+                        ->where(function ($subQuery) {
+                            $subQuery->whereNull('praktikum_praktikan.sesi_praktikum_id')
+                                ->orWhereColumn('praktikum_praktikan.sesi_praktikum_id', 'kuis.sesi_praktikum_id');
+                        });
+                })
+                ->where(function ($query) use ($authPraktikan, $now) {
+                    $query->where('waktu_selesai', '>', $now)
+                        ->orWhereHas('kuis_praktikan', function ($subQuery) use ($authPraktikan) {
+                            $subQuery->where('praktikan_id', $authPraktikan->id)
+                                ->where('selesai', false);
+                        });
                 })
                 ->with([
-                    'pertemuan:id,praktikum_id',
+                    'pertemuan:id,nama,praktikum_id',
                     'pertemuan.praktikum:id,nama'
                 ])
                 ->get()
-                ->map(function ($kuis) {
-                    return [
-                        'id' => $kuis->id,
-                        'nama' => $kuis->nama,
-                        'waktu_mulai' => $kuis->waktu_mulai,
-                        'waktu_selesai' => $kuis->waktu_selesai,
-                        'praktikum' => [
-                            'id' => $kuis->pertemuan->praktikum->id,
-                            'nama' => $kuis->pertemuan->praktikum->nama
-                        ]
-                    ];
-                })
+                ->map(fn ($kuis) => [
+                    'id' => $kuis->id,
+                    'nama' => $kuis->nama,
+                    'waktu_mulai' => $kuis->waktu_mulai,
+                    'waktu_selesai' => $kuis->waktu_selesai,
+                    'praktikum' => $kuis->pertemuan->praktikum,
+                ]),
         ]);
     }
     public function profilePage()

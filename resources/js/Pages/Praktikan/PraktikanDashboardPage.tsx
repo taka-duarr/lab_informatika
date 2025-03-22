@@ -3,9 +3,9 @@ import { PraktikanLayout } from "@/layouts/PraktikanLayout";
 import { PageProps } from "@/types";
 import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { ScrollArea } from "@/components/ui/scroll-area";
-import { ArrowRight, BookOpenText, FolderSync, UserRound } from "lucide-react";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import { ArrowRight, BookOpenText, Clock, NotebookText, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { kuisDateTime } from "@/lib/utils";
 
 export default function PraktikanDashboardPage({ auth, aslabs, kuis }: PageProps<{
     aslabs: {
@@ -25,6 +25,7 @@ export default function PraktikanDashboardPage({ auth, aslabs, kuis }: PageProps
         };
     }[];
 }>) {
+    console.log(kuis);
     return (
         <>
             <PraktikanLayout auth={auth}>
@@ -41,26 +42,16 @@ export default function PraktikanDashboardPage({ auth, aslabs, kuis }: PageProps
                             <CardContent className="grid gap-4">
                                 {
                                     kuis.length > 0 ? kuis.map((kuis, index) => ((
-                                        <div key={index} className="flex items-center space-x-4 rounded-md border p-4 truncate [&_p]:truncate">
-                                            <BookOpenText/>
-                                            <div className="space-y-1 flex-1 truncate overflow-hidden">
-                                                <p className="text-sm font-medium leading-none">
-                                                    { kuis.nama }
-                                                </p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    { kuis.praktikum.nama }
-                                                </p>
+                                        <div key={index} className="space-y-2 rounded-md border p-4 *:flex *:gap-4 *:items-center *:text-sm *:line-clamp-2">
+                                            <div className="font-medium">
+                                                <BookOpenText size={20} /> { kuis.nama }
                                             </div>
-                                            <TooltipProvider>
-                                                <Tooltip>
-                                                    <TooltipTrigger onClick={() => router.visit(route('admin.kuis.update', { q: kuis.id }))}>
-                                                        <FolderSync/>
-                                                    </TooltipTrigger>
-                                                    <TooltipContent>
-                                                        Detail Kuis
-                                                    </TooltipContent>
-                                                </Tooltip>
-                                            </TooltipProvider>
+                                            <div>
+                                                <NotebookText size={20} /> { kuis.praktikum.nama }
+                                            </div>
+                                            <div>
+                                                <Clock size={20} />{ kuisDateTime(kuis.waktu_mulai, kuis.waktu_selesai) }
+                                            </div>
                                         </div>
                                     ))) : (
                                         <div className="flex items-center space-x-4 rounded-md border p-3 truncate [&_p]:truncate">

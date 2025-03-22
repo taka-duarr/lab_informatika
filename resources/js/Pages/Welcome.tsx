@@ -40,19 +40,19 @@ import { id as localdeId } from "date-fns/locale";
 
 export default function LandingPage({
     auth,
-    aslabs,
+    laboratoriums,
     beritas,
 }: PageProps<{
-    aslabs: {
+    laboratoriums: {
         id: string;
         nama: string;
-        username: string;
-        jabatan: string;
-        avatar: string | null;
-        laboratorium: {
+        aslabs: {
             id: string;
             nama: string;
-        };
+            username: string;
+            jabatan: string;
+            avatar: string | null;
+        }[];
     }[];
     beritas: {
         id: string;
@@ -70,6 +70,7 @@ export default function LandingPage({
         } | null;
     }[];
 }>) {
+    console.log(laboratoriums)
     const landingImages = [LandingPrak, LandingPrak2, LandingPrak3];
     const featuresRef = useRef<HTMLDivElement | null>(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
@@ -344,62 +345,77 @@ export default function LandingPage({
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">
                             Asisten Laboratorium
                         </h2>
-                        <Carousel
-                            opts={{
-                                align: "start",
-                            }}
-                            className="w-72 md:w-full md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto"
+                        <Tabs
+                            defaultValue="Jaringan Komputer"
+                            className="w-full"
                         >
-                            <CarouselContent className="mx-auto">
-                                {aslabs.map((aslab) => (
-                                    <CarouselItem
-                                        key={aslab.id}
-                                        className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                            <TabsList className="h-auto md:h-10 mx-auto max-w-xs md:max-w-lg grid grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1 gap-y-3 !p-3 my-4">
+                                { laboratoriums.map((laboratorium) => ((
+                                    <TabsTrigger key={ laboratorium.id } value={ laboratorium.nama }>
+                                        { laboratorium.nama }
+                                    </TabsTrigger>
+                                )))}
+                            </TabsList>
+                            { laboratoriums.map((laboratorium, index) => ((
+                                <TabsContent
+                                    key={ laboratorium.id }
+                                    value={ laboratorium.nama }
+                                    className="overflow-hidden"
+                                >
+                                    <Carousel
+                                        opts={{
+                                            align: "start",
+                                        }}
+                                        className="w-72 md:w-full md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto"
                                     >
-                                        <div className="p-1">
-                                            <Card>
-                                                <CardContent className="flex flex-col items-center p-6">
-                                                    <div className="aspect-square relative w-full mb-4 content-center">
-                                                        {aslab.avatar ? (
-                                                            <img
-                                                                src={`/storage/aslab/${aslab.avatar}`}
-                                                                alt={`avatar-${aslab.nama}`}
-                                                                className="object-cover object-center rounded-md"
-                                                            />
-                                                        ) : (
-                                                            <UserCircle2
-                                                                strokeWidth={
-                                                                    1.5
-                                                                }
-                                                                className="mx-auto my-auto text-primary"
-                                                                size={100}
-                                                            />
-                                                        )}
+                                        <CarouselContent className={ `mx-auto ${ index % 2 === 0 ? 'animate-in md:slide-in-from-left-6' : 'animate-in md:slide-in-from-right-6' } fade-in-10 duration-1000 md:duration-700` }>
+                                            {laboratorium.aslabs.map((aslab) => (
+                                                <CarouselItem
+                                                    key={aslab.id}
+                                                    className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
+                                                >
+                                                    <div className="p-1">
+                                                        <Card>
+                                                            <CardContent className="flex flex-col items-center p-6">
+                                                                <div className="aspect-square relative w-full mb-4 content-center">
+                                                                    {aslab.avatar ? (
+                                                                        <img
+                                                                            src={`/storage/aslab/${aslab.avatar}`}
+                                                                            alt={`avatar-${aslab.nama}`}
+                                                                            className="object-cover object-center rounded-md"
+                                                                        />
+                                                                    ) : (
+                                                                        <UserCircle2
+                                                                            strokeWidth={ 1.5 }
+                                                                            className="mx-auto my-auto text-primary"
+                                                                            size={100}
+                                                                        />
+                                                                    )}
+                                                                </div>
+                                                                <h3 className="h-16 font-semibold text-lg text-center mb-2 line-clamp-2 text-ellipsis">
+                                                                    {aslab.nama}
+                                                                </h3>
+                                                                <p className="text-sm text-gray-600 text-center mb-4">
+                                                                    {aslab.jabatan}
+                                                                </p>
+                                                                <p className="font-bold text-lg text-center">
+                                                                    {aslab.username}
+                                                                </p>
+                                                                <Badge className="mt-2 font-medium text-base text-center bg-primary">
+                                                                    { laboratorium.nama }
+                                                                </Badge>
+                                                            </CardContent>
+                                                        </Card>
                                                     </div>
-                                                    <h3 className="h-16 font-semibold text-lg text-center mb-2 line-clamp-2 text-ellipsis">
-                                                        {aslab.nama}
-                                                    </h3>
-                                                    <p className="text-sm text-gray-600 text-center mb-4">
-                                                        {aslab.jabatan}
-                                                    </p>
-                                                    <p className="font-bold text-lg text-center">
-                                                        {aslab.username}
-                                                    </p>
-                                                    <Badge className="mt-2 font-medium text-base text-center bg-primary">
-                                                        {
-                                                            aslab.laboratorium
-                                                                .nama
-                                                        }
-                                                    </Badge>
-                                                </CardContent>
-                                            </Card>
-                                        </div>
-                                    </CarouselItem>
-                                ))}
-                            </CarouselContent>
-                            <CarouselPrevious />
-                            <CarouselNext />
-                        </Carousel>
+                                                </CarouselItem>
+                                            ))}
+                                        </CarouselContent>
+                                        <CarouselPrevious />
+                                        <CarouselNext />
+                                    </Carousel>
+                                </TabsContent>
+                            )))}
+                        </Tabs>
                     </div>
                 </section>
 
