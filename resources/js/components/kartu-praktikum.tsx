@@ -87,7 +87,7 @@ const styles = StyleSheet.create({
     },
     profileImage: {
         width: 90,
-        height: 120,
+        height: 90,
         objectFit: "cover",
         objectPosition: "center",
     },
