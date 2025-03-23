@@ -858,7 +858,7 @@ export default function AdminPraktikumPraktikanIndexPage({
             header: () => {
                 return (
                     <div className="ml-2">
-                        Aslab / Dosen
+                        Aslab - Dosen
                     </div>
                 );
             },
