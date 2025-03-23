@@ -171,7 +171,7 @@ export default function PraktikanPraktikumIndexPage({ auth, praktikums, currentD
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                            <DropdownMenuItem disabled onClick={ () => router.visit(route('admin.praktikum.praktikan.index', { q: originalRow.id })) }>
+                            <DropdownMenuItem disabled={!originalRow.terverifikasi} onClick={ () => router.visit(route('praktikan.praktikum.details', { id: originalRow.id })) }>
                                 <Users2 /> Detail Praktikum
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />

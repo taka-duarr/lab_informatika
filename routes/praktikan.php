@@ -9,6 +9,7 @@ Route::prefix('praktikan')->name('praktikan.')->middleware('guard:praktikan')->g
 
     Route::prefix('praktikum')->name('praktikum.')->group(function () {
         Route::get('/', [PraktikanPagesController::class, 'praktikumIndexPage'])->name('index');
+        Route::get('/details/{id}', [PraktikanPagesController::class, 'praktikumDetailsPage'])->name('details');
         Route::get('/register', [PraktikanPagesController::class, 'praktikumCreatePage'])->name('create');
     });
     Route::prefix('kuis')->name('kuis.')->group(function () {

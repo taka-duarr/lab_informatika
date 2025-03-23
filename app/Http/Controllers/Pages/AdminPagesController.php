@@ -510,7 +510,7 @@ class AdminPagesController extends Controller
                         ->with([
                             'aslab:id,nama',
                             'dosen:id,nama',
-                            'sesi:id,nama',
+                            'sesi:id,nama,hari,waktu_mulai,waktu_selesai',
                         ]),
                 ])
                 ->first();
@@ -548,8 +548,13 @@ class AdminPagesController extends Controller
                             ? ['id' => $p->dosen->id, 'nama' => $p->dosen->nama]
                             : null,
                         'sesi' => $p->sesi
-                            ? ['id' => $p->sesi->id, 'nama' => $p->sesi->nama]
-                            : null,
+                            ? [
+                                'id' => $p->sesi->id,
+                                'nama' => $p->sesi->nama,
+                                'hari' => $p->sesi->hari,
+                                'waktu_mulai' => $p->sesi->waktu_mulai,
+                                'waktu_selesai' => $p->sesi->waktu_selesai,
+                            ] : null,
                     ]),
                 ],
                 'sesiPraktikums' => fn() => SesiPraktikum::select([

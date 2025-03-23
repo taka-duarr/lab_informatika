@@ -17,7 +17,7 @@ import {
     SidebarMenuSubItem,
     SidebarRail,
 } from "@/components/ui/sidebar"
-import { LogoJarkom } from "@/lib/StaticImagesLib";
+import { LogoLabInformatika } from "@/lib/StaticImagesLib";
 import { Link } from "@inertiajs/react";
 
 const data: {
@@ -86,7 +86,7 @@ export function PraktikanSidebar({ ...props }: React.ComponentProps<typeof Sideb
                     <SidebarMenuItem>
                         <div className="px-3 flex gap-1 items-center">
                             <div className="flex aspect-square size-16 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-                                <img src={ LogoJarkom } width={ 80 } alt="jarkom-jaya"/>
+                                <img src={ LogoLabInformatika } width={ 80 } alt="jarkom-jaya"/>
                             </div>
                             <p className="font-semibold text-lg select-none">
                                 Labinformatika

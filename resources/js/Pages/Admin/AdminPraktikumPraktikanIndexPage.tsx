@@ -96,6 +96,9 @@ type Praktikan = {
     sesi: {
         id: string;
         nama: string;
+        hari: string;
+        waktu_mulai: string;
+        waktu_selesai: string;
     } | null;
 };
 type Praktikum = {
@@ -1248,9 +1251,9 @@ export default function AdminPraktikumPraktikanIndexPage({
         exportKartuPraktikum(praktikumPraktikansData)
             .then((res) => {
                 toast({
-                    variant: "default",
-                    className: "bg-green-500 text-white",
-                    title: "Berhasil!",
+                    variant: res.success ? "default" : "destructive",
+                    className: res.success ? "bg-green-500 text-white" : '',
+                    title: res.title,
                     description: res.message,
                 });
             })

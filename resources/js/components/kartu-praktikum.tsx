@@ -3,6 +3,7 @@ import { LogoLabInformatika } from "@/lib/StaticImagesLib";
 import { saveAs } from "file-saver";
 import * as React from "react";
 import { Buffer } from 'buffer';
+import { parseSesiTime } from "@/lib/utils";
 
 window.Buffer = Buffer;
 type Praktikan = {
@@ -21,6 +22,9 @@ type Praktikan = {
     sesi: {
         id: string;
         nama: string;
+        hari: string;
+        waktu_mulai: string;
+        waktu_selesai: string;
     } | null;
 }
 type Praktikum = {
@@ -150,6 +154,8 @@ const styles = StyleSheet.create({
     },
 });
 export const exportKartuPraktikum = async (praktikum: Praktikum): Promise<{
+    success: boolean;
+    title: string;
     message: string
 }> => {
     try {
@@ -219,7 +225,7 @@ export const exportKartuPraktikum = async (praktikum: Praktikum): Promise<{
                                         Sesi
                                     </Text>
                                     <Text>
-                                        : {praktikan.sesi?.nama ?? ""}
+                                        : { praktikan.sesi ? `${praktikan.sesi.nama} - ${praktikan.sesi.hari}, ${ parseSesiTime(praktikan.sesi.waktu_mulai, new Date()) } - ${parseSesiTime(praktikan.sesi.waktu_selesai, new Date())} ` : '' }
                                     </Text>
                                 </View>
                                 <View style={styles.bioRow}>
@@ -291,11 +297,15 @@ export const exportKartuPraktikum = async (praktikum: Praktikum): Promise<{
             `kartu-praktikum-${praktikum.nama}-${praktikum.periode.nama}.pdf`
         );
         return {
+            success: true,
+            title: 'Berhasil!',
             message: 'Berhasil mengeskpor Kartu Praktikum!'
         };
     } catch (error) {
         console.error(error);
         return {
+            success: false,
+            title: 'Gagal mengekspor Kartu!',
             message: 'Gagal mengeskpor Kartu Praktikum! cek console dan laporkan ke Developer'
         };
     }

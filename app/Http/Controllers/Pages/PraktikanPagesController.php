@@ -10,6 +10,7 @@ use App\Models\Kuis;
 use App\Models\KuisPraktikan;
 use App\Models\Praktikan;
 use App\Models\Praktikum;
+use App\Models\PraktikumPraktikan;
 use App\Models\SoalKuis;
 use Illuminate\Http\Request;
 use Illuminate\Support\Carbon;
@@ -213,6 +214,72 @@ class PraktikanPagesController extends Controller
                         ]);
                 }
             ])->get(),
+        ]);
+    }
+    public function praktikumDetailsPage(Request $request, $id = null)
+    {
+        $authPraktikan = Auth::guard('praktikan')->user();
+        if (!$authPraktikan) {
+            abort(401);
+        }
+
+        $pivot = PraktikumPraktikan::with([
+            'praktikum:id,nama,status',
+            'aslab:id,nama,username,no_hp',
+            'dosen:id,nama,username',
+            'sesi_praktikum:id,nama,hari,waktu_mulai,waktu_selesai',
+        ])
+            ->where('praktikan_id', $authPraktikan->id)
+            ->where('praktikum_id', $id)
+            ->firstOrFail();
+
+        if (!$pivot) {
+            abort(403);
+        }
+
+        $praktikum = $pivot->praktikum;
+
+        $praktikans = PraktikumPraktikan::with([
+            'praktikan:id,nama,username',
+        ])
+            ->where('sesi_praktikum_id', $pivot->sesi_praktikum_id)
+            ->join('praktikan', 'praktikum_praktikan.praktikan_id', '=', 'praktikan.id')
+            ->orderBy('praktikan.nama')
+            ->get()
+            ->pluck('praktikan');
+
+        return Inertia::render('Praktikan/PraktikanPraktikumDetailsPage', [
+            'praktikum' => [
+                'id' => $praktikum->id,
+                'nama' => $praktikum->nama,
+                'status' => $praktikum->status,
+                'aslab' => $pivot->aslab ? [
+                    'id' => $pivot->aslab->id,
+                    'nama' => $pivot->aslab->nama,
+                    'username' => $pivot->aslab->username,
+                    'no_hp' => $pivot->aslab->no_hp,
+                ] : null,
+                'dosen' => $pivot->dosen ? [
+                    'id' => $pivot->dosen->id,
+                    'nama' => $pivot->dosen->nama,
+                    'username' => $pivot->dosen->username,
+                ] : null,
+                'sesi' => $pivot->sesi_praktikum ? [
+                    'id' => $pivot->sesi_praktikum->id,
+                    'nama' => $pivot->sesi_praktikum->nama,
+                    'hari' => $pivot->sesi_praktikum->hari,
+                    'waktu_mulai' => $pivot->sesi_praktikum->waktu_mulai,
+                    'waktu_selesai' => $pivot->sesi_praktikum->waktu_selesai,
+                ] : null,
+                'praktikans' => $praktikans->map(function ($p) use($authPraktikan) {
+                    return [
+                        'id' => $p->id,
+                        'nama' => $p->nama,
+                        'username' => $p->username,
+                        'is_me' => $p->id === $authPraktikan->id,
+                    ];
+                }),
+            ],
         ]);
     }
 

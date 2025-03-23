@@ -51,6 +51,23 @@ export const kuisIsOpen = (start: string, end: string, current: string): boolean
 
     return (isBefore(currentTime, endTime) && isAfter(currentTime, startTime));
 };
+// utils/getValidWangsaff.ts
+
+export const getValidWangsaff = (wangsaff: string): string | null => {
+    if (!wangsaff) return null;
+    const sanitized = wangsaff.replace(/[^0-9]/g, '');
+    if (sanitized.startsWith('0')) {
+        return '62' + sanitized.slice(1);
+    }
+    if (sanitized.startsWith('62')) {
+        return sanitized;
+    }
+    if (sanitized.startsWith('8')) {
+        return '62' + sanitized;
+    }
+    return null;
+};
+
 
 //
 

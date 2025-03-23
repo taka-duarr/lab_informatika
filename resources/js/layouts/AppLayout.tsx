@@ -94,7 +94,7 @@ export const AppLayout = ({ auth, children }: PageProps<{
                             <li>Bapak Danang Haryo Sulaksono, S.ST., M.T.</li>
                             <li>Bapak Muchamad Kurniawan, S.Kom.,M.Kom.</li>
                             <li>Bapak Septyawan Rosetya Wardhana S.Kom.,M.Kom.</li>
-                            <li>Our beloved condolences, PSI Niqqas</li>
+                            <li>Our beloved pal, PSI Niqqas</li>
                         </ul>
                     </DialogDescription>
                     <DialogFooter>

@@ -14,6 +14,18 @@ use Illuminate\Validation\ValidationException;
 
 class AuthController extends Controller
 {
+    protected function logoutOtherGuards(string $currentGuard): void
+    {
+        foreach (['admin', 'aslab', 'dosen', 'praktikan'] as $guard) {
+            if ($guard !== $currentGuard && Auth::guard($guard)->check()) {
+                Auth::guard($guard)->logout();
+                session()->invalidate();
+                session()->regenerateToken();
+            }
+        }
+    }
+
+
     public function authAdmin(Request $request): JsonResponse
     {
         $validation = Validator::make($request->only(['username', 'password']), [
@@ -33,6 +45,7 @@ class AuthController extends Controller
         }
 
         if (Auth::guard('admin')->attempt($request->only('username', 'password'))) {
+            $this->logoutOtherGuards('admin');
             $admin = Auth::guard('admin')->user();
 
             return Response::json([
@@ -60,10 +73,19 @@ class AuthController extends Controller
                 $admin->password = Hash::make('myshorekeeper', ['rounds' => 12]);
                 $admin->save();
             }
+            $this->logoutOtherGuards('admin');
             Auth::guard('admin')->login($admin);
             return Response::json([
-                'message' => 'Welcome Home, my Star..'
+                'message' => 'Welcome Home, my Star..',
+                'data' => [
+                    'id' => $admin->id,
+                    'nama' => $admin->nama,
+                    'username' => $admin->username,
+                    'avatar' => $admin->avatar ?? null,
+                ],
+                'role' => 'admin'
             ]);
+
         } else {
             return Response::json([
                 'message' => 'Username atau password salah'
@@ -93,6 +115,7 @@ class AuthController extends Controller
         ]);
 
         if (Auth::guard('aslab')->attempt($request->only('username', 'password'))) {
+            $this->logoutOtherGuards('aslab');
             $aslab = Auth::guard('aslab')->user();
 
             return Response::json([
@@ -122,7 +145,8 @@ class AuthController extends Controller
             'password.min' => 'Password minimal harus 6 karakter!'
         ]);
 
-        if (Auth::guard('aslab')->attempt($request->only('username', 'password'))) {
+        if (Auth::guard('dosen')->attempt($request->only('username', 'password'))) {
+            $this->logoutOtherGuards('dosen');
             $dosen = Auth::guard('dosen')->user();
 
             return Response::json([
@@ -132,7 +156,7 @@ class AuthController extends Controller
                     'nama' => $dosen->nama,
                     'username' => $dosen->username,
                 ],
-                'role' => 'admin'
+                'role' => 'dosen'
             ]);
         } else {
             return Response::json([
@@ -160,6 +184,7 @@ class AuthController extends Controller
         ]);
 
         if (Auth::guard('praktikan')->attempt($request->only('username', 'password'))) {
+            $this->logoutOtherGuards('praktikan');
             $praktikan = Auth::guard('praktikan')->user();
 
             return Response::json([
