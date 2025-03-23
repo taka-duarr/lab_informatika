@@ -12,7 +12,7 @@ import {
     Clock,
     Copy,
     Download, FileDown,
-    FolderCheck,
+    FolderCheck, FolderSync,
     Loader2,
     MoreHorizontal,
     Trash2,
@@ -74,6 +74,7 @@ import { Separator } from "@/components/ui/separator";
 import * as React from "react";
 import { exportKartuPraktikum } from "@/components/kartu-praktikum";
 import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import { Switch } from "@/components/ui/switch";
 
 type Praktikan = {
     id: string;
@@ -189,6 +190,18 @@ export default function AdminPraktikumPraktikanIndexPage({
         isRandomDosen: boolean;
         onSubmit: boolean;
     };
+    type UpdateVerifikasiPraktikan = {
+        id: string;
+        nama: string;
+        username: string;
+        sesi_praktikum_id: string;
+        aslab_id: string;
+        dosen_id: string;
+        isRandomAslab: boolean;
+        isRandomDosen: boolean;
+        terverifikasi: boolean;
+        onSubmit: boolean;
+    };
     const uploadFileInit: uploadFile = {
         file: null,
         onLoad: false,
@@ -212,6 +225,18 @@ export default function AdminPraktikumPraktikanIndexPage({
         isRandomDosen: false,
         onSubmit: false,
     };
+    const updateVerifikasiPraktikanInit: UpdateVerifikasiPraktikan = {
+        id: "",
+        nama: "",
+        username: "",
+        sesi_praktikum_id: "",
+        aslab_id: "",
+        dosen_id: "",
+        isRandomAslab: false,
+        isRandomDosen: false,
+        terverifikasi: true,
+        onSubmit: false,
+    };
     const [clipboard, setClipboard] = useState<string>("");
     const handleSetClipboard = (value: string) => {
         setClipboard(value);
@@ -228,7 +253,9 @@ export default function AdminPraktikumPraktikanIndexPage({
         useState<boolean>(false);
 
     const [verifikasiPraktikan, setVerifikasiPraktikan] = useState<VerifikasiPraktikan>(verifikasiPraktikanInit);
+    const [updateVerifikasiPraktikan, setUpdateVerifikasiPraktikan] = useState<UpdateVerifikasiPraktikan>(updateVerifikasiPraktikanInit);
     const [openVerifikasiPraktikan, setOpenVerifikasiPraktikan] = useState<boolean>(false);
+    const [openUpdateVerifikasiPraktikan, setOpenUpdateVerifikasiPraktikan] = useState<boolean>(false);
     const [inValidVerifikasiPraktikan, setInvalidVerifikasiPraktikan] = useState<boolean>(false);
     const [openDeletePraktikan, setOpenDeletePraktikan] = useState(false);
     const [deletePraktikan, setDeletePraktikan] = useState<DeletePraktikan>(deletePraktikanInit);
@@ -510,10 +537,31 @@ export default function AdminPraktikumPraktikanIndexPage({
         }));
         setOpenVerifikasiPraktikan(true);
     };
+    const handleOpenUpdateVerifikasi = (initData: UpdateVerifikasiPraktikan = updateVerifikasiPraktikanInit, open: boolean = true) => {
+        setUpdateVerifikasiPraktikan({
+            id: initData.id,
+            nama: initData.nama,
+            username: initData.username,
+            sesi_praktikum_id: initData.sesi_praktikum_id,
+            aslab_id: initData.aslab_id,
+            dosen_id: initData.dosen_id,
+            isRandomAslab: initData.isRandomAslab,
+            isRandomDosen: initData.isRandomDosen,
+            terverifikasi: initData.terverifikasi,
+            onSubmit: false
+        });
+        setOpenUpdateVerifikasiPraktikan(open);
+    };
     const handleCancelVerifikasi = (open: boolean) => {
         if (!open) {
             setOpenVerifikasiPraktikan(false);
             setVerifikasiPraktikan(verifikasiPraktikanInit);
+        }
+    };
+    const handleCancelUpdateVerifikasi = (open: boolean) => {
+        if (!open) {
+            setOpenUpdateVerifikasiPraktikan(false);
+            setUpdateVerifikasiPraktikan(updateVerifikasiPraktikanInit);
         }
     };
     const handleSubmitVerifikasiPraktikan = (event: FormEvent<HTMLFormElement>) => {
@@ -616,6 +664,116 @@ export default function AdminPraktikumPraktikanIndexPage({
                         ? err.response.data.message
                         : "Error tidak diketahui terjadi!";
                 setVerifikasiPraktikan((prevState) => ({
+                    ...prevState,
+                    onSubmit: false,
+                }));
+                toast({
+                    variant: "destructive",
+                    title: "Permintaan gagal diproses!",
+                    description: errMsg,
+                });
+            });
+    };
+    const handleSubmitUpdateVerifikasiPraktikan = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setUpdateVerifikasiPraktikan((prevState) => ({
+            ...prevState,
+            onSubmit: true,
+        }));
+
+        const {
+            id,
+            sesi_praktikum_id,
+            aslab_id,
+            isRandomAslab,
+            dosen_id,
+            isRandomDosen,
+            terverifikasi
+        } = updateVerifikasiPraktikan;
+
+        let selectedAslabId = aslab_id;
+        if (isRandomAslab) {
+            if (aslabs.length > 0) {
+                const minKuota = Math.min(
+                    ...aslabs.map((aslab) => aslab.kuota)
+                );
+                const minKuotaAslabs = aslabs.filter(
+                    (aslab) => aslab.kuota === minKuota
+                );
+                selectedAslabId =
+                    minKuotaAslabs[
+                        Math.floor(Math.random() * minKuotaAslabs.length)
+                    ].id;
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Aslab tidak tersedia!",
+                    description:
+                        "Tidak ada data aslab yang tersedia untuk dipilih.",
+                });
+                setUpdateVerifikasiPraktikan((prevState) => ({
+                    ...prevState,
+                    onSubmit: false,
+                }));
+                return;
+            }
+        }
+
+        let selectedDosenId = dosen_id;
+        if (isRandomDosen) {
+            if (dosens.length > 0) {
+                const minKuota = Math.min(
+                    ...dosens.map((dosen) => dosen.kuota)
+                );
+                const minKuotaDosens = dosens.filter(
+                    (dosen) => dosen.kuota === minKuota
+                );
+                selectedDosenId =
+                    minKuotaDosens[
+                        Math.floor(Math.random() * minKuotaDosens.length)
+                    ].id;
+            } else {
+                toast({
+                    variant: "destructive",
+                    title: "Dosen tidak tersedia!",
+                    description:
+                        "Tidak ada data Dosen yang tersedia untuk dipilih.",
+                });
+                setUpdateVerifikasiPraktikan((prevState) => ({
+                    ...prevState,
+                    onSubmit: false,
+                }));
+                return;
+            }
+        }
+
+        axios
+            .post(route("praktikum-praktikan.verifikasi"), {
+                praktikum_id: praktikum.id,
+                praktikan_id: id,
+                sesi_praktikum_id: sesi_praktikum_id,
+                aslab_id: selectedAslabId,
+                dosen_id: selectedDosenId,
+                terverifikasi: terverifikasi,
+            })
+            .then((res) => {
+                handleOpenUpdateVerifikasi(updateVerifikasiPraktikanInit, false);
+                toast({
+                    variant: "default",
+                    className: "bg-green-500 text-white",
+                    title: "Berhasil!",
+                    description: res.data.message,
+                });
+                router.reload({
+                    only: ["praktikum", "sesiPraktikums", "aslabs", "dosens"],
+                });
+            })
+            .catch((err: unknown) => {
+                const errMsg: string =
+                    err instanceof AxiosError && err.response?.data?.message
+                        ? err.response.data.message
+                        : "Error tidak diketahui terjadi!";
+                setUpdateVerifikasiPraktikan((prevState) => ({
                     ...prevState,
                     onSubmit: false,
                 }));
@@ -824,6 +982,27 @@ export default function AdminPraktikumPraktikanIndexPage({
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
                             <DropdownMenuItem
+                                className={`${originalRow.terverifikasi ? 'flex' : 'hidden'}`}
+                                disabled={!originalRow.terverifikasi}
+                                onClick={() =>
+                                    handleOpenUpdateVerifikasi({
+                                        ...updateVerifikasiPraktikanInit,
+                                        id: originalRow.id,
+                                        nama: originalRow.nama,
+                                        username: originalRow.username,
+                                        sesi_praktikum_id: originalRow.sesi?.id ?? '',
+                                        aslab_id: originalRow.aslab?.id ?? '',
+                                        dosen_id: originalRow.dosen?.id ?? '',
+                                        isRandomAslab: !originalRow.aslab?.id,
+                                        isRandomDosen: !originalRow.dosen?.id,
+                                        terverifikasi: originalRow.terverifikasi
+                                    })
+                                }
+                            >
+                                <FolderSync /> Ubah Data
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                                className={`${originalRow.terverifikasi ? 'hidden' : 'flex'}`}
                                 disabled={originalRow.terverifikasi}
                                 onClick={() =>
                                     handleOpenVerifikasi(row.original.id)
@@ -1405,6 +1584,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                     columns={columns}
                     data={praktikum.praktikan}
                     showViewPerPage={false}
+                    withNumber={true}
                 />
             </AdminLayout>
 
@@ -2049,6 +2229,256 @@ export default function AdminPraktikumPraktikanIndexPage({
                         </Button>
                     </form>
                     <AlertDialogCancel disabled={verifikasiPraktikan.onSubmit}>
+                        Batal
+                    </AlertDialogCancel>
+                </AlertDialogContent>
+            </AlertDialog>
+            <AlertDialog
+                open={openUpdateVerifikasiPraktikan}
+                onOpenChange={handleCancelUpdateVerifikasi}
+            >
+                <AlertDialogContent
+                    className="my-alert-dialog-content"
+                    onOpenAutoFocus={(e) => e.preventDefault()}
+                >
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Update Verifikasi Praktikan
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="text-zinc-900 font-medium antialiased">
+                            {updateVerifikasiPraktikan.nama} -{" "}
+                            {updateVerifikasiPraktikan.username}
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <form
+                        className={cn("grid items-start gap-4")}
+                        onSubmit={handleSubmitUpdateVerifikasiPraktikan}
+                    >
+                        <div className="space-y-1.5">
+                            <div className="grid gap-2">
+                                <Label>Asisten Laboratorium</Label>
+                                <Select
+                                    disabled={updateVerifikasiPraktikan.isRandomAslab}
+                                    value={updateVerifikasiPraktikan.aslab_id}
+                                    onValueChange={(val) =>
+                                        setUpdateVerifikasiPraktikan((prevState) => ({
+                                            ...prevState,
+                                            aslab_id: val,
+                                        }))
+                                    }
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue
+                                            placeholder={`${
+                                                updateVerifikasiPraktikan.isRandomAslab
+                                                    ? "Asisten Laboratorium Acak"
+                                                    : "Pilih Asisten Laboratorium"
+                                            }`}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {aslabs.length > 0 ? (
+                                            aslabs.map((aslab) => (
+                                                <SelectItem
+                                                    key={aslab.id}
+                                                    value={aslab.id}
+                                                >
+                                                    {aslab.nama}
+                                                </SelectItem>
+                                            ))
+                                        ) : (
+                                            <SelectItem
+                                                value={`null-${Math.random()
+                                                    .toString(36)
+                                                    .substring(2, 6)}`}
+                                                disabled
+                                            >
+                                                Tidak ada Aslab tersedia
+                                            </SelectItem>
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="items-center flex gap-1.5">
+                                <Checkbox
+                                    id="random-aslab-update"
+                                    checked={updateVerifikasiPraktikan.isRandomAslab}
+                                    onCheckedChange={(checked) =>
+                                        setUpdateVerifikasiPraktikan((prevState) => ({
+                                            ...prevState,
+                                            isRandomAslab: !!checked,
+                                            aslab_id: !!checked
+                                                ? ""
+                                                : prevState.aslab_id,
+                                        }))
+                                    }
+                                />
+                                <Label
+                                    htmlFor="random-aslab-update"
+                                    className="text-sm opacity-80"
+                                >
+                                    Asisten Laboratorium Acak
+                                </Label>
+                            </div>
+                        </div>
+                        <div className="space-y-1.5">
+                            <div className="grid gap-2">
+                                <Label>Dosen Pembimbing</Label>
+                                <Select
+                                    disabled={updateVerifikasiPraktikan.isRandomDosen}
+                                    value={updateVerifikasiPraktikan.dosen_id}
+                                    onValueChange={(val) =>
+                                        setUpdateVerifikasiPraktikan((prevState) => ({
+                                            ...prevState,
+                                            dosen_id: val,
+                                        }))
+                                    }
+                                >
+                                    <SelectTrigger className="w-full">
+                                        <SelectValue
+                                            placeholder={`${
+                                                updateVerifikasiPraktikan.isRandomDosen
+                                                    ? "Dosen Pembimbing Acak"
+                                                    : "Pilih Dosen Pembimbing"
+                                            }`}
+                                        />
+                                    </SelectTrigger>
+                                    <SelectContent>
+                                        {dosens.length > 0 ? (
+                                            dosens.map((dosen) => (
+                                                <SelectItem
+                                                    key={dosen.id}
+                                                    value={dosen.id}
+                                                >
+                                                    {dosen.nama}
+                                                </SelectItem>
+                                            ))
+                                        ) : (
+                                            <SelectItem
+                                                value={`null-${Math.random()
+                                                    .toString(36)
+                                                    .substring(2, 6)}`}
+                                                disabled
+                                            >
+                                                Tidak ada Dosen tersedia
+                                            </SelectItem>
+                                        )}
+                                    </SelectContent>
+                                </Select>
+                            </div>
+                            <div className="items-center flex gap-1.5">
+                                <Checkbox
+                                    id="random-dosen-update"
+                                    onCheckedChange={(checked) =>
+                                        setUpdateVerifikasiPraktikan((prevState) => ({
+                                            ...prevState,
+                                            isRandomDosen: !!checked,
+                                            dosen_id: !!checked
+                                                ? ""
+                                                : prevState.dosen_id,
+                                        }))
+                                    }
+                                    checked={updateVerifikasiPraktikan.isRandomDosen}
+                                />
+                                <Label
+                                    htmlFor="random-dosen-update"
+                                    className="text-sm opacity-80"
+                                >
+                                    Dosen Pembimbing Acak
+                                </Label>
+                            </div>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label>Sesi Praktikum</Label>
+                            <Select
+                                value={updateVerifikasiPraktikan.sesi_praktikum_id}
+                                onValueChange={(val) =>
+                                    setUpdateVerifikasiPraktikan((prevState) => ({
+                                        ...prevState,
+                                        sesi_praktikum_id: val,
+                                    }))
+                                }
+                            >
+                                <SelectTrigger className="w-full">
+                                    <SelectValue placeholder="Pilih Sesi" />
+                                </SelectTrigger>
+                                <SelectContent>
+                                    {sesiPraktikums.length > 0 ? (
+                                        sesiPraktikums.map((sesi) => {
+                                            const isDisabled =
+                                                sesi.kuota !== null &&
+                                                (sesi.sisa_kuota ?? 0) <= 0;
+                                            return (
+                                                <SelectItem
+                                                    key={sesi.id}
+                                                    value={sesi.id}
+                                                    disabled={isDisabled}
+                                                >
+                                                    {`${sesi.nama} - ${
+                                                        sesi.hari
+                                                    } (${parseSesiTime(
+                                                        sesi.waktu_mulai,
+                                                        currentDate
+                                                    )} - ${parseSesiTime(
+                                                        sesi.waktu_selesai,
+                                                        currentDate
+                                                    )}) ${
+                                                        isDisabled
+                                                            ? "(Kuota Penuh)"
+                                                            : ""
+                                                    }`}
+                                                </SelectItem>
+                                            );
+                                        })
+                                    ) : (
+                                        <SelectItem
+                                            value={`null-${Math.random()
+                                                .toString(36)
+                                                .substring(2, 6)}`}
+                                            disabled
+                                        >
+                                            Tidak ada sesi tersedia
+                                        </SelectItem>
+                                    )}
+                                </SelectContent>
+                            </Select>
+                            <div className="flex flex-row items-center justify-between rounded-md border-[1.5px] p-2.5 shadow-sm">
+                                <div className="space-y-0.5">
+                                    <Label>Status Verifikasi</Label>
+                                </div>
+                                <Switch
+                                    checked={updateVerifikasiPraktikan.terverifikasi}
+                                    onCheckedChange={(checked) => {
+                                        setUpdateVerifikasiPraktikan((prevState) => ({
+                                            ...prevState,
+                                            terverifikasi: checked
+                                        }));
+                                    }}
+                                />
+                            </div>
+                        </div>
+                        <Button
+                            type="submit"
+                            disabled={
+                                !updateVerifikasiPraktikan.sesi_praktikum_id ||
+                                (updateVerifikasiPraktikan.isRandomAslab
+                                    ? false
+                                    : !updateVerifikasiPraktikan.aslab_id) ||
+                                updateVerifikasiPraktikan.onSubmit
+                            }
+                            className="bg-green-500 hover:bg-green-500/90 "
+                        >
+                            {updateVerifikasiPraktikan.onSubmit ? (
+                                <>
+                                    Memproses{" "}
+                                    <Loader2 className="animate-spin" />
+                                </>
+                            ) : (
+                                <span>Simpan</span>
+                            )}
+                        </Button>
+                    </form>
+                    <AlertDialogCancel disabled={updateVerifikasiPraktikan.onSubmit}>
                         Batal
                     </AlertDialogCancel>
                 </AlertDialogContent>

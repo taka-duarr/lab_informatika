@@ -14,7 +14,7 @@ return new class extends Migration
         Schema::create('aslab_jenis_praktikum', function (Blueprint $table) {
             $table->uuid('id')->primary();
             $table->foreignUuid('aslab_id')->constrained('aslab')->cascadeOnDelete();
-            $table->foreignUuid('jenis_praktikum_id')->constrained('jenis_praktikums')->cascadeOnDelete();
+            $table->foreignUuid('jenis_praktikum_id')->constrained('jenis_praktikum')->cascadeOnDelete();
             $table->timestamps();
         });
     }
@@ -24,6 +24,6 @@ return new class extends Migration
      */
     public function down(): void
     {
-        Schema::dropIfExists('aslab_jenis_praktikums');
+        Schema::dropIfExists('aslab_jenis_praktikum');
     }
 };
