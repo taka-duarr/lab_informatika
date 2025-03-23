@@ -25,11 +25,14 @@ export function ProfileDropdown({ className, auth }: PageProps<{
     if (!auth.user) {
         return (
             <Button
+                asChild
                 className="flex items-center justify-center gap-1.5 font-semibold rounded-md"
-                onClick={() => router.visit(route('praktikan.login'))}
             >
-                Masuk
-                <LogIn className="hidden sm:block" />
+                <a href={route('praktikan.login')}>
+                    Masuk
+                    <LogIn className="hidden sm:block" />
+                </a>
+
             </Button>
         )
     }

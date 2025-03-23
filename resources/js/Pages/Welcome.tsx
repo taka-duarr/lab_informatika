@@ -70,7 +70,6 @@ export default function LandingPage({
         } | null;
     }[];
 }>) {
-    console.log(laboratoriums)
     const landingImages = [LandingPrak, LandingPrak2, LandingPrak3];
     const featuresRef = useRef<HTMLDivElement | null>(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);

@@ -13,7 +13,7 @@ import { Button } from "@/components/ui/button";
 import { HumpbackWhale, LogoJarkom } from "@/lib/StaticImagesLib";
 import { Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
-import { Head, Link, router } from "@inertiajs/react";
+import { Head, router } from "@inertiajs/react";
 import axios, { AxiosError } from "axios";
 import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
@@ -168,9 +168,9 @@ export default function PraktikanLoginPage() {
                                 </div>
                                 <div className="!-mb-4 flex flex-row gap-1 justify-end text-sm">
                                     <p>Belum punya akun?</p>
-                                    <Link href={route('praktikan.register')} className="font-semibold underline-offset-2 hover:underline">
+                                    <a href={route('praktikan.register')} className="font-semibold underline-offset-2 hover:underline">
                                         Buat Akun
-                                    </Link>
+                                    </a>
                                 </div>
                             </CardContent>
                             <CardFooter className="pt-3 pb-8 flex flex-col gap-2.5">
