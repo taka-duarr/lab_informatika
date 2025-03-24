@@ -316,9 +316,8 @@ class PraktikanController extends Controller
 
             $upload = $request->file('avatar');
 
-            $extension = $request->file('avatar')->getClientOriginalExtension();
-            $randomString = Str::random(8);
-            $filename = Str::slug($praktikan->nama . '-' . $praktikan->username . '-' . $randomString) . '.' . $extension;
+            $extension = $upload->getClientOriginalExtension();
+            $filename = Str::slug(Str::uuid()->toString()) . '.' . $extension;
 
             $image = Image::read($upload)->toJpeg(70);
             Storage::disk('praktikan')->put($filename, $image);

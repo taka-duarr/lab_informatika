@@ -11,6 +11,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Str;
 use Illuminate\Validation\Rule;
+use Intervention\Image\Laravel\Facades\Image;
 
 class AslabController extends Controller
 {
@@ -204,18 +205,20 @@ class AslabController extends Controller
                 Storage::disk('aslab')->delete($aslab->avatar);
             }
 
-            $extension = $request->file('avatar')->getClientOriginalExtension();
-            $randomString = Str::random(8);
-            $filename = Str::slug($aslab->nama . '-' . $aslab->username . '-' . $randomString) . '.' . $extension;
+            $upload = $request->file('avatar');
 
-            $avatarPath = $request->file('avatar')->storeAs('/', $filename, 'aslab');
-            $aslab->update(['avatar' => $avatarPath]);
+            $extension = $upload->getClientOriginalExtension();
+            $filename = Str::slug(Str::uuid()->toString()) . '.' . $extension;
+
+            $image = Image::read($upload)->toJpeg(70);
+            Storage::disk('aslab')->put($filename, $image);
+            $aslab->update(['avatar' => $filename]);
 
             DB::commit();
 
             return response()->json([
                 'message' => 'Profil berhasil diunggah!',
-                'avatar_url' => $avatarPath,
+                'avatar_url' => $filename,
             ], 200);
         } catch (\Exception $exception) {
             DB::rollBack();
