@@ -452,4 +452,42 @@ class PraktikanController extends Controller
                     : null,
             ], 500);
         }
-    }}
+    }
+
+    public function resetPassword(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'id' => 'required|exists:praktikan,id',
+            ]);
+
+            $authAdmin = Auth::guard('admin')->user();
+            $authPraktikan = Auth::guard('praktikan')->user();
+
+            if (!is_null($authAdmin?->laboratorium_id) && is_null($authPraktikan)) {
+                return Response::json([
+                    'message' => 'Bruh.. ?'
+                ], 403);
+            }
+
+            $praktikan = Praktikan::find($validated['id']);
+
+            if (!$praktikan) {
+                return Response::json([
+                    'message' => 'Praktikan tidak ditemukan'
+                ], 404);
+            }
+
+            $praktikan->update([
+                'password' => Hash::make($praktikan->username, ['rounds' => 12]),
+            ]);
+
+            return Response::json([
+                'message' => 'Berhasil mengatur ulang password'
+            ]);
+        } catch (QueryException $exception) {
+            return $this->queryExceptionResponse($exception);
+        }
+    }
+}
+

@@ -462,6 +462,7 @@ class AdminPagesController extends Controller
                     'nama',
                     'tahun',
                     'status',
+                    'link_grup',
                     'jenis',
                     'periode',
                     'pertemuan',

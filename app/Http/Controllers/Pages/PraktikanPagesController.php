@@ -124,6 +124,8 @@ class PraktikanPagesController extends Controller
             'praktikums' => fn() => Praktikum::select([
                 'praktikum.id',
                 'praktikum.nama',
+                'praktikum.link_grup as link_grup',
+                'praktikum.status as status',
                 'praktikum_praktikan.terverifikasi',
                 'sesi_praktikum.id as sesi_id',
                 'sesi_praktikum.nama as sesi_nama',
@@ -142,22 +144,24 @@ class PraktikanPagesController extends Controller
                     $query->where('praktikum.nama', 'like', "%{$search}%");
                 })
                 ->get()
-                ->map(function ($item) {
+                ->map(function ($praktikum) {
                     return [
-                        'id' => $item->id,
-                        'nama' => $item->nama,
-                        'terverifikasi' => (bool) $item->terverifikasi,
-                        'sesi' => $item->sesi_id ? [
-                            'id' => $item->sesi_id,
-                            'nama' => $item->sesi_nama,
-                            'hari' => $item->hari,
-                            'waktu_mulai' => $item->waktu_mulai,
-                            'waktu_selesai' => $item->waktu_selesai,
+                        'id' => $praktikum->id,
+                        'nama' => $praktikum->nama,
+                        'terverifikasi' => (bool) $praktikum->terverifikasi,
+                        'status' => (bool) $praktikum->status,
+                        'link_grup' => $praktikum->status ? $praktikum->link_grup : null,
+                        'sesi' => $praktikum->sesi_id ? [
+                            'id' => $praktikum->sesi_id,
+                            'nama' => $praktikum->sesi_nama,
+                            'hari' => $praktikum->hari,
+                            'waktu_mulai' => $praktikum->waktu_mulai,
+                            'waktu_selesai' => $praktikum->waktu_selesai,
                         ] : null,
-                        'aslab' => $item->aslab_id ? [
-                            'id' => $item->aslab_id,
-                            'nama' => $item->aslab_nama,
-                            'no_hp' => $item->aslab_no_hp,
+                        'aslab' => $praktikum->aslab_id ? [
+                            'id' => $praktikum->aslab_id,
+                            'nama' => $praktikum->aslab_nama,
+                            'no_hp' => $praktikum->aslab_no_hp,
                         ] : null,
                     ];
                 }),

@@ -9,7 +9,7 @@ import {
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { Button } from "@/components/ui/button"
 import { CardDescription, CardTitle } from "@/components/ui/card";
-import { ArrowUpDown, MoreHorizontal, Plus, Loader2, Pencil, Trash2, Upload } from "lucide-react"
+import { ArrowUpDown, MoreHorizontal, Plus, Loader2, Pencil, Trash2, Upload, UnlockKeyhole } from "lucide-react"
 import { FormEvent, useState } from "react";
 import { TableSearchForm } from "@/components/table-search-form";
 import { cn } from "@/lib/utils";
@@ -57,6 +57,12 @@ export default function AdminPraktikanIndexPage({ auth, pagination }: PageProps<
         validation: string;
         onSubmit: boolean;
     };
+    type ResetPasswordForm = {
+        id: string;
+        nama: string;
+        validation: string;
+        onSubmit: boolean;
+    };
     const createFormInit: CreateForm = {
         nama: '',
         username: '',
@@ -74,13 +80,21 @@ export default function AdminPraktikanIndexPage({ auth, pagination }: PageProps<
         validation: '',
         onSubmit: false
     };
+    const resetPasswordFormInit: ResetPasswordForm = {
+        id: '',
+        nama: '',
+        validation: '',
+        onSubmit: false
+    };
     const [ openCreateForm, setOpenCreateForm ] = useState(false);
     const [ openUpdateForm, setOpenUpdateForm ] = useState(false);
     const [ openDeleteForm, setOpenDeleteForm ] = useState(false);
+    const [ openResetPasswordForm, setOpenResetPasswordForm ] = useState(false);
 
     const [ createForm, setCreateForm ] = useState<CreateForm>(createFormInit);
     const [ updateForm, setUpdateForm ] = useState<UpdateForm>(updateFormInit);
     const [ deleteForm, setDeleteForm ] = useState<DeleteForm>(deleteFormInit);
+    const [ resetPasswordForm, setResetPasswordForm ] = useState<ResetPasswordForm>(resetPasswordFormInit);
 
     const columns: ColumnDef<Praktikan>[] = [
         {
@@ -152,6 +166,16 @@ export default function AdminPraktikanIndexPage({ auth, pagination }: PageProps<
                                 }));
                             } }>
                                 <Trash2 /> Hapus data
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={ () => {
+                                setOpenResetPasswordForm(true);
+                                setResetPasswordForm((prevState) => ({
+                                    ...prevState,
+                                    id: originalRow.id,
+                                    nama: originalRow.nama,
+                                }));
+                            } }>
+                                <UnlockKeyhole /> Reset Password
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
                         </DropdownMenuContent>
@@ -309,6 +333,55 @@ export default function AdminPraktikanIndexPage({ auth, pagination }: PageProps<
                     ? err.response.data.message
                     : 'Error tidak diketahui terjadi!';
                 setDeleteForm((prevState) => ({ ...prevState, onSubmit: false }));
+                toast({
+                    variant: "destructive",
+                    title: "Permintaan gagal diproses!",
+                    description: errMsg,
+                });
+            });
+    };
+    const handleResetPasswordFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setResetPasswordForm((prevState) => ({ ...prevState, onSubmit: true }));
+        const { id } = resetPasswordForm;
+        const resetPasswordSchema = z.object({
+            id: z.string({ message: 'Format Praktikan tidak valid! '}).min(1, { message: 'Format Praktikan tidak valid!' }),
+        });
+        const resetPasswordParse = resetPasswordSchema.safeParse({
+            id: id,
+        });
+        if (!resetPasswordParse.success) {
+            const errMsg = resetPasswordParse.error.issues[0]?.message;
+            toast({
+                variant: "destructive",
+                title: "Periksa kembali Input anda!",
+                description: errMsg,
+            });
+            setResetPasswordForm((prevState) => ({ ...prevState, onSubmit: false }));
+            return;
+        }
+
+        axios.post<{
+            message: string;
+        }>(route('praktikan.reset-password'), {
+            id: id,
+        })
+            .then((res) => {
+                setResetPasswordForm(deleteFormInit);
+                setOpenResetPasswordForm(false);
+                toast({
+                    variant: 'default',
+                    className: 'bg-green-500 text-white',
+                    title: "Berhasil!",
+                    description: res.data.message,
+                });
+                router.reload({ only: ['pagination'] });
+            })
+            .catch((err: unknown) => {
+                const errMsg: string = err instanceof AxiosError && err.response?.data?.message
+                    ? err.response.data.message
+                    : 'Error tidak diketahui terjadi!';
+                setResetPasswordForm((prevState) => ({ ...prevState, onSubmit: false }));
                 toast({
                     variant: "destructive",
                     title: "Permintaan gagal diproses!",
@@ -490,6 +563,58 @@ export default function AdminPraktikanIndexPage({ auth, pagination }: PageProps<
                 </AlertDialogContent>
             </AlertDialog>
             {/*---DELETE-FORM---*/}
+
+            {/*--RESET-PASSWORD-FORM--*/}
+            <AlertDialog open={ openResetPasswordForm } onOpenChange={ setOpenResetPasswordForm }>
+                <AlertDialogContent className="my-alert-dialog-content" onOpenAutoFocus={ (e) => e.preventDefault() }>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Atur Ulang Password Praktikan
+                        </AlertDialogTitle>
+                        <AlertDialogDescription className="flex flex-col gap-0.5">
+                            <p className="text-red-600 font-bold">
+                                Kamu akan mengatur ulang Password Praktikan!
+                            </p>
+                            <p className="">
+                                Password akan diatur ulang menjadi NPM Praktikan.
+                            </p>
+                            <br/>
+                            <p>Apakah kamu yakin..?</p>
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <form className={ cn("grid items-start gap-4") } onSubmit={ handleResetPasswordFormSubmit }>
+                        <div className="grid gap-2">
+                            <Label htmlFor="validation">Validasi aksi anda</Label>
+                            <Input
+                                type="text"
+                                name="validation"
+                                id="validation"
+                                value={ resetPasswordForm.validation }
+                                placeholder="JARKOM JAYA"
+                                onChange={ (event) =>
+                                    setResetPasswordForm((prevState) => ({
+                                        ...prevState,
+                                        validation: event.target.value,
+                                    }))
+                                }
+                                autoComplete="off"
+                            />
+                            <p>Ketik <strong>JARKOM JAYA</strong> untuk melanjutkan</p>
+                        </div>
+                        <Button type="submit" disabled={ resetPasswordForm.onSubmit || resetPasswordForm.validation !== 'JARKOM JAYA'}>
+                            { resetPasswordForm.onSubmit
+                                ? (
+                                    <>Memproses <Loader2 className="animate-spin" /></>
+                                ) : (
+                                    <span>Simpan</span>
+                                )
+                            }
+                        </Button>
+                    </form>
+                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                </AlertDialogContent>
+            </AlertDialog>
+            {/*---RESET-PASSWORD-FORM---*/}
         </AdminLayout>
     );
 }

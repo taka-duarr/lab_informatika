@@ -106,6 +106,7 @@ Route::prefix('praktikan')->name('praktikan.')->group(function () {
     Route::post('/delete', [PraktikanController::class, 'destroy'])->name('delete');
     Route::post('/upload-avatar', [PraktikanController::class, 'uploadAvatar'])->name('upload-avatar');
     Route::post('/add-ban-list', [PraktikanController::class, 'addBanList'])->name('add-ban-list');
+    Route::post('/reset-password', [PraktikanController::class, 'resetPassword'])->name('reset-password');
 });
 
 Route::prefix('jenis-praktikum')->name('jenis-praktikum.')->group(function () {

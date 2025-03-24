@@ -57,6 +57,7 @@ type Praktikum = {
     nama: string;
     tahun: string;
     status: boolean;
+    link_grup: string | null;
     jenis: IDNama;
     periode: IDNama;
     pertemuan: {
@@ -79,6 +80,7 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
         periode_praktikum_id: string;
         status: boolean;
         tahun: number;
+        link_grup: string;
         onSubmit: boolean;
     };
 
@@ -94,6 +96,7 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
         periode_praktikum_id: praktikum.periode.id,
         status: Boolean(praktikum.status),
         tahun: Number(praktikum.tahun),
+        link_grup: praktikum.link_grup ?? '',
         onSubmit: false
     });
     const [ isOnChange, setIsOnChange ] = useState(false);
@@ -127,7 +130,7 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
     const handleUpdateFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setUpdateForm((prevState) => ({ ...prevState, onSubmit: true }));
-        const { nama, status, jenis_praktikum_id, periode_praktikum_id } = updateForm;
+        const { nama, status, link_grup, jenis_praktikum_id, periode_praktikum_id } = updateForm;
         const tahun = selectedYear;
         const updateSchema = z.object({
             nama: z.string({ message: 'Format nama tidak valid! '}).min(1, { message: 'Nama Praktikum wajib diisi!' }),
@@ -161,6 +164,7 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
             periode_praktikum_id: periode_praktikum_id,
             status: status,
             tahun: tahun,
+            link_grup: link_grup ? link_grup : null
         })
             .then((res) => {
                 toast({
@@ -937,19 +941,19 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
                             </Select>
                         </Label>
                     </div>
-                    <div className="grid gap-2">
-                        <Label htmlFor="nama">Nama Praktikum</Label>
-                        <Input
-                            type="text"
-                            name="nama"
-                            id="nama"
-                            value={ updateForm.nama }
-                            onChange={(event) => handleUpdateForm('nama', event.target.value)}
-                        />
-                    </div>
-                    <div className=" flex flex-col md:flex-row flex-wrap gap-3 md:gap-2 md:items-center">
-                        <Label className="grid gap-2 [&_button]:w-full min-w-72 flex-1 basis-1/2">
-                            Tahun Periode Praktikum
+                    <div className="flex flex-col md:flex-row gap-3 flex-wrap md:items-center">
+                        <div className="grid gap-2 flex-1 min-w-72">
+                            <Label htmlFor="nama">Nama Praktikum</Label>
+                            <Input
+                                type="text"
+                                name="nama"
+                                id="nama"
+                                value={ updateForm.nama }
+                                onChange={(event) => handleUpdateForm('nama', event.target.value)}
+                            />
+                        </div>
+                        <Label className="grid gap-2 [&_button]:w-full min-w-72 flex-1 lg:flex-none">
+                            Tahun Praktikum
                             <YearPicker
                                 value={ selectedYear }
                                 onValueChange={(year) => {
@@ -958,7 +962,22 @@ export default function AdminPraktikumDetailsPage({ auth, praktikum, jenisPrakti
                                 }}
                             />
                         </Label>
-                        <div className="min-w-80 flex-1 grid gap-2">
+                    </div>
+
+                    <div className=" flex flex-col md:flex-row flex-wrap gap-3 md:gap-2 md:items-center">
+                        <div className="grid gap-2 flex-1 min-w-80">
+                            <Label htmlFor="link_grup">Link Grup</Label>
+                            <Input
+                                type="text"
+                                name="link_grup"
+                                id="link_grup"
+                                value={ updateForm.link_grup }
+                                className="placeholder:text-sm"
+                                placeholder="Contoh : https://chat.whatsapp.com/..."
+                                onChange={(event) => handleUpdateForm('link_grup', event.target.value)}
+                            />
+                        </div>
+                        <div className="min-w-72 flex-1 md:flex-none grid gap-2">
                             <Label htmlFor="status-switch">
                                 Status Praktikum
                             </Label>

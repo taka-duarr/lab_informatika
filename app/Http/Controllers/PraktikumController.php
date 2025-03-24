@@ -108,6 +108,7 @@ class PraktikumController extends Controller
             'status' => 'required|boolean',
             'jenis_praktikum_id' => 'required|exists:jenis_praktikum,id',
             'periode_praktikum_id' => 'required|exists:periode_praktikum,id',
+            'link_grup' => 'nullable|string'
         ], [
             'tahun.min' => 'Tahun Praktikum tidak boleh sebelum dari 1977!',
             'tahun.max' => 'Tahun Praktikum tidak boleh lebih dari tahun Cyberpunk!',
@@ -119,7 +120,8 @@ class PraktikumController extends Controller
                 'tahun' => $validated['tahun'],
                 'status' => $validated['status'],
                 'jenis_praktikum_id' => $validated['jenis_praktikum_id'],
-                'periode_praktikum_id' => $validated['periode_praktikum_id']
+                'periode_praktikum_id' => $validated['periode_praktikum_id'],
+                'link_grup' => $validated['link_grup']
             ]);
             return Response::json([
                 'message' => 'Praktikum berhasil diperbarui!'

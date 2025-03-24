@@ -15,12 +15,13 @@ import {
     DropdownMenuLabel, DropdownMenuSeparator,
     DropdownMenuTrigger
 } from "@/components/ui/dropdown-menu";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
 import DataTable from "@/components/data-table";
 
 type Praktikum = {
     id: string;
     nama: string;
+    status: boolean;
+    link_grup: string | null;
     terverifikasi: boolean;
     sesi: {
         id: string;
@@ -47,7 +48,7 @@ export default function PraktikanPraktikumIndexPage({ auth, praktikums, currentD
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                        className="w-full justify-start"
+                        className="w-64 justify-start"
                     >
                         Praktikum
                         <ArrowUpDown />
@@ -55,7 +56,7 @@ export default function PraktikanPraktikumIndexPage({ auth, praktikums, currentD
                 );
             },
             cell: ({ row }) => (
-                <div className="capitalize min-w-48 truncate px-2">
+                <div className="w-64 line-clamp-2 ml-4">
                     {row.getValue("nama")}
                 </div>
             ),
@@ -68,7 +69,7 @@ export default function PraktikanPraktikumIndexPage({ auth, praktikums, currentD
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                        className="w-full justify-start"
+                        className="w-24 justify-start"
                     >
                         Sesi
                         <ArrowUpDown />
@@ -78,7 +79,7 @@ export default function PraktikanPraktikumIndexPage({ auth, praktikums, currentD
             cell: ({ row }) => {
                 const sesi = row.original.sesi;
                 return (
-                    <div className="capitalize min-w-40 ml-4 flex flex-col md:flex-row flex-wrap gap-x-0.5">
+                    <div className="capitalize w-24 ml-4 flex flex-col md:flex-row flex-wrap gap-x-0.5">
                         <p>{ sesi ? `${sesi.nama} - ${sesi.hari} ` : '-'}</p>
                         <p>{ sesi ? `(${parseSesiTime(sesi.waktu_mulai, currentDate)} - ${parseSesiTime(sesi.waktu_selesai, currentDate)})` : ""}</p>
                     </div>
@@ -93,7 +94,7 @@ export default function PraktikanPraktikumIndexPage({ auth, praktikums, currentD
                     <Button
                         variant="ghost"
                         onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
-                        className="min-w-48 justify-start"
+                        className="w-52 justify-start"
                     >
                         Asisten Laboratorium
                         <ArrowUpDown />
@@ -103,21 +104,35 @@ export default function PraktikanPraktikumIndexPage({ auth, praktikums, currentD
             cell: ({ row }) => {
                 const aslab = row.original.aslab;
                 return (
-                    <div className="capitalize w-48 ml-4 flex items-center gap-2">
-                        <p className="truncate">{ aslab ? `${aslab.nama}` : '-'  }</p>
-                        { aslab && (
-                            <TooltipProvider>
-                                <Tooltip>
-                                    <TooltipTrigger className="ml-auto group">
-                                        <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 16 16" className="text-gray-700 group-hover:text-green-600">
-                                            <path fill="currentColor" d="M8 0a8 8 0 1 1-4.075 14.886L.658 15.974a.5.5 0 0 1-.632-.632l1.089-3.266A8 8 0 0 1 8 0M5.214 4.004a.7.7 0 0 0-.526.266C4.508 4.481 4 4.995 4 6.037c0 1.044.705 2.054.804 2.196c.098.138 1.388 2.28 3.363 3.2q.55.255 1.12.446c.472.16.902.139 1.242.085c.379-.06 1.164-.513 1.329-1.01c.163-.493.163-.918.113-1.007c-.049-.088-.18-.142-.378-.25c-.196-.105-1.165-.618-1.345-.687c-.18-.073-.312-.106-.443.105c-.132.213-.507.691-.623.832c-.113.139-.23.159-.425.053c-.198-.105-.831-.33-1.584-1.054c-.585-.561-.98-1.258-1.094-1.469c-.116-.213-.013-.326.085-.433c.09-.094.198-.246.296-.371c.097-.122.132-.21.198-.353c.064-.141.031-.266-.018-.371s-.443-1.152-.607-1.577c-.16-.413-.323-.355-.443-.363c-.114-.005-.245-.005-.376-.005"></path>
-                                        </svg>
-                                    </TooltipTrigger>
-                                    <TooltipContent>
-                                        <p>Wangsaff kan</p>
-                                    </TooltipContent>
-                                </Tooltip>
-                            </TooltipProvider>
+                    <div className="capitalize w-52 ml-4 flex items-center gap-2">
+                        <p className="line-clamp-2 text-ellipsis">{ aslab ? `${aslab.nama}` : '-'  }</p>
+                    </div>
+                );
+            },
+        },
+        {
+            accessorFn: (row) => row.aslab?.nama || "-",
+            id: "link_grup",
+            header: () => {
+                return (
+                    <div className="min-w-28 justify-start">
+                        Link Grup
+                    </div>
+                );
+            },
+            cell: ({ row }) => {
+                const linkGrup = row.original.link_grup;
+                return (
+                    <div className="w-28 flex items-center gap-2">
+                        { linkGrup ? (
+                            <a href={linkGrup} target="_blank" className="group flex items-center gap-0.5 underline underline-offset-4 text-blue-500 italic">
+                                Wangsaff-kan
+                                <svg xmlns="http://www.w3.org/2000/svg" width={16} height={16} viewBox="0 0 16 16" className="text-gray-700 group-hover:text-green-600">
+                                    <path fill="currentColor" d="M8 0a8 8 0 1 1-4.075 14.886L.658 15.974a.5.5 0 0 1-.632-.632l1.089-3.266A8 8 0 0 1 8 0M5.214 4.004a.7.7 0 0 0-.526.266C4.508 4.481 4 4.995 4 6.037c0 1.044.705 2.054.804 2.196c.098.138 1.388 2.28 3.363 3.2q.55.255 1.12.446c.472.16.902.139 1.242.085c.379-.06 1.164-.513 1.329-1.01c.163-.493.163-.918.113-1.007c-.049-.088-.18-.142-.378-.25c-.196-.105-1.165-.618-1.345-.687c-.18-.073-.312-.106-.443.105c-.132.213-.507.691-.623.832c-.113.139-.23.159-.425.053c-.198-.105-.831-.33-1.584-1.054c-.585-.561-.98-1.258-1.094-1.469c-.116-.213-.013-.326.085-.433c.09-.094.198-.246.296-.371c.097-.122.132-.21.198-.353c.064-.141.031-.266-.018-.371s-.443-1.152-.607-1.577c-.16-.413-.323-.355-.443-.363c-.114-.005-.245-.005-.376-.005"></path>
+                                </svg>
+                            </a>
+                        ) : (
+                            <p className="text-muted-foreground font-medium italic"> - </p>
                         ) }
                     </div>
                 );
