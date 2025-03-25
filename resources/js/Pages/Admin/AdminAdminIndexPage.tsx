@@ -9,8 +9,18 @@ import {
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { Button } from "@/components/ui/button"
 import { CardDescription, CardTitle } from "@/components/ui/card";
-import { ArrowUpDown, MoreHorizontal, Plus, Loader2, Pencil, Trash2 } from "lucide-react"
-import { FormEvent, useState } from "react";
+import {
+    ArrowUpDown,
+    MoreHorizontal,
+    Plus,
+    Loader2,
+    Pencil,
+    Trash2,
+    EyeOff,
+    Eye,
+    LockKeyhole
+} from "lucide-react"
+import React, { FormEvent, useState } from "react";
 import { TableSearchForm } from "@/components/table-search-form";
 import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
@@ -46,18 +56,20 @@ type Admin = {
         nama: string;
     } | null;
 };
-export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }: PageProps<{
+export default function AdminAdminIndexPage({ auth, pagination, laboratoriums, is_myShorekeeper }: PageProps<{
     pagination: PaginationData<Admin[]>;
     laboratoriums: {
         id: string;
         nama: string;
     }[];
+    is_myShorekeeper: boolean;
 }>) {
-    console.log(pagination);
+    console.log(is_myShorekeeper);
     const { toast } = useToast();
     type CreateForm = {
         nama: string;
         username: string;
+        password: string;
         laboratorium: string | null;
         onSubmit: boolean;
     };
@@ -66,6 +78,13 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
         nama: string;
         username: string;
         laboratorium: string | null;
+        onSubmit: boolean;
+    };
+    type UpdatePasswordForm = {
+        id: string;
+        nama: string;
+        password: string;
+        repeatPassword: string;
         onSubmit: boolean;
     };
     type DeleteForm = {
@@ -77,6 +96,7 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
     const createFormInit: CreateForm = {
         nama: '',
         username: '',
+        password: '',
         laboratorium: null,
         onSubmit: false
     };
@@ -87,6 +107,13 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
         laboratorium: '',
         onSubmit: false
     };
+    const updatePasswordFormInit: UpdatePasswordForm = {
+        id: '',
+        nama: '',
+        password: '',
+        repeatPassword: '',
+        onSubmit: false,
+    };
     const deleteFormInit: DeleteForm = {
         id: '',
         nama: '',
@@ -95,10 +122,13 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
     };
     const [ openCreateForm, setOpenCreateForm ] = useState(false);
     const [ openUpdateForm, setOpenUpdateForm ] = useState(false);
+    const [ openUpdatePasswordForm, setOpenUpdatePasswordForm ] = useState(false);
     const [ openDeleteForm, setOpenDeleteForm ] = useState(false);
+    const [ passwordVisible, setPasswordVisible ] = useState<boolean>(false);
 
     const [ createForm, setCreateForm ] = useState<CreateForm>(createFormInit);
     const [ updateForm, setUpdateForm ] = useState<UpdateForm>(updateFormInit);
+    const [ updatePasswordForm, setUpdatePasswordForm ] = useState<UpdatePasswordForm>(updatePasswordFormInit);
     const [ deleteForm, setDeleteForm ] = useState<DeleteForm>(deleteFormInit);
 
     const columns: ColumnDef<Admin>[] = [
@@ -179,7 +209,7 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                            <DropdownMenuItem disabled={!originalRow.laboratorium} onClick={ () => {
+                            <DropdownMenuItem disabled={!(is_myShorekeeper || (auth.user?.laboratorium_id === null && originalRow.laboratorium !== null))} onClick={ () => {
                                 setOpenUpdateForm(true);
                                 setUpdateForm((prevState) => ({
                                     ...prevState,
@@ -191,7 +221,17 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
                             } }>
                                 <Pencil /> Ubah data
                             </DropdownMenuItem>
-                            <DropdownMenuItem disabled={!originalRow.laboratorium} onClick={ () => {
+                            <DropdownMenuItem disabled={!(is_myShorekeeper || (auth.user?.laboratorium_id === null && originalRow.laboratorium !== null))} onClick={ () => {
+                                setOpenUpdatePasswordForm(true);
+                                setUpdatePasswordForm((prevState) => ({
+                                    ...prevState,
+                                    id: originalRow.id,
+                                    nama: originalRow.nama
+                                }));
+                            } }>
+                                <LockKeyhole /> Ubah Password
+                            </DropdownMenuItem>
+                            <DropdownMenuItem disabled={!(is_myShorekeeper || (auth.user?.laboratorium_id === null && originalRow.laboratorium !== null))} onClick={ () => {
                                 setOpenDeleteForm(true);
                                 setDeleteForm((prevState) => ({
                                     ...prevState,
@@ -208,10 +248,28 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
             },
         },
     ];
+
+    const togglePasswordVisibility = () => {
+        setPasswordVisible((prev) => !prev);
+    };
+    const handleOpenCreateForm = (open: boolean = true) => {
+        setOpenCreateForm(open);
+        !open && setCreateForm(createFormInit);
+    };
+    const handleOpenUpdateForm = (open: boolean = true) => {
+        setOpenUpdateForm(open);
+        !open && setUpdateForm(updateFormInit);
+        !open && setPasswordVisible(false);
+    };
+    const handleOpenUpdatePasswordForm = (open: boolean = true) => {
+        setOpenUpdatePasswordForm(open);
+        !open && setUpdatePasswordForm(updatePasswordFormInit);
+        !open && setPasswordVisible(false);
+    };
     const handleCreateFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setCreateForm((prevState) => ({ ...prevState, onSubmit: true }));
-        const { nama, username, laboratorium } = createForm;
+        const { nama, username, password, laboratorium } = createForm;
         const namaSchema = z.object({
             nama: z.string({ message: 'Format nama tidak valid! '}).min(1, { message: 'Nama Admin wajib diisi!' }),
             username: z.string({ message: 'Format Username tidak valid! '}).min(1, { message: 'Username Admin wajib diisi!' }),
@@ -236,6 +294,7 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
         }>(route('admin.create'), {
             nama: nama,
             username: username,
+            password: password,
             laboratorium_id: laboratorium === "null" ? null : laboratorium,
         })
             .then((res) => {
@@ -317,6 +376,40 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
                 });
             });
     };
+    const handleUpdatePasswordFormSubmit = (event: FormEvent<HTMLFormElement>) => {
+        event.preventDefault();
+        setUpdatePasswordForm((prevState) => ({ ...prevState, onSubmit: true }));
+        const { id, password, repeatPassword } = updatePasswordForm;
+        axios.post<{
+            message: string;
+        }>(route('admin.update-password'), {
+            id: id,
+            password: password,
+            repeat_password: repeatPassword
+        })
+            .then((res) => {
+                setUpdatePasswordForm(updatePasswordFormInit);
+                setOpenUpdatePasswordForm(false);
+                toast({
+                    variant: 'default',
+                    className: 'bg-green-500 text-white',
+                    title: "Berhasil!",
+                    description: res.data.message,
+                });
+                router.reload({ only: ['pagination'] });
+            })
+            .catch((err: unknown) => {
+                const errMsg: string = err instanceof AxiosError && err.response?.data?.message
+                    ? err.response.data.message
+                    : 'Error tidak diketahui terjadi!';
+                setUpdatePasswordForm((prevState) => ({ ...prevState, onSubmit: false }));
+                toast({
+                    variant: "destructive",
+                    title: "Permintaan gagal diproses!",
+                    description: errMsg,
+                });
+            });
+    };
     const handleDeleteFormSubmit = (event: FormEvent<HTMLFormElement>) => {
         event.preventDefault();
         setDeleteForm((prevState) => ({ ...prevState, onSubmit: true }));
@@ -377,7 +470,7 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
                 Data Admin yang terdaftar
             </CardDescription>
             <div className="flex flex-col lg:flex-row gap-2 items-start justify-between">
-                <AlertDialog open={ openCreateForm } onOpenChange={ setOpenCreateForm }>
+                <AlertDialog open={ openCreateForm } onOpenChange={ handleOpenCreateForm }>
                     <AlertDialogTrigger asChild>
                         <Button className="mt-4">
                             Buat <Plus />
@@ -389,7 +482,7 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
                                 Menambahkan Admin
                             </AlertDialogTitle>
                             <AlertDialogDescription>
-                                Menambahkan Data Admin, <strong>Password</strong> default adalah Username
+                                Menambahkan Admin baru, Panjang <strong>Password</strong> minimal adalah 6 karakter. Gunakan <strong>Password</strong> yang aman ya gaes
                             </AlertDialogDescription>
                         </AlertDialogHeader>
                         <form className={ cn("grid items-start gap-4") } onSubmit={ handleCreateFormSubmit }>
@@ -427,7 +520,32 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
                                     onChange={ (event) => setCreateForm((prevState) => ({ ...prevState, username: event.target.value })) }
                                 />
                             </div>
-                            <Button type="submit" disabled={createForm.onSubmit}>
+                            <div className="grid gap-2">
+                                <Label htmlFor="password">Password</Label>
+                                <div className="relative">
+                                    <Input
+                                        id="password"
+                                        name="password"
+                                        type={ passwordVisible ? "text" : "password" }
+                                        placeholder="******"
+                                        value={ createForm.password }
+                                        onChange={ (event) => setCreateForm((prevState) => ({ ...prevState, password: event.target.value })) }
+                                        required
+                                    />
+                                    <button
+                                        type="button"
+                                        onClick={ togglePasswordVisibility }
+                                        className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                                    >
+                                        { passwordVisible ? (
+                                            <EyeOff className="w-5 h-5"/>
+                                        ) : (
+                                            <Eye className="w-5 h-5"/>
+                                        ) }
+                                    </button>
+                                </div>
+                            </div>
+                            <Button type="submit" disabled={!createForm.nama || !createForm.username || !createForm.password || createForm.password.length < 6 || createForm.onSubmit}>
                                 { createForm.onSubmit
                                     ? (
                                         <>Memproses <Loader2 className="animate-spin" /></>
@@ -449,7 +567,7 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
             />
 
             {/*--UPDATE-FORM--*/}
-            <AlertDialog open={ openUpdateForm } onOpenChange={ setOpenUpdateForm }>
+            <AlertDialog open={ openUpdateForm } onOpenChange={ handleOpenUpdateForm }>
                 <AlertDialogContent className="my-alert-dialog-content" onOpenAutoFocus={ (e) => e.preventDefault() }>
                     <AlertDialogHeader>
                         <AlertDialogTitle>
@@ -508,6 +626,83 @@ export default function AdminAdminIndexPage({ auth, pagination, laboratoriums }:
                 </AlertDialogContent>
             </AlertDialog>
             {/*---UPDATE-FORM---*/}
+
+            {/*--UPDATE-PASSWORD-FORM--*/}
+            <AlertDialog open={ openUpdatePasswordForm } onOpenChange={ handleOpenUpdatePasswordForm }>
+                <AlertDialogContent className="my-alert-dialog-content" onOpenAutoFocus={ (e) => e.preventDefault() }>
+                    <AlertDialogHeader>
+                        <AlertDialogTitle>
+                            Update Password Admin
+                        </AlertDialogTitle>
+                        <AlertDialogDescription>
+                            Mengubah Password <strong>{updatePasswordForm.nama}</strong>, Panjang <strong>Password</strong> minimal adalah 6 karakter. Gunakan <strong>Password</strong> yang aman ya gaes
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <form className={ cn("grid items-start gap-4") } onSubmit={ handleUpdatePasswordFormSubmit }>
+                        <div className="grid gap-2">
+                            <Label htmlFor="password">Password Baru</Label>
+                            <div className="relative">
+                                <Input
+                                    id="password"
+                                    name="password"
+                                    type={ passwordVisible ? "text" : "password" }
+                                    placeholder="******"
+                                    value={ updatePasswordForm.password }
+                                    onChange={ (event) => setUpdatePasswordForm((prevState) => ({ ...prevState, password: event.target.value })) }
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={ togglePasswordVisibility }
+                                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                                >
+                                    { passwordVisible ? (
+                                        <EyeOff className="w-5 h-5"/>
+                                    ) : (
+                                        <Eye className="w-5 h-5"/>
+                                    ) }
+                                </button>
+                            </div>
+                        </div>
+                        <div className="grid gap-2">
+                            <Label htmlFor="repeatPassword">Konfirmasi Password Baru</Label>
+                            <div className="relative">
+                                <Input
+                                    id="repeatPassword"
+                                    name="repeatPassword"
+                                    type={ passwordVisible ? "text" : "password" }
+                                    placeholder="******"
+                                    value={ updatePasswordForm.repeatPassword }
+                                    onChange={ (event) => setUpdatePasswordForm((prevState) => ({ ...prevState, repeatPassword: event.target.value })) }
+                                    required
+                                />
+                                <button
+                                    type="button"
+                                    onClick={ togglePasswordVisibility }
+                                    className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
+                                >
+                                    { passwordVisible ? (
+                                        <EyeOff className="w-5 h-5"/>
+                                    ) : (
+                                        <Eye className="w-5 h-5"/>
+                                    ) }
+                                </button>
+                            </div>
+                        </div>
+                        <Button type="submit" disabled={updatePasswordForm.onSubmit || updatePasswordForm.password !== updatePasswordForm.repeatPassword || updatePasswordForm.password.length < 6}>
+                            { updatePasswordForm.onSubmit
+                                ? (
+                                    <>Memproses <Loader2 className="animate-spin" /></>
+                                ) : (
+                                    <span>Simpan</span>
+                                )
+                            }
+                        </Button>
+                    </form>
+                    <AlertDialogCancel>Batal</AlertDialogCancel>
+                </AlertDialogContent>
+            </AlertDialog>
+            {/*---UPDATE-PASSWORD-FORM---*/}
 
             {/*--DELETE-FORM--*/}
             <AlertDialog open={ openDeleteForm } onOpenChange={ setOpenDeleteForm }>

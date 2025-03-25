@@ -161,6 +161,7 @@ class AdminPagesController extends Controller
         $admins = $query->paginate($viewPerPage)->withQueryString();
 
         return Inertia::render('Admin/AdminAdminIndexPage', [
+            'is_myShorekeeper' => $authAdmin->username === "shorekeeper",
             'pagination' => fn() => $admins,
             'laboratoriums' => fn() => Laboratorium::select('id','nama')->orderBy('nama', 'asc')->get()
         ]);

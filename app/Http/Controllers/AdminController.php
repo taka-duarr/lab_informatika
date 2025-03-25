@@ -3,6 +3,7 @@ namespace App\Http\Controllers;
 
 use App\Models\Admin;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Storage;
@@ -58,6 +59,34 @@ class AdminController extends Controller
 
             return Response::json([
                 'message' => 'Admin berhasil diperbarui',
+            ]);
+        } catch (QueryException $exception) {
+            return $this->queryExceptionResponse($exception);
+        }
+    }
+    public function updatePassword(Request $request)
+    {
+        $authAdmin = Auth::guard('admin')->user();
+
+        if (!$authAdmin || $authAdmin?->laboratorium_id !== null) {
+            return Response::json([
+                'message' => 'Hmm.. are we got a fighter?',
+                'auth' => $authAdmin
+            ], 403);
+        }
+        $validated = $request->validate([
+            'id' => 'required|exists:admin,id',
+            'password' => 'required|string|min:6',
+            'repeat_password' => 'required|string|same:password',
+        ]);
+
+        try {
+            Admin::where('id', $validated['id'])->update([
+                'password' => Hash::make($validated['password'], ['rounds' => 12]),
+            ]);
+
+            return Response::json([
+                'message' => 'Password Admin berhasil diperbarui',
             ]);
         } catch (QueryException $exception) {
             return $this->queryExceptionResponse($exception);

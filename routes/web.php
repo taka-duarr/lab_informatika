@@ -83,6 +83,7 @@ Route::prefix('laboratorium')->name('laboratorium.')->group(function () {
 Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/create', [AdminController::class, 'store'])->name('create');
     Route::post('/update', [AdminController::class, 'update'])->name('update');
+    Route::post('/update-password', [AdminController::class, 'updatePassword'])->name('update-password');
     Route::post('/delete', [AdminController::class, 'destroy'])->name('delete');
     Route::post('/upload-avatar', [AdminController::class, 'uploadAvatar'])->name('upload-avatar');
 });
