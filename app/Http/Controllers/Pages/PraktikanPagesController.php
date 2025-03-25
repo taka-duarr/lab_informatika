@@ -222,6 +222,9 @@ class PraktikanPagesController extends Controller
     }
     public function praktikumDetailsPage(Request $request, $id = null)
     {
+        if (!$id) {
+            abort(404);
+        }
         $authPraktikan = Auth::guard('praktikan')->user();
         if (!$authPraktikan) {
             abort(401);

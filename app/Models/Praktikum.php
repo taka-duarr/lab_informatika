@@ -39,4 +39,9 @@ class Praktikum extends Model
     {
         return $this->belongsToMany(Praktikan::class, 'praktikum_praktikan', 'praktikum_id', 'praktikan_id');
     }
+    public function praktikum_praktikan(): HasMany
+    {
+        return $this->hasMany(PraktikumPraktikan::class, 'praktikum_id');
+    }
+
 }
