@@ -143,7 +143,7 @@ export default function AslabPraktikumIndexPage({ auth, praktikums }: PageProps<
 
     return (
         <AslabLayout auth={auth}>
-            <Head title="aslab - Manajemen Praktikum" />
+            <Head title="Aslab - Manajemen Praktikum" />
             <CardTitle>
                 Manajemen Praktikum
             </CardTitle>

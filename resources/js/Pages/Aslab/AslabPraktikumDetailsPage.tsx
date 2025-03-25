@@ -14,6 +14,7 @@ import * as XLSX from "xlsx";
 import { ColumnDef } from "@tanstack/react-table";
 import { parseSesiTime } from "@/lib/utils";
 import DataTable from "@/components/data-table";
+import { Head } from "@inertiajs/react";
 
 type Praktikan = {
     id: string;
@@ -154,6 +155,7 @@ export default function AslabPraktikumDetailsPage({ auth, currentDate, praktikum
     return (
         <>
             <AslabLayout auth={auth}>
+                <Head title="Aslab - Manajemen Praktikum" />
                 <CardTitle>
                     Detail Praktikum { praktikum.nama }
                 </CardTitle>
