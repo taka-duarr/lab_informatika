@@ -44,7 +44,6 @@ export default function PraktikanKuisIndexPage({ auth, currentDate, kuis }: Page
 }>) {
     const { toast } = useToast();
 
-    console.log(kuis)
     type StartKuisForm = {
         id: string;
         nama: string;

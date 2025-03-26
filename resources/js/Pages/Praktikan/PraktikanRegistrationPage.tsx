@@ -209,7 +209,6 @@ export default function PraktikanRegistrationPage() {
                         ...prevState,
                         form: progress
                     }));
-                    console.log('form: ', progress)
                 }
             });
 
@@ -227,7 +226,6 @@ export default function PraktikanRegistrationPage() {
                                 ...prevState,
                                 avatar: progress
                             }));
-                            console.log('avatar: ', progress)
                         }
                     });
                 } catch {

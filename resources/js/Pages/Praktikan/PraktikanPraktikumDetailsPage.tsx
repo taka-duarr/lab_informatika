@@ -42,7 +42,6 @@ type Praktikum = {
 export default function PraktikanPraktikumDetailsPage({ auth, praktikum }: PageProps<{
     praktikum: Praktikum;
 }>) {
-    console.log(praktikum);
     const columns: ColumnDef<Praktikan>[] = [
         {
             accessorKey: "username",

@@ -14,7 +14,7 @@ import { Input } from "@/components/ui/input";
 import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from "@/components/ui/select";
 import { AvatarUpload } from "@/components/avatar-upload";
 
-export default function AdminPraktikanDetailsPage({ auth, dosen }: PageProps<{
+export default function AdminPraktikanDetailsPage({ auth, praktikan }: PageProps<{
     praktikan: {
         id: string;
         nama: string;
@@ -31,9 +31,9 @@ export default function AdminPraktikanDetailsPage({ auth, dosen }: PageProps<{
         onSubmit: boolean;
     };
     const [ updateForm, setUpdateForm ] = useState<UpdateForm>({
-        nama: dosen.nama,
-        username: dosen.username,
-        jenis_kelamin: dosen.jenis_kelamin,
+        nama: praktikan.nama,
+        username: praktikan.username,
+        jenis_kelamin: praktikan.jenis_kelamin,
         onSubmit: false
     });
     const [ isOnChange, setIsOnChange ] = useState(false);
@@ -46,9 +46,9 @@ export default function AdminPraktikanDetailsPage({ auth, dosen }: PageProps<{
         setUpdateForm((prevState) => {
             const newState = { ...prevState, ...payload };
             const latestState = {
-                nama: dosen.nama,
-                username: dosen.username,
-                jenis_kelamin: dosen.jenis_kelamin,
+                nama: praktikan.nama,
+                username: praktikan.username,
+                jenis_kelamin: praktikan.jenis_kelamin,
                 onSubmit: false
             }
             if (JSON.stringify(newState) !== JSON.stringify(latestState)) {
@@ -86,7 +86,7 @@ export default function AdminPraktikanDetailsPage({ auth, dosen }: PageProps<{
         axios.post<{
             message: string;
         }>(route('praktikan.update'), {
-            id: dosen.id,
+            id: praktikan.id,
             nama: nama,
             username: username,
             jenis_kelamin: jenis_kelamin
@@ -120,7 +120,7 @@ export default function AdminPraktikanDetailsPage({ auth, dosen }: PageProps<{
     const handleUploadAvatar = (file: File) => {
         const formData = new FormData();
         formData.append('avatar', file);
-        formData.append('id', dosen.id);
+        formData.append('id', praktikan.id);
         axios.post<{
             message: string;
             avatar_url: string;
@@ -150,7 +150,6 @@ export default function AdminPraktikanDetailsPage({ auth, dosen }: PageProps<{
             });
     };
 
-    console.log(dosen)
     return (
         <>
             <AdminLayout auth={auth}>
@@ -159,9 +158,9 @@ export default function AdminPraktikanDetailsPage({ auth, dosen }: PageProps<{
                     Detail data Praktikan
                 </CardTitle>
                 <CardDescription>
-                    Menampilkan data praktikan { dosen.nama }
+                    Menampilkan data praktikan { praktikan.nama }
                 </CardDescription>
-                <AvatarUpload avatarSrc={dosen.avatar ? `/storage/praktikan/${dosen.avatar}` : undefined} onUpload={handleUploadAvatar} />
+                <AvatarUpload avatarSrc={praktikan.avatar ? `/storage/praktikan/${praktikan.avatar}` : undefined} onUpload={handleUploadAvatar} />
                 <form className={ cn("grid items-start gap-4") } onSubmit={ handleUpdateFormSubmit }>
                     <div className="flex flex-col md:flex-row md:flex-wrap gap-3 md:items-center *:grow">
                         <div className="grid gap-2 min-w-80">

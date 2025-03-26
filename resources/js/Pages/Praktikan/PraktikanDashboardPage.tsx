@@ -25,7 +25,6 @@ export default function PraktikanDashboardPage({ auth, aslabs, kuis }: PageProps
         };
     }[];
 }>) {
-    console.log(kuis);
     return (
         <>
             <PraktikanLayout auth={auth}>

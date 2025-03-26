@@ -39,7 +39,6 @@ export default function PraktikanPraktikumIndexPage({ auth, praktikums, currentD
     praktikums: Praktikum[];
     currentDate: string;
 }>) {
-    console.log(praktikums);
     const columns: ColumnDef<Praktikum>[] = [
         {
             accessorKey: "nama",
