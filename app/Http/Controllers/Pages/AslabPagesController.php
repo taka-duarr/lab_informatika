@@ -45,9 +45,16 @@ class AslabPagesController extends Controller
             abort(401);
         }
 
-        $query = Praktikum::with([
-            'periode:id,nama',
+        $query = Praktikum::select([
+            'praktikum.id',
+            'praktikum.nama',
+            'praktikum.tahun',
+            'praktikum.status',
+            'praktikum.periode_praktikum_id',
         ])
+            ->with([
+                'periode:id,nama',
+            ])
             ->withCount([
                 'praktikum_praktikan as praktikan_count' => function ($q) use ($authAslab) {
                     $q->where('terverifikasi', true)
@@ -71,7 +78,6 @@ class AslabPagesController extends Controller
             'praktikums' => fn () => $praktikums,
         ]);
     }
-
     public function praktikumCreatePage(Request $request)
     {
         $authAslab = Auth::guard('aslab')->user();

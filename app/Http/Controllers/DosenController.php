@@ -6,6 +6,7 @@ use App\Models\Dosen;
 use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
@@ -107,6 +108,33 @@ class DosenController extends Controller
             return $this->queryExceptionResponse($exception);
         }
     }
+    public function updatePassword(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'password' => 'required|string|min:6',
+                'repeat_password' => 'required|string|same:password',
+            ]);
+
+            $authDosen = Auth::guard('dosen')->user();
+
+            if (!$authDosen) {
+                return Response::json([
+                    'message' => 'Autentikasi tidak sah...!',
+                ], 403);
+            }
+
+            Dosen::where('id', $authDosen->id)->update([
+                'password' => Hash::make($validated['password'], ['rounds' => 12]),
+            ]);
+
+            return Response::json([
+                'message' => 'Password berhasil diperbarui',
+            ]);
+        } catch (QueryException $exception) {
+            return $this->queryExceptionResponse($exception);
+        }
+    }
 
     /**
      * Remove the specified resource from storage.
@@ -121,6 +149,40 @@ class DosenController extends Controller
             Dosen::where('id', $validated['id'])->delete();
             return Response::json([
                 'message' => 'Dosen berhasil dihapus!',
+            ]);
+        } catch (QueryException $exception) {
+            return $this->queryExceptionResponse($exception);
+        }
+    }
+    public function resetPassword(Request $request)
+    {
+        try {
+            $validated = $request->validate([
+                'id' => 'required|exists:dosen,id',
+            ]);
+
+            $authAdmin = Auth::guard('admin')->user();
+
+            if (!is_null($authAdmin?->laboratorium_id)) {
+                return Response::json([
+                    'message' => 'Bruh.. ?'
+                ], 403);
+            }
+
+            $dosen = Dosen::find($validated['id']);
+
+            if (!$dosen) {
+                return Response::json([
+                    'message' => 'Dosen tidak ditemukan'
+                ], 404);
+            }
+
+            $dosen->update([
+                'password' => Hash::make($dosen->username, ['rounds' => 12]),
+            ]);
+
+            return Response::json([
+                'message' => 'Berhasil mengatur ulang password'
             ]);
         } catch (QueryException $exception) {
             return $this->queryExceptionResponse($exception);

@@ -1,4 +1,3 @@
-import { AdminSidebar } from "@/components/admin-sidebar"
 import { Separator } from "@/components/ui/separator"
 import {
     SidebarInset,
@@ -11,13 +10,14 @@ import { Footer } from "@/components/app-footer";
 import { Toaster } from "@/components/ui/toaster";
 import { PageProps } from "@/types";
 import { ProfileDropdown } from "@/components/profile-dropdown";
+import { DosenSidebar } from "@/components/dosen-sidebar";
 
 export const DosenLayout = ({ auth, children }: PageProps<{
     children: ReactNode;
 }>) => {
     return (
         <SidebarProvider>
-            <AdminSidebar />
+            <DosenSidebar />
             <SidebarInset>
                 <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4">
                     <div className="flex items-center space-x-4">

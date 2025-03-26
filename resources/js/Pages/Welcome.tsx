@@ -361,57 +361,59 @@ export default function LandingPage({
                                     value={ laboratorium.nama }
                                     className="overflow-hidden"
                                 >
-                                    <Carousel
-                                        opts={{
-                                            align: "start",
-                                        }}
-                                        className="w-72 md:w-full md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto"
-                                    >
-                                        <CarouselContent className={ `mx-auto ${ index % 2 === 0 ? 'animate-in md:slide-in-from-left-6' : 'animate-in md:slide-in-from-right-6' } fade-in-10 duration-1000 md:duration-700` }>
-                                            {laboratorium.aslabs.map((aslab) => (
-                                                <CarouselItem
-                                                    key={aslab.id}
-                                                    className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4"
-                                                >
-                                                    <div className="p-1">
-                                                        <Card>
-                                                            <CardContent className="flex flex-col items-center p-6">
-                                                                <div className="aspect-square relative w-full mb-4 content-center">
-                                                                    {aslab.avatar ? (
-                                                                        <img
-                                                                            src={`/storage/aslab/${aslab.avatar}`}
-                                                                            alt={`avatar-${aslab.nama}`}
-                                                                            className="object-cover object-center rounded-md"
-                                                                        />
-                                                                    ) : (
-                                                                        <UserCircle2
-                                                                            strokeWidth={ 1.5 }
-                                                                            className="mx-auto my-auto text-primary"
-                                                                            size={100}
-                                                                        />
-                                                                    )}
-                                                                </div>
-                                                                <h3 className="h-16 font-semibold text-lg text-center mb-2 line-clamp-2 text-ellipsis">
-                                                                    {aslab.nama}
-                                                                </h3>
-                                                                <p className="text-sm text-gray-600 text-center mb-4">
-                                                                    {aslab.jabatan}
-                                                                </p>
-                                                                <p className="font-bold text-lg text-center">
-                                                                    {aslab.username}
-                                                                </p>
-                                                                <Badge className="mt-2 font-medium text-base text-center bg-primary">
-                                                                    { laboratorium.nama }
-                                                                </Badge>
-                                                            </CardContent>
-                                                        </Card>
-                                                    </div>
-                                                </CarouselItem>
-                                            ))}
-                                        </CarouselContent>
-                                        <CarouselPrevious />
-                                        <CarouselNext />
-                                    </Carousel>
+                                    <div className={ `mx-auto ${ index % 2 === 0 ? 'animate-in md:slide-in-from-left-6' : 'animate-in md:slide-in-from-right-6' } fade-in-10 duration-1000 md:duration-700` }>
+                                        <Carousel
+                                            opts={{
+                                                align: "start",
+                                            }}
+                                            className="w-72 md:w-full md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto"
+                                        >
+                                            <CarouselContent className="mx-auto fade-in-10 duration-50">
+                                                {laboratorium.aslabs.map((aslab) => (
+                                                    <CarouselItem
+                                                        key={aslab.id}
+                                                        className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4 duration-200"
+                                                    >
+                                                        <div className="p-1">
+                                                            <Card>
+                                                                <CardContent className="flex flex-col items-center p-6">
+                                                                    <div className="aspect-square relative w-full mb-4 content-center">
+                                                                        {aslab.avatar ? (
+                                                                            <img
+                                                                                src={`/storage/aslab/${aslab.avatar}`}
+                                                                                alt={`avatar-${aslab.nama}`}
+                                                                                className="object-cover object-center rounded-md"
+                                                                            />
+                                                                        ) : (
+                                                                            <UserCircle2
+                                                                                strokeWidth={ 1.5 }
+                                                                                className="mx-auto my-auto text-primary"
+                                                                                size={100}
+                                                                            />
+                                                                        )}
+                                                                    </div>
+                                                                    <h3 className="h-16 font-semibold text-lg text-center mb-2 line-clamp-2 text-ellipsis">
+                                                                        {aslab.nama}
+                                                                    </h3>
+                                                                    <p className="text-sm text-gray-600 text-center mb-4">
+                                                                        {aslab.jabatan}
+                                                                    </p>
+                                                                    <p className="font-bold text-lg text-center">
+                                                                        {aslab.username}
+                                                                    </p>
+                                                                    <Badge className="mt-2 font-medium text-base text-center bg-primary">
+                                                                        { laboratorium.nama }
+                                                                    </Badge>
+                                                                </CardContent>
+                                                            </Card>
+                                                        </div>
+                                                    </CarouselItem>
+                                                ))}
+                                            </CarouselContent>
+                                            <CarouselPrevious />
+                                            <CarouselNext />
+                                        </Carousel>
+                                    </div>
                                 </TabsContent>
                             )))}
                         </Tabs>

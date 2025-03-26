@@ -97,7 +97,10 @@ Route::prefix('aslab')->name('aslab.')->group(function () {
 Route::prefix('dosen')->name('dosen.')->group(function () {
     Route::post('/create', [DosenController::class, 'store'])->name('create');
     Route::post('/update', [DosenController::class, 'update'])->name('update');
+    Route::post('/update-password', [DosenController::class, 'updatePassword'])->name('update-password');
     Route::post('/delete', [DosenController::class, 'destroy'])->name('delete');
+    Route::post('/reset-password', [DosenController::class, 'resetPassword'])->name('reset-password');
+
 });
 Route::prefix('praktikan')->name('praktikan.')->group(function () {
     Route::post('/create', [PraktikanController::class, 'store'])->name('create');

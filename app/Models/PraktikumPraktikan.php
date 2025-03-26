@@ -13,7 +13,9 @@ class PraktikumPraktikan extends Model
     protected $table = 'praktikum_praktikan';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
-
+    protected $casts = [
+        'terverifikasi' => 'boolean',
+    ];
     public function praktikum() {
         return $this->belongsTo(Praktikum::class);
     }

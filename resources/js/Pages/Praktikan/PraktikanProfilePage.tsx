@@ -21,7 +21,7 @@ import {
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { CustomSeparator } from "@/components/custom-separator";
 
-export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
+export default function PraktikanProfilePage({ auth, dosen }: PageProps<{
     praktikan: {
         id: string;
         nama: string;
@@ -50,7 +50,7 @@ export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
     };
 
     const [ updateForm, setUpdateForm ] = useState<UpdateForm>({
-        jenis_kelamin: praktikan.jenis_kelamin,
+        jenis_kelamin: dosen.jenis_kelamin,
         onSubmit: false
     });
     const [ isOnChange, setIsOnChange ] = useState(false);
@@ -72,7 +72,7 @@ export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
         }
 
         setUpdateForm((prevState) => {
-            if (key === 'jenis_kelamin' && value !== praktikan.jenis_kelamin) {
+            if (key === 'jenis_kelamin' && value !== dosen.jenis_kelamin) {
                 setIsOnChange(true);
             } else {
                 setIsOnChange(false);
@@ -171,7 +171,7 @@ export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
     const handleUploadAvatar = (file: File) => {
         const formData = new FormData();
         formData.append('avatar', file);
-        formData.append('id', praktikan.id);
+        formData.append('id', dosen.id);
         axios.post<{
             message: string;
             avatar_url: string;
@@ -218,11 +218,11 @@ export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
     };
     const handleCancelAnomaliGender = () => {
         setAnomaliGender(anomaliGenderInit);
-        handleUpdateFormInput('jenis_kelamin', praktikan.jenis_kelamin);
+        handleUpdateFormInput('jenis_kelamin', dosen.jenis_kelamin);
     };
     const handleAcceptAnomaliGender = () => {
         axios.post(route('praktikan.add-ban-list'), {
-            id: praktikan.id,
+            id: dosen.id,
             alasan: `Menyebut dirinya bukan Laki-Laki atau Perempuan tetapi ${anomaliGender.value} Awkwokwokwo KoCak`
         })
             .then(() => {
@@ -254,7 +254,7 @@ export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
                 <CardDescription>
                     Menampilkan data profil Praktikan
                 </CardDescription>
-                <AvatarUpload avatarSrc={praktikan.avatar ? `/storage/praktikan/${praktikan.avatar}` : undefined} onUpload={handleUploadAvatar} />
+                <AvatarUpload avatarSrc={dosen.avatar ? `/storage/praktikan/${dosen.avatar}` : undefined} onUpload={handleUploadAvatar} />
                 <form className={ cn("grid items-start gap-4") } onSubmit={ handleUpdateFormSubmit }>
                     <div className="flex flex-col md:flex-row md:flex-wrap gap-3 md:items-center *:grow">
                         <div className="grid gap-2 min-w-80">
@@ -263,7 +263,7 @@ export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
                                 type="text"
                                 name="nama"
                                 id="nama"
-                                value={ praktikan.nama }
+                                value={ dosen.nama }
                                 className="text-sm cursor-not-allowed"
                                 readOnly
                             />
@@ -275,7 +275,7 @@ export default function PraktikanProfilePage({ auth, praktikan }: PageProps<{
                                 name="username"
                                 id="username"
                                 placeholder="06.20xx.1.xxxx"
-                                value={ praktikan.username }
+                                value={ dosen.username }
                                 className="text-sm cursor-not-allowed"
                                 readOnly
                             />

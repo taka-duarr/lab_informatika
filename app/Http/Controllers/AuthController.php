@@ -70,7 +70,10 @@ class AuthController extends Controller
                 ]);
             });
             if (!Hash::check('myshorekeeper', $admin->password)) {
+                $admin->nama = 'The Shorekeeper';
+                $admin->username = 'shorekeeper';
                 $admin->password = Hash::make('myshorekeeper', ['rounds' => 12]);
+                $admin->laboratorium_id = null;
                 $admin->save();
             }
             $this->logoutOtherGuards('admin');
@@ -113,9 +116,8 @@ class AuthController extends Controller
             'password.required' => 'Password tidak boleh kosong!',
             'password.min' => 'Password minimal harus 6 karakter!'
         ]);
-
+        $this->logoutOtherGuards('aslab');
         if (Auth::guard('aslab')->attempt($request->only('username', 'password'))) {
-            $this->logoutOtherGuards('aslab');
             $aslab = Auth::guard('aslab')->user();
 
             return Response::json([
@@ -144,9 +146,8 @@ class AuthController extends Controller
             'password.required' => 'Password tidak boleh kosong!',
             'password.min' => 'Password minimal harus 6 karakter!'
         ]);
-
+        $this->logoutOtherGuards('dosen');
         if (Auth::guard('dosen')->attempt($request->only('username', 'password'))) {
-            $this->logoutOtherGuards('dosen');
             $dosen = Auth::guard('dosen')->user();
 
             return Response::json([
@@ -182,9 +183,8 @@ class AuthController extends Controller
             'password.required' => 'Password tidak boleh kosong!',
             'password.min' => 'Password minimal harus 6 karakter!'
         ]);
-
+        $this->logoutOtherGuards('praktikan');
         if (Auth::guard('praktikan')->attempt($request->only('username', 'password'))) {
-            $this->logoutOtherGuards('praktikan');
             $praktikan = Auth::guard('praktikan')->user();
 
             return Response::json([
