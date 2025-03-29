@@ -56,11 +56,10 @@ export default function PraktikanKuisResultPage({ kuisPraktikan }: PageProps<{
                         { resultMessage }
                     </p>
                 </div>
-
                 <Card className="w-full max-w-md">
                     <CardHeader>
                         <CardTitle className="tracking-wide leading-2">
-                            Kuis Sistem Operasi XXXVIII - Pertemuan 2
+                            { kuisPraktikan.kuis.nama }
                         </CardTitle>
                         <CardDescription>Diselesaikan pada { format(kuisPraktikan.updated_at, 'PPPp', { locale: localeId })}</CardDescription>
                     </CardHeader>

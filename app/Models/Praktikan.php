@@ -32,4 +32,8 @@ class Praktikan extends Authenticatable
     {
         return $this->belongsTo(Dosen::class, 'dosen_id');
     }
+    public function praktikum_praktikan(): HasMany
+    {
+        return $this->hasMany(PraktikumPraktikan::class, 'praktikan_id');
+    }
 }

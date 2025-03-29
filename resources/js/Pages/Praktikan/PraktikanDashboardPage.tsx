@@ -27,8 +27,8 @@ export default function PraktikanDashboardPage({ auth, aslabs, kuis }: PageProps
 }>) {
     return (
         <>
+            <Head title="Praktikan - Dashboard" />
             <PraktikanLayout auth={auth}>
-                <Head title="Praktikan - Dashboard" />
                 <div className="flex flex-col lg:flex-row gap-3 text-green-600">
                     <Card className="flex flex-col w-full lg:w-2/3 lg:min-w-[26rem] h-[27rem] lg:h-[32rem] overflow-y-auto rounded">
                         <CardHeader>

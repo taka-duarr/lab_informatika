@@ -273,6 +273,7 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
         }>(route('kuis.update'), {
             id: kuis.id,
             pertemuan_id: pertemuan_id,
+            sesi_praktikum_id: sesi_praktikum_id,
             nama: nama,
             deskripsi: JSON.stringify(deskripsi),
             waktu_mulai: waktu_mulai,

@@ -27,7 +27,7 @@ export const RenderQuillDelta = ({ delta, imgWidth = 32, className }: {
     const htmlContent: string = converter.convert();
     return (
         <>
-            <div className={ `flex flex-col items-center justify-center *:*:w-${imgWidth} ${className ?? ''} *:[&_ol]:list-decimal *:[&_ol]:list-inside *:[&_a]:text-blue-600 *:[&_a]:font-medium` }>
+            <div className={ `flex flex-col items-center justify-center *:*:w-${imgWidth} ${className ?? ''} *:[&_ol]:list-decimal *:[&_ol]:ml-5 *:[&_ul]:list-disc *:[&_ul]:ml-5 *:[&_a]:text-blue-600 *:[&_a]:font-medium` }>
                 {parse(htmlContent)}
             </div>
         </>

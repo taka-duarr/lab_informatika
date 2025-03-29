@@ -5,9 +5,12 @@ namespace App\Http\Controllers\Pages;
 use App\Http\Controllers\Controller;
 use App\Models\Aslab;
 use App\Models\JenisPraktikum;
+use App\Models\Kuis;
 use App\Models\Laboratorium;
 use App\Models\PeriodePraktikum;
+use App\Models\Praktikan;
 use App\Models\Praktikum;
+use App\Models\PraktikumPraktikan;
 use App\Models\SesiPraktikum;
 use Carbon\Carbon;
 use GuzzleHttp\Psr7\Response;
@@ -25,7 +28,52 @@ class AslabPagesController extends Controller
     }
     public function dashboardPage()
     {
-        return Inertia::render('Aslab/AslabDashboardPage');
+        $authAslab = Auth::guard('aslab')->user();
+        if (!$authAslab) {
+            abort(401);
+        }
+
+        return Inertia::render('Aslab/AslabDashboardPage', [
+            'praktikans' => Praktikan::select([
+                'praktikan.id',
+                'praktikan.nama',
+                'praktikan.username',
+                'praktikan.avatar'
+            ])
+                ->join('praktikum_praktikan', 'praktikum_praktikan.praktikan_id', '=', 'praktikan.id')
+                ->join('praktikum', 'praktikum.id', '=', 'praktikum_praktikan.praktikum_id')
+                ->where('praktikum_praktikan.terverifikasi', true)
+                ->where('praktikum_praktikan.aslab_id', $authAslab->id)
+                ->where('praktikum.status', true)
+                ->get(),
+            'praktikums' => Praktikum::select(['id', 'nama', 'jenis_praktikum_id'])
+                ->where('praktikum.status', true)
+                ->whereHas('praktikum_praktikan', function ($query) use ($authAslab) {
+                    $query->select('praktikum_id');
+                    $query->where('aslab_id', $authAslab->id);
+                })
+                ->with([
+                    'praktikan' => function ($query) use ($authAslab) {
+                        $query->select(['id', 'nama', 'username', 'avatar']);
+                        $query->wherePivot('terverifikasi', true);
+                        $query->wherePivot('aslab_id', $authAslab->id);
+                    },
+                    'jenis:id,nama,laboratorium_id',
+                    'jenis.laboratorium:id,nama'
+                ])
+                ->get()
+                ->map(fn ($praktikum) => [
+                    'id' => $praktikum->id,
+                    'nama' => $praktikum->nama,
+                    'laboratorium' => $praktikum->jenis->laboratorium,
+                    'praktikans' => $praktikum->praktikan->map(fn ($praktikan) => [
+                        'id' => $praktikan->id,
+                        'nama' => $praktikan->nama,
+                        'username' => $praktikan->username,
+                        'avatar' => $praktikan->avatar,
+                    ]),
+                ])
+        ]);
     }
     public function profilePage()
     {

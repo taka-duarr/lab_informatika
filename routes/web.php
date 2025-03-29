@@ -57,10 +57,12 @@ Route::get('/hall-of-fames', function () {return Inertia::render('HallOfFamesPag
 Route::get('/ban-list', [PraktikanPagesController::class, 'banListPage'])->name('ban-list');
 
 // <-- LOGIN PAGE ROUTE --> //
-Route::get('/shadow', [AdminPagesController::class, 'loginPage'])->name('admin.login');
-Route::get('/login', [PraktikanPagesController::class, 'loginPage'])->name('praktikan.login');
-Route::get('/login-aslab', [AslabPagesController::class, 'loginPage'])->name('aslab.login');
-Route::get('/login-dosen', [DosenPagesController::class, 'loginPage'])->name('dosen.login');
+Route::middleware('noAuth')->group(function () {
+    Route::get('/shadow', [AdminPagesController::class, 'loginPage'])->name('admin.login');
+    Route::get('/login', [PraktikanPagesController::class, 'loginPage'])->name('praktikan.login');
+    Route::get('/login-aslab', [AslabPagesController::class, 'loginPage'])->name('aslab.login');
+    Route::get('/login-dosen', [DosenPagesController::class, 'loginPage'])->name('dosen.login');
+});
 Route::get('/register', [PraktikanPagesController::class, 'registerPage'])->name('praktikan.register');
 // <-- END OF LOGIN PAGE ROUTE --> //
 
@@ -74,13 +76,13 @@ Route::prefix('auth')->name('auth.')->group(function () {
 });
 // <-- END OF AUTH ROUTE --> //
 
-Route::prefix('laboratorium')->name('laboratorium.')->group(function () {
+Route::prefix('laboratorium')->name('laboratorium.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [LaboratoriumController::class, 'store'])->name('create');
     Route::post('/update', [LaboratoriumController::class, 'update'])->name('update');
     Route::post('/delete', [LaboratoriumController::class, 'destroy'])->name('delete');
     Route::post('/upload-avatar', [LaboratoriumController::class, 'uploadAvatar'])->name('upload-avatar');
 });
-Route::prefix('admin')->name('admin.')->group(function () {
+Route::prefix('admin')->name('admin.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [AdminController::class, 'store'])->name('create');
     Route::post('/update', [AdminController::class, 'update'])->name('update');
     Route::post('/update-password', [AdminController::class, 'updatePassword'])->name('update-password');
@@ -88,64 +90,74 @@ Route::prefix('admin')->name('admin.')->group(function () {
     Route::post('/upload-avatar', [AdminController::class, 'uploadAvatar'])->name('upload-avatar');
 });
 Route::prefix('aslab')->name('aslab.')->group(function () {
-    Route::post('/create', [AslabController::class, 'store'])->name('create');
-    Route::post('/update', [AslabController::class, 'update'])->name('update');
-    Route::post('/update-aktif', [AslabController::class, 'updateAktif'])->name('update-aktif');
-    Route::post('/delete', [AslabController::class, 'destroy'])->name('delete');
-    Route::post('/upload-avatar', [AslabController::class, 'uploadAvatar'])->name('upload-avatar');
+    Route::middleware('withAuth:admin')->group(function () {
+        Route::post('/create', [AslabController::class, 'store'])->name('create');
+        Route::post('/update-aktif', [AslabController::class, 'updateAktif'])->name('update-aktif');
+        Route::post('/delete', [AslabController::class, 'destroy'])->name('delete');
+    });
+    Route::middleware('withAuth:admin,aslab')->group(function () {
+        Route::post('/update', [AslabController::class, 'update'])->name('update');
+        Route::post('/upload-avatar', [AslabController::class, 'uploadAvatar'])->name('upload-avatar');
+    });
 });
 Route::prefix('dosen')->name('dosen.')->group(function () {
-    Route::post('/create', [DosenController::class, 'store'])->name('create');
-    Route::post('/update', [DosenController::class, 'update'])->name('update');
-    Route::post('/update-password', [DosenController::class, 'updatePassword'])->name('update-password');
-    Route::post('/delete', [DosenController::class, 'destroy'])->name('delete');
-    Route::post('/reset-password', [DosenController::class, 'resetPassword'])->name('reset-password');
-
+    Route::middleware('withAuth:admin')->group(function () {
+        Route::post('/create', [DosenController::class, 'store'])->name('create');
+        Route::post('/delete', [DosenController::class, 'destroy'])->name('delete');
+        Route::post('/reset-password', [DosenController::class, 'resetPassword'])->name('reset-password');
+    });
+    Route::middleware('withAuth:admin,dosen')->group(function () {
+        Route::post('/update', [DosenController::class, 'update'])->name('update');
+        Route::post('/update-password', [DosenController::class, 'updatePassword'])->name('update-password');
+    });
 });
 Route::prefix('praktikan')->name('praktikan.')->group(function () {
-    Route::post('/create', [PraktikanController::class, 'store'])->name('create');
-    Route::post('/create-mass', [PraktikanController::class, 'storeMass'])->name('create-mass');
-    Route::post('/update', [PraktikanController::class, 'update'])->name('update');
-    Route::post('/update-password', [PraktikanController::class, 'updatePassword'])->name('update-password');
-    Route::post('/delete', [PraktikanController::class, 'destroy'])->name('delete');
-    Route::post('/upload-avatar', [PraktikanController::class, 'uploadAvatar'])->name('upload-avatar');
-    Route::post('/add-ban-list', [PraktikanController::class, 'addBanList'])->name('add-ban-list');
-    Route::post('/reset-password', [PraktikanController::class, 'resetPassword'])->name('reset-password');
+    Route::middleware('withAuth:admin')->group(function () {
+        Route::post('/create', [PraktikanController::class, 'store'])->name('create');
+        Route::post('/create-mass', [PraktikanController::class, 'storeMass'])->name('create-mass');
+        Route::post('/add-ban-list', [PraktikanController::class, 'addBanList'])->name('add-ban-list');
+        Route::post('/reset-password', [PraktikanController::class, 'resetPassword'])->name('reset-password');
+        Route::post('/delete', [PraktikanController::class, 'destroy'])->name('delete');
+    });
+    Route::middleware('withAuth:admin,praktikan')->group(function () {
+        Route::post('/update', [PraktikanController::class, 'update'])->name('update');
+        Route::post('/update-password', [PraktikanController::class, 'updatePassword'])->name('update-password');
+        Route::post('/upload-avatar', [PraktikanController::class, 'uploadAvatar'])->name('upload-avatar');
+    });
 });
 
-Route::prefix('jenis-praktikum')->name('jenis-praktikum.')->group(function () {
+Route::prefix('jenis-praktikum')->name('jenis-praktikum.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [JenisPraktikumController::class, 'store'])->name('create');
     Route::post('/update', [JenisPraktikumController::class, 'update'])->name('update');
     Route::post('/delete', [JenisPraktikumController::class, 'destroy'])->name('delete');
 });
-Route::prefix('periode-praktikum')->name('periode-praktikum.')->group(function () {
+Route::prefix('periode-praktikum')->name('periode-praktikum.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [PeriodePraktikumController::class, 'store'])->name('create');
     Route::post('/update', [PeriodePraktikumController::class, 'update'])->name('update');
     Route::post('/delete', [PeriodePraktikumController::class, 'destroy'])->name('delete');
 });
-Route::prefix('praktikum')->name('praktikum.')->group(function () {
+Route::prefix('praktikum')->name('praktikum.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [PraktikumController::class, 'store'])->name('create');
     Route::post('/update', [PraktikumController::class, 'update'])->name('update');
     Route::post('/delete', [PraktikumController::class, 'destroy'])->name('delete');
     Route::post('/update-status', [PraktikumController::class, 'updateStatus'])->name('update-status');
 });
-
-Route::prefix('pertemuan')->name('pertemuan.')->group(function () {
+Route::prefix('pertemuan')->name('pertemuan.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [PertemuanController::class, 'store'])->name('create');
     Route::post('/update', [PertemuanController::class, 'update'])->name('update');
     Route::post('/delete', [PertemuanController::class, 'destroy'])->name('delete');
 });
-Route::prefix('modul')->name('modul.')->group(function () {
+Route::prefix('modul')->name('modul.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [ModulController::class, 'store'])->name('create');
     Route::post('/update', [ModulController::class, 'update'])->name('update');
     Route::post('/delete', [ModulController::class, 'destroy'])->name('delete');
 });
-Route::prefix('sesi-praktikum')->name('sesi-praktikum.')->group(function () {
+Route::prefix('sesi-praktikum')->name('sesi-praktikum.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [SesiPraktikumController::class, 'store'])->name('create');
     Route::post('/update', [SesiPraktikumController::class, 'update'])->name('update');
     Route::post('/delete', [SesiPraktikumController::class, 'destroy'])->name('delete');
 });
-Route::prefix('praktikum-praktikan')->name('praktikum-praktikan.')->group(function () {
+Route::prefix('praktikum-praktikan')->name('praktikum-praktikan.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [PraktikumPraktikanController::class, 'store'])->name('create');
     Route::post('/create-mass', [PraktikumPraktikanController::class, 'storeMass'])->name('create-mass');
     Route::post('/update', [PraktikumPraktikanController::class, 'update'])->name('update');
@@ -153,51 +165,51 @@ Route::prefix('praktikum-praktikan')->name('praktikum-praktikan.')->group(functi
     Route::post('/verifikasi', [PraktikumPraktikanController::class, 'verifikasi'])->name('verifikasi');
 });
 
-Route::prefix('label')->name('label.')->group(function () {
+Route::prefix('label')->name('label.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [LabelController::class, 'store'])->name('create');
     Route::post('/update', [LabelController::class, 'update'])->name('update');
     Route::post('/delete', [LabelController::class, 'destroy'])->name('delete');
 });
-Route::prefix('soal')->name('soal.')->group(function () {
+Route::prefix('soal')->name('soal.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [SoalController::class, 'store'])->name('create');
     Route::post('/create-mass', [SoalController::class, 'storeMass'])->name('create-mass');
     Route::post('/update', [SoalController::class, 'update'])->name('update');
     Route::post('/delete', [SoalController::class, 'destroy'])->name('delete');
 });
-Route::prefix('kuis')->name('kuis.')->group(function () {
+Route::prefix('kuis')->name('kuis.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [KuisController::class, 'store'])->name('create');
     Route::post('/update', [KuisController::class, 'update'])->name('update');
     Route::post('/delete', [KuisController::class, 'destroy'])->name('delete');
 });
-Route::prefix('kuis-praktikan')->name('kuis-praktikan.')->group(function () {
+Route::prefix('kuis-praktikan')->name('kuis-praktikan.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [KuisPraktikanController::class, 'store'])->name('create');
     Route::post('/update', [KuisPraktikanController::class, 'update'])->name('update');
     Route::post('/delete', [KuisPraktikanController::class, 'destroy'])->name('delete');
     Route::post('/submit-end', [KuisPraktikanController::class, 'submitEnd'])->name('submit-end');
 });
-Route::prefix('jawaban-kuis')->name('jawaban-kuis.')->group(function () {
+Route::prefix('jawaban-kuis')->name('jawaban-kuis.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [JawabanKuisController::class, 'store'])->name('create');
     Route::post('/update', [JawabanKuisController::class, 'update'])->name('update');
     Route::post('/delete', [JawabanKuisController::class, 'destroy'])->name('delete');
     Route::post('/upsert', [JawabanKuisController::class, 'upsert'])->name('upsert');
 });
 
-Route::prefix('berita')->name('berita.')->group(function () {
+Route::prefix('berita')->name('berita.')->middleware('withAuth:admin')->group(function () {
     Route::get('/', [BeritaController::class, 'index'])->name('index');
     Route::get('/{slug}', [BeritaController::class, 'show'])->name('show');
     Route::post('/create', [BeritaController::class, 'store'])->name('create');
     Route::post('/update', [BeritaController::class, 'update'])->name('update');
     Route::post('/delete', [BeritaController::class, 'destroy'])->name('delete');
 });
-Route::prefix('jenis-nilai')->name('jenis-nilai.')->group(function () {
+Route::prefix('jenis-nilai')->name('jenis-nilai.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [JenisNilaiController::class, 'store'])->name('create');
 });
 
-Route::get('/kuis', function () {
-    return Inertia::render('KuisTest', [
-        'soals' => \App\Models\Soal::select('id','pertanyaan','pilihan_jawaban')->limit(50)->get(),
-    ]);
-});
+//Route::get('/kuis', function () {
+//    return Inertia::render('KuisTest', [
+//        'soals' => \App\Models\Soal::select('id','pertanyaan','pilihan_jawaban')->limit(50)->get(),
+//    ]);
+//});
 //Route::get('/test-nilai', function () {
 //    return \Inertia\Inertia::render('Admin/AdminNilaiIndexPage');
 //});

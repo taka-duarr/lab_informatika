@@ -17,7 +17,7 @@ class GuardMiddleware
         $user = Auth::guard($guard)->user();
 
         if (!$user) {
-            return redirect()->route("$guard.login");
+            return redirect()->route("praktikan.login");
         }
 
         $prefix = $request->segment(1);

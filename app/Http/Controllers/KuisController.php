@@ -121,7 +121,8 @@ class KuisController extends Controller
     public function update(Request $request)
     {
         $validated = $request->validate([
-            'pertemuan_id' => 'required|uuid',
+            'pertemuan_id' => 'required|exists:pertemuan,id',
+            'sesi_praktikum_id' => 'required|exists:sesi_praktikum,id',
             'nama' => 'required|string|max:255',
             'deskripsi' => 'required|string',
             'waktu_mulai' => 'required|date',
@@ -147,6 +148,7 @@ class KuisController extends Controller
 
             $kuis->update([
                 'pertemuan_id' => $validated['pertemuan_id'],
+                'sesi_praktikum_id' => $validated['sesi_praktikum_id'],
                 'nama' => $validated['nama'],
                 'deskripsi' => $validated['deskripsi'],
                 'waktu_mulai' => $waktu_mulai,

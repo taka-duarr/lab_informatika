@@ -42,7 +42,6 @@ export default function AdminSoalUpdatePage({ auth, labels, soal }: PageProps<{
     };
 }>) {
     const { toast } = useToast();
-    console.log(soal);
 
     const updateFormInit: UpdateForm = {
         label: soal.label,
@@ -207,6 +206,7 @@ export default function AdminSoalUpdatePage({ auth, labels, soal }: PageProps<{
                         handleFormChange("pertanyaan", delta)
                     }}
                     value={updateForm.pertanyaan}
+                    height="400px"
                 />
                 <AnswersEditor
                     onOptionsChange={(options) => {

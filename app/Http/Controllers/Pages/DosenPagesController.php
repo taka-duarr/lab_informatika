@@ -3,7 +3,9 @@
 namespace App\Http\Controllers\Pages;
 
 use App\Http\Controllers\Controller;
+use App\Models\Aslab;
 use App\Models\Dosen;
+use App\Models\Praktikan;
 use App\Models\Praktikum;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -18,7 +20,45 @@ class DosenPagesController extends Controller
     }
     public function dashboardPage()
     {
-        return Inertia::render('Dosen/DosenDashboardPage');
+        $authDosen = Auth::guard('dosen')->user();
+        if (!$authDosen) {
+            abort(401);
+        }
+
+        return Inertia::render('Dosen/DosenDashboardPage', [
+            'aslabs' => fn() => Aslab::select(['id','nama','username','jabatan','avatar','laboratorium_id'])
+                ->where('aktif', true)
+                ->with('laboratorium:id,nama')
+                ->orderBy('username', 'asc')
+                ->get(),
+            'praktikums' => Praktikum::select(['id', 'nama', 'jenis_praktikum_id'])
+                ->where('praktikum.status', true)
+                ->whereHas('praktikum_praktikan', function ($query) use ($authDosen) {
+                    $query->select('praktikum_id');
+                    $query->where('dosen_id', $authDosen->id);
+                })
+                ->with([
+                    'praktikan' => function ($query) use ($authDosen) {
+                        $query->select(['id', 'nama', 'username', 'avatar']);
+                        $query->wherePivot('terverifikasi', true);
+                        $query->wherePivot('dosen_id', $authDosen->id);
+                    },
+                    'jenis:id,nama,laboratorium_id',
+                    'jenis.laboratorium:id,nama'
+                ])
+                ->get()
+                ->map(fn ($praktikum) => [
+                    'id' => $praktikum->id,
+                    'nama' => $praktikum->nama,
+                    'laboratorium' => $praktikum->jenis->laboratorium,
+                    'praktikans' => $praktikum->praktikan->map(fn ($praktikan) => [
+                        'id' => $praktikan->id,
+                        'nama' => $praktikan->nama,
+                        'username' => $praktikan->username,
+                        'avatar' => $praktikan->avatar,
+                    ]),
+                ])
+        ]);
     }
     public function profilePage()
     {
