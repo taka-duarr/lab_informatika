@@ -19,7 +19,9 @@ import {
     LandingPrak,
     LandingPrak2,
     LandingPrak3,
-    LogoJarkom, LogoLabInformatika,
+    LogoJarkom,
+    LogoLabInformatika,
+    LogoRPL,
 } from "@/lib/StaticImagesLib";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -109,8 +111,8 @@ export default function LandingPage({
             description:
                 "Praktikum semester ganjil yang tersedia untuk mahasiswa mulai dari semester 1",
             content:
-                "Pemrograman terstruktur adalah paradigma pemrograman yang mengutamakan penggunaan struktur kontrol seperti percabangan dan perulangan. Prinsip dasar dari pemrograman terstruktur adalah modularitas, di mana kode program dibagi menjadi fungsi atau prosedur kecil agar lebih mudah dipahami dan dikelola. Dalam praktikum ini, mahasiswa akan belajar dasar-dasar pemrograman dengan bahasa seperti C atau Python, memahami konsep variabel, tipe data, operator, hingga algoritma dasar seperti sorting dan searching. Selain itu, mahasiswa juga akan diberikan latihan membuat program sederhana untuk memperkuat pemahaman mereka terhadap konsep-konsep pemrograman.",
-            // image: "/images/pemrograman-terstruktur.jpg",
+                "Pemrograman terstruktur adalah paradigma pemrograman yang mengutamakan penggunaan struktur kontrol seperti percabangan dan perulangan. Prinsip dasar dari pemrograman terstruktur adalah modularitas, di mana kode program dibagi menjadi fungsi atau prosedur kecil agar lebih mudah dipahami dan dikelola. Dalam praktikum ini, mahasiswa akan belajar dasar-dasar pemrograman dengan bahasa C/C++, memahami konsep variabel, tipe data, operator, hingga algoritma dasar seperti sorting dan searching. Selain itu, mahasiswa juga akan diberikan latihan membuat program sederhana untuk memperkuat pemahaman mereka terhadap konsep-konsep pemrograman.",
+            // image: { LogoRPL },
         },
         {
             title: "Struktur Data",
@@ -118,15 +120,15 @@ export default function LandingPage({
                 "Praktikum semester genap yang tersedia untuk mahasiswa mulai dari semester 2",
             content:
                 "Struktur data adalah cara penyimpanan dan pengorganisasian data agar dapat digunakan secara efisien. Struktur data yang baik memungkinkan algoritma berjalan lebih cepat dan lebih efisien dalam penggunaan sumber daya. Dalam praktikum ini, mahasiswa akan belajar berbagai jenis struktur data seperti array, linked list, stack, queue, tree, dan graph. Selain itu, mahasiswa akan memahami bagaimana masing-masing struktur data bekerja, kapan harus menggunakannya, serta bagaimana implementasinya dalam bahasa pemrograman seperti C++ atau Java. Mahasiswa juga akan diberikan tugas membuat program yang memanfaatkan struktur data dalam berbagai kasus, seperti manajemen antrean atau pencarian jalur terpendek dalam graf.",
-            // image: "/images/struktur-data.jpg",
+            // image: { LogoRPL },
         },
         {
             title: "Pemrograman Berorientasi Objek",
             description:
                 "Praktikum semester ganjil yang tersedia untuk mahasiswa mulai dari semester 3",
             content:
-                "Pemrograman berorientasi objek (OOP) adalah paradigma pemrograman yang berfokus pada objek dan interaksinya. OOP memungkinkan pengembangan perangkat lunak yang lebih modular, reusable, dan mudah dikembangkan. Dalam praktikum ini, mahasiswa akan belajar konsep utama dalam OOP seperti kelas, objek, enkapsulasi, pewarisan, dan polimorfisme. Mahasiswa juga akan mempelajari bagaimana menerapkan prinsip-prinsip ini dalam bahasa pemrograman seperti Java atau Python. Praktikum ini mencakup latihan membuat aplikasi berbasis OOP, seperti sistem manajemen perpustakaan atau aplikasi toko online, agar mahasiswa dapat memahami bagaimana OOP diterapkan dalam dunia nyata.",
-            // image: "/images/pbo.jpg",
+                "Pemrograman berorientasi objek (OOP) adalah paradigma pemrograman yang berfokus pada objek dan interaksinya. OOP memungkinkan pengembangan perangkat lunak yang lebih modular, reusable, dan mudah dikembangkan. Dalam praktikum ini, mahasiswa akan belajar konsep utama dalam OOP seperti kelas, objek, enkapsulasi, pewarisan, dan polimorfisme. Mahasiswa juga akan mempelajari bagaimana menerapkan prinsip-prinsip ini dalam bahasa pemrograman seperti Java . Praktikum ini mencakup latihan membuat aplikasi berbasis OOP, seperti sistem manajemen perpustakaan atau aplikasi toko online, agar mahasiswa dapat memahami bagaimana OOP diterapkan dalam dunia nyata.",
+            // image: { LogoRPL },
         },
         {
             title: "Basis Data",
@@ -134,7 +136,7 @@ export default function LandingPage({
                 "Praktikum semester genap yang tersedia untuk mahasiswa mulai dari semester 4",
             content:
                 "Basis data adalah kumpulan data yang terorganisir untuk memudahkan akses, pengelolaan, dan pemutakhiran. Dalam dunia teknologi informasi, basis data digunakan untuk menyimpan informasi yang dapat diakses oleh berbagai aplikasi. Dalam praktikum ini, mahasiswa akan belajar dasar-dasar basis data, termasuk perancangan basis data, normalisasi, serta penggunaan bahasa SQL untuk manipulasi data. Mahasiswa juga akan melakukan praktik menggunakan sistem manajemen basis data (DBMS) seperti MySQL atau PostgreSQL. Selain itu, mahasiswa akan diberikan tugas untuk membuat proyek basis data sederhana, seperti sistem manajemen inventaris atau sistem informasi akademik.",
-            // image: "/images/basis-data.jpg",
+            // image: { LogoRPL },
         },
     ];
 
@@ -169,7 +171,8 @@ export default function LandingPage({
                                     Laboratorium Teknik Informatika ITATS
                                 </h2>
                                 <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl font-medium">
-                                    Welcome to Labinformatika ITATS, keep chilling and always Looksmaxxing
+                                    Welcome to Labinformatika ITATS, keep
+                                    chilling and always Looksmaxxing
                                 </p>
                             </div>
                             <div className="space-x-4">
@@ -319,8 +322,10 @@ export default function LandingPage({
                                                             </div>
                                                             <div className="content-center mx-auto lg:mx-0 w-auto md:w-80 relative order-first lg:order-none">
                                                                 <img
-                                                                    src={ LogoLabInformatika }
-                                                                    alt="logo-labinformatika"
+                                                                    src={
+                                                                        LogoRPL
+                                                                    }
+                                                                    alt="logo-Rekayasa-Perangkat-Lunak"
                                                                     width={200}
                                                                     className="mx-auto rounded-lg aspect-square object-cover object-center"
                                                                 />
@@ -349,19 +354,28 @@ export default function LandingPage({
                             className="w-full"
                         >
                             <TabsList className="h-auto md:h-10 mx-auto max-w-xs md:max-w-lg grid grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1 gap-y-3 !p-3 my-4">
-                                { laboratoriums.map((laboratorium) => ((
-                                    <TabsTrigger key={ laboratorium.id } value={ laboratorium.nama }>
-                                        { laboratorium.nama }
+                                {laboratoriums.map((laboratorium) => (
+                                    <TabsTrigger
+                                        key={laboratorium.id}
+                                        value={laboratorium.nama}
+                                    >
+                                        {laboratorium.nama}
                                     </TabsTrigger>
-                                )))}
+                                ))}
                             </TabsList>
-                            { laboratoriums.map((laboratorium, index) => ((
+                            {laboratoriums.map((laboratorium, index) => (
                                 <TabsContent
-                                    key={ laboratorium.id }
-                                    value={ laboratorium.nama }
+                                    key={laboratorium.id}
+                                    value={laboratorium.nama}
                                     className="overflow-hidden"
                                 >
-                                    <div className={ `mx-auto ${ index % 2 === 0 ? 'animate-in md:slide-in-from-left-6' : 'animate-in md:slide-in-from-right-6' } fade-in-10 duration-1000 md:duration-700` }>
+                                    <div
+                                        className={`mx-auto ${
+                                            index % 2 === 0
+                                                ? "animate-in md:slide-in-from-left-6"
+                                                : "animate-in md:slide-in-from-right-6"
+                                        } fade-in-10 duration-1000 md:duration-700`}
+                                    >
                                         <Carousel
                                             opts={{
                                                 align: "start",
@@ -369,53 +383,67 @@ export default function LandingPage({
                                             className="w-72 md:w-full md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto"
                                         >
                                             <CarouselContent className="mx-auto fade-in-10 duration-50">
-                                                {laboratorium.aslabs.map((aslab) => (
-                                                    <CarouselItem
-                                                        key={aslab.id}
-                                                        className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4 duration-200"
-                                                    >
-                                                        <div className="p-1">
-                                                            <Card>
-                                                                <CardContent className="flex flex-col items-center p-6">
-                                                                    <div className="aspect-square relative w-full mb-4 content-center">
-                                                                        {aslab.avatar ? (
-                                                                            <img
-                                                                                src={`/storage/aslab/${aslab.avatar}`}
-                                                                                alt={`avatar-${aslab.nama}`}
-                                                                                className="object-cover object-center rounded-md"
-                                                                            />
-                                                                        ) : (
-                                                                            <UserCircle2
-                                                                                strokeWidth={ 1.5 }
-                                                                                className="mx-auto my-auto text-primary"
-                                                                                size={100}
-                                                                            />
-                                                                        )}
-                                                                    </div>
-                                                                    <h3 className="h-16 font-semibold text-lg text-center mb-2 line-clamp-2 text-ellipsis">
-                                                                        {aslab.nama}
-                                                                    </h3>
-                                                                    <p className="text-sm text-gray-600 text-center mb-4">
-                                                                        {aslab.jabatan}
-                                                                    </p>
-                                                                    <p className="font-bold text-lg text-center">
-                                                                        {aslab.username}
-                                                                    </p>
-                                                                    <Badge className="mt-2 font-medium text-base text-center bg-primary">
-                                                                        { laboratorium.nama }
-                                                                    </Badge>
-                                                                </CardContent>
-                                                            </Card>
-                                                        </div>
-                                                    </CarouselItem>
-                                                ))}
+                                                {laboratorium.aslabs.map(
+                                                    (aslab) => (
+                                                        <CarouselItem
+                                                            key={aslab.id}
+                                                            className="md:basis-1/2 lg:basis-1/3 xl:basis-1/4 duration-200"
+                                                        >
+                                                            <div className="p-1">
+                                                                <Card>
+                                                                    <CardContent className="flex flex-col items-center p-6">
+                                                                        <div className="aspect-square relative w-full mb-4 content-center">
+                                                                            {aslab.avatar ? (
+                                                                                <img
+                                                                                    src={`/storage/aslab/${aslab.avatar}`}
+                                                                                    alt={`avatar-${aslab.nama}`}
+                                                                                    className="object-cover object-center rounded-md"
+                                                                                />
+                                                                            ) : (
+                                                                                <UserCircle2
+                                                                                    strokeWidth={
+                                                                                        1.5
+                                                                                    }
+                                                                                    className="mx-auto my-auto text-primary"
+                                                                                    size={
+                                                                                        100
+                                                                                    }
+                                                                                />
+                                                                            )}
+                                                                        </div>
+                                                                        <h3 className="h-16 font-semibold text-lg text-center mb-2 line-clamp-2 text-ellipsis">
+                                                                            {
+                                                                                aslab.nama
+                                                                            }
+                                                                        </h3>
+                                                                        <p className="text-sm text-gray-600 text-center mb-4">
+                                                                            {
+                                                                                aslab.jabatan
+                                                                            }
+                                                                        </p>
+                                                                        <p className="font-bold text-lg text-center">
+                                                                            {
+                                                                                aslab.username
+                                                                            }
+                                                                        </p>
+                                                                        <Badge className="mt-2 font-medium text-base text-center bg-primary">
+                                                                            {
+                                                                                laboratorium.nama
+                                                                            }
+                                                                        </Badge>
+                                                                    </CardContent>
+                                                                </Card>
+                                                            </div>
+                                                        </CarouselItem>
+                                                    )
+                                                )}
                                             </CarouselContent>
                                             <CarouselPrevious />
                                             <CarouselNext />
                                         </Carousel>
                                     </div>
                                 </TabsContent>
-                            )))}
+                            ))}
                         </Tabs>
                     </div>
                 </section>
@@ -523,22 +551,6 @@ export default function LandingPage({
                             </Button>
                         </CardFooter>
                     </Card>
-                </section>
-
-                <section
-                    id="cta"
-                    className="w-full py-12 md:py-24 lg:py-32 bg-gray-100"
-                >
-                    <div className="flex flex-col items-center space-y-4 text-center">
-                        <div className="space-y-2">
-                            <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl">
-                                Siapa maskot Lab.Jarkom?
-                            </h2>
-                            <p className="mx-auto text-gray-500 md:text-xl">
-                                Tentu saja Mahiru Shiina&#10084;&#65039;
-                            </p>
-                        </div>
-                    </div>
                 </section>
             </AppLayout>
         </>

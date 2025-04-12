@@ -195,13 +195,17 @@ Route::prefix('jawaban-kuis')->name('jawaban-kuis.')->middleware('withAuth:admin
     Route::post('/upsert', [JawabanKuisController::class, 'upsert'])->name('upsert');
 });
 
-Route::prefix('berita')->name('berita.')->middleware('withAuth:admin')->group(function () {
+Route::prefix('berita')->name('berita.')->group(function () {
     Route::get('/', [BeritaController::class, 'index'])->name('index');
     Route::get('/{slug}', [BeritaController::class, 'show'])->name('show');
-    Route::post('/create', [BeritaController::class, 'store'])->name('create');
-    Route::post('/update', [BeritaController::class, 'update'])->name('update');
-    Route::post('/delete', [BeritaController::class, 'destroy'])->name('delete');
+
+    Route::middleware('withAuth:admin')->group(function () {
+        Route::post('/create', [BeritaController::class, 'store'])->name('create');
+        Route::post('/update', [BeritaController::class, 'update'])->name('update');
+        Route::post('/delete', [BeritaController::class, 'destroy'])->name('delete');
+    });
 });
+
 Route::prefix('jenis-nilai')->name('jenis-nilai.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [JenisNilaiController::class, 'store'])->name('create');
 });

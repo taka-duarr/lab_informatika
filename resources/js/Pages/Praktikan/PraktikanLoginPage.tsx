@@ -10,7 +10,12 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { HumpbackWhale, LogoJarkom } from "@/lib/StaticImagesLib";
+import {
+    HumpbackWhale,
+    LogoItats,
+    LogoJarkom,
+    LogoLabInformatika,
+} from "@/lib/StaticImagesLib";
 import { Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
 import { Head, router } from "@inertiajs/react";
@@ -19,21 +24,27 @@ import { useToast } from "@/hooks/use-toast";
 import { Toaster } from "@/components/ui/toaster";
 
 const loginSchema = z.object({
-    username: z.string({ message: 'Username wajib diisi!' }).min(3, "Username minimal 3 karakter").max(50, "Username terlalu panjang"),
-    password: z.string({ message: 'Password wajib diisi!' }).min(6, "Password minimal 6 karakter").max(100, "Password terlalu panjang"),
+    username: z
+        .string({ message: "Username wajib diisi!" })
+        .min(3, "Username minimal 3 karakter")
+        .max(50, "Username terlalu panjang"),
+    password: z
+        .string({ message: "Password wajib diisi!" })
+        .min(6, "Password minimal 6 karakter")
+        .max(100, "Password terlalu panjang"),
 });
 export default function PraktikanLoginPage() {
     const { toast } = useToast();
     const formInit = {
-        username: '',
-        password: '',
+        username: "",
+        password: "",
         onsubmit: false,
         onSuccess: false,
         onError: false,
-        errMsg: ''
+        errMsg: "",
     };
-    const [ form, setForm ] = useState(formInit);
-    const [ passwordVisible, setPasswordVisible ] = useState(false);
+    const [form, setForm] = useState(formInit);
+    const [passwordVisible, setPasswordVisible] = useState(false);
 
     const handleFormInput = (event: ChangeEvent<HTMLInputElement>) => {
         const { name, value } = event.target;
@@ -41,7 +52,7 @@ export default function PraktikanLoginPage() {
             ...prevState,
             [name]: value,
             onError: false,
-            errMsg: ''
+            errMsg: "",
         }));
     };
     const handleFormSubmit = (event: FormEvent<HTMLFormElement>) => {
@@ -58,44 +69,50 @@ export default function PraktikanLoginPage() {
                 ...prevState,
                 onsubmit: false,
                 onError: true,
-                errMsg: loginValidation.error.issues[0].message
+                errMsg: loginValidation.error.issues[0].message,
             }));
             return;
         }
 
-        axios.post(route('auth.praktikan'), {
-            username: username,
-            password: password,
-        })
-            .then((res) => {
-                setForm((prevState) => ({ ...prevState, onsubmit: false, onSuccess: true }));
-                toast({
-                    variant: 'default',
-                    className: 'bg-green-500 text-white',
-                    title: "Sukses!",
-                    description: res.data.message,
-                });
-                router.visit(route('praktikan.dashboard'), { replace: true });
+        axios
+            .post(route("auth.praktikan"), {
+                username: username,
+                password: password,
             })
-            .catch((err: unknown) => {
-                const errMsg: string = err instanceof AxiosError && err.response?.data?.message
-                    ? err.response.data.message
-                    : 'Server gagal memproses permintaan!';
+            .then((res) => {
                 setForm((prevState) => ({
                     ...prevState,
                     onsubmit: false,
-                    onError: (err instanceof AxiosError && err.status !== 500),
-                    errMsg: errMsg
+                    onSuccess: true,
+                }));
+                toast({
+                    variant: "default",
+                    className: "bg-green-500 text-white",
+                    title: "Sukses!",
+                    description: res.data.message,
+                });
+                router.visit(route("praktikan.dashboard"), { replace: true });
+            })
+            .catch((err: unknown) => {
+                const errMsg: string =
+                    err instanceof AxiosError && err.response?.data?.message
+                        ? err.response.data.message
+                        : "Server gagal memproses permintaan!";
+                setForm((prevState) => ({
+                    ...prevState,
+                    onsubmit: false,
+                    onError: err instanceof AxiosError && err.status !== 500,
+                    errMsg: errMsg,
                 }));
                 if (err instanceof AxiosError && err.status === 500) {
                     toast({
-                        variant: 'destructive',
+                        variant: "destructive",
                         title: "Gagal!",
-                        description: err?.response?.data.message ?? 'Network Error',
+                        description:
+                            err?.response?.data.message ?? "Network Error",
                     });
                 }
             });
-
     };
     const togglePasswordVisibility = () => {
         setPasswordVisible((prev) => !prev);
@@ -106,19 +123,19 @@ export default function PraktikanLoginPage() {
             <Head title="Login" />
             <div className="relative min-h-screen bg-gradient-to-b from-muted from-70% to-muted-foreground flex items-center justify-center">
                 <img
-                    src={ HumpbackWhale }
+                    src={HumpbackWhale}
                     alt="humpback-whale"
                     className="absolute inset-0 w-full h-full object-cover z-0"
                 />
 
                 <div className="relative z-10 w-full max-w-md m-4">
                     <Card className="w-full max-w-md shadow-md !bg-white !bg-opacity-80">
-                        <form onSubmit={ handleFormSubmit }>
+                        <form onSubmit={handleFormSubmit}>
                             <CardHeader className="space-y-1 flex flex-col items-center">
                                 <img
-                                    src={ LogoJarkom }
+                                    src={LogoLabInformatika}
                                     alt="logo-jarkom"
-                                    width={ 140 }
+                                    width={140}
                                     className="mx-auto"
                                 />
                                 <CardTitle className="text-2xl font-bold text-center">
@@ -136,8 +153,8 @@ export default function PraktikanLoginPage() {
                                         name="username"
                                         type="text"
                                         placeholder="06.xxxx.1.xxxxx"
-                                        value={ form.username }
-                                        onChange={ handleFormInput }
+                                        value={form.username}
+                                        onChange={handleFormInput}
                                         required
                                     />
                                 </div>
@@ -147,28 +164,35 @@ export default function PraktikanLoginPage() {
                                         <Input
                                             id="password"
                                             name="password"
-                                            type={ passwordVisible ? "text" : "password" }
+                                            type={
+                                                passwordVisible
+                                                    ? "text"
+                                                    : "password"
+                                            }
                                             placeholder="Password"
-                                            value={ form.password }
-                                            onChange={ handleFormInput }
+                                            value={form.password}
+                                            onChange={handleFormInput}
                                             required
                                         />
                                         <button
                                             type="button"
-                                            onClick={ togglePasswordVisibility }
+                                            onClick={togglePasswordVisibility}
                                             className="absolute inset-y-0 right-2 flex items-center text-gray-500 hover:text-gray-700"
                                         >
-                                            { passwordVisible ? (
-                                                <EyeOff className="w-5 h-5"/>
+                                            {passwordVisible ? (
+                                                <EyeOff className="w-5 h-5" />
                                             ) : (
-                                                <Eye className="w-5 h-5"/>
-                                            ) }
+                                                <Eye className="w-5 h-5" />
+                                            )}
                                         </button>
                                     </div>
                                 </div>
                                 <div className="!-mb-4 flex flex-row gap-1 justify-end text-sm">
                                     <p>Belum punya akun?</p>
-                                    <a href={route('praktikan.register')} className="font-semibold underline-offset-2 hover:underline">
+                                    <a
+                                        href={route("praktikan.register")}
+                                        className="font-semibold underline-offset-2 hover:underline"
+                                    >
                                         Buat Akun
                                     </a>
                                 </div>
@@ -178,14 +202,16 @@ export default function PraktikanLoginPage() {
                                     className="w-full"
                                     type="submit"
                                     disabled={
-                                        form.onsubmit || form.onError || form.onSuccess
+                                        form.onsubmit ||
+                                        form.onError ||
+                                        form.onSuccess
                                     }
                                 >
                                     {form.onsubmit
                                         ? "Memuat..."
                                         : form.onSuccess
-                                            ? "Berhasil"
-                                            : "Masuk"}
+                                        ? "Berhasil"
+                                        : "Masuk"}
                                 </Button>
                                 <p
                                     className={`h-6 text-sm text-red-600 font-medium ${
