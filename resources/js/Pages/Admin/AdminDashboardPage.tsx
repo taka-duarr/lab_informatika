@@ -1,8 +1,20 @@
 import { AdminLayout } from "@/layouts/AdminLayout";
-import { Card, CardContent, CardDescription, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+    Card,
+    CardContent,
+    CardDescription,
+    CardFooter,
+    CardHeader,
+    CardTitle,
+} from "@/components/ui/card";
 import { ArrowRight, BookOpenText, FolderSync, UserRound } from "lucide-react";
 import { Button } from "@/components/ui/button";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 import { MahiruCirle } from "@/lib/StaticImagesLib";
 import {
     ChartConfig,
@@ -10,14 +22,18 @@ import {
     ChartLegend,
     ChartLegendContent,
     ChartTooltip,
-    ChartTooltipContent
+    ChartTooltipContent,
 } from "@/components/ui/chart";
 import { Bar, BarChart, CartesianGrid, XAxis } from "recharts";
 import { ScrollArea } from "@/components/ui/scroll-area";
 import { Head, router } from "@inertiajs/react";
 import { PageProps } from "@/types";
 
-export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
+export default function AdminDashboardPage({
+    auth,
+    aslabs,
+    kuis,
+}: PageProps<{
     aslabs: {
         nama: string;
         username: string;
@@ -34,12 +50,42 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
     }[];
 }>) {
     const chartDataPraktikum = [
-        { praktikum: "Sistem Operasi XXXVI", terverifikasi: 97, lulus: 90, gugur: 7 },
-        { praktikum: "Jaringan Komputer XXXVI", terverifikasi: 85, lulus: 83, gugur: 2 },
-        { praktikum: "Sistem Operasi XXXVII", terverifikasi: 106, lulus: 85, gugur: 21 },
-        { praktikum: "Jaringan Komputer XXXVII", terverifikasi: 96, lulus: 93, gugur: 3 },
-        { praktikum: "Sistem Operasi XXXVIII", terverifikasi: 88, lulus: 80, gugur: 8 },
-        { praktikum: "Jaringan Komputer XXXVIII", terverifikasi: 0, lulus: 0, gugur: 0 },
+        {
+            praktikum: "Sistem Operasi XXXVI",
+            terverifikasi: 97,
+            lulus: 90,
+            gugur: 7,
+        },
+        {
+            praktikum: "Jaringan Komputer XXXVI",
+            terverifikasi: 85,
+            lulus: 83,
+            gugur: 2,
+        },
+        {
+            praktikum: "Sistem Operasi XXXVII",
+            terverifikasi: 106,
+            lulus: 85,
+            gugur: 21,
+        },
+        {
+            praktikum: "Jaringan Komputer XXXVII",
+            terverifikasi: 96,
+            lulus: 93,
+            gugur: 3,
+        },
+        {
+            praktikum: "Sistem Operasi XXXVIII",
+            terverifikasi: 88,
+            lulus: 80,
+            gugur: 8,
+        },
+        {
+            praktikum: "Jaringan Komputer XXXVIII",
+            terverifikasi: 0,
+            lulus: 0,
+            gugur: 0,
+        },
     ];
 
     const chartConfig = {
@@ -66,27 +112,41 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                         <CardHeader>
                             <CardTitle>Jadwal Kuis</CardTitle>
                             <CardDescription>
-                                { kuis.length } Kuis mendatang
+                                {kuis.length} Kuis mendatang
                             </CardDescription>
                         </CardHeader>
                         <ScrollArea>
                             <CardContent className="grid gap-4">
-                                {
-                                    kuis.length > 0 ? kuis.map((kuis, index) => ((
-                                        <div key={index} className="flex items-center space-x-4 rounded-md border p-4 truncate [&_p]:truncate">
-                                            <BookOpenText/>
+                                {kuis.length > 0 ? (
+                                    kuis.map((kuis, index) => (
+                                        <div
+                                            key={index}
+                                            className="flex items-center space-x-4 rounded-md border p-4 truncate [&_p]:truncate"
+                                        >
+                                            <BookOpenText />
                                             <div className="space-y-1 flex-1 truncate overflow-hidden">
                                                 <p className="text-sm font-medium leading-none">
-                                                    { kuis.nama }
+                                                    {kuis.nama}
                                                 </p>
                                                 <p className="text-sm text-muted-foreground">
-                                                    { kuis.praktikum.nama }
+                                                    {kuis.praktikum.nama}
                                                 </p>
                                             </div>
                                             <TooltipProvider>
                                                 <Tooltip>
-                                                    <TooltipTrigger onClick={() => router.visit(route('admin.kuis.update', { q: kuis.id }))}>
-                                                        <FolderSync/>
+                                                    <TooltipTrigger
+                                                        onClick={() =>
+                                                            router.visit(
+                                                                route(
+                                                                    "admin.kuis.update",
+                                                                    {
+                                                                        q: kuis.id,
+                                                                    }
+                                                                )
+                                                            )
+                                                        }
+                                                    >
+                                                        <FolderSync />
                                                     </TooltipTrigger>
                                                     <TooltipContent>
                                                         Detail Kuis
@@ -94,19 +154,24 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                                                 </Tooltip>
                                             </TooltipProvider>
                                         </div>
-                                    ))) : (
-                                        <div className="flex items-center space-x-4 rounded-md border p-3 truncate [&_p]:truncate">
-                                            <p className="text-sm font-medium text-muted-foreground/80">
-                                                Tidak ada kuis mendatang
-                                            </p>
-                                        </div>
-                                    )
-                                }
+                                    ))
+                                ) : (
+                                    <div className="flex items-center space-x-4 rounded-md border p-3 truncate [&_p]:truncate">
+                                        <p className="text-sm font-medium text-muted-foreground/80">
+                                            Tidak ada kuis mendatang
+                                        </p>
+                                    </div>
+                                )}
                             </CardContent>
                         </ScrollArea>
                         <CardFooter className="mt-auto">
-                            <Button className="w-full">
-                                Manajemen Kuis <ArrowRight/>
+                            <Button
+                                className="w-full"
+                                onClick={() =>
+                                    router.visit(route("admin.kuis.index"))
+                                }
+                            >
+                                Manajemen Kuis <ArrowRight />
                             </Button>
                         </CardFooter>
                     </Card>
@@ -114,43 +179,55 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                         <CardHeader>
                             <CardTitle>Aslab Aktif</CardTitle>
                             <CardDescription>
-                                { aslabs.length } Aslab aktif saat ini
+                                {aslabs.length} Aslab aktif saat ini
                             </CardDescription>
                         </CardHeader>
                         <ScrollArea>
                             <CardContent className="grid gap-4">
-                                {
-                                    aslabs.map((aslab, index) => ((
-                                        <div key={ index } className="flex items-center space-x-4 rounded-md border p-4 truncate [&_p]:truncate">
-                                            <div className={ `w-8 h-8 rounded-full overflow-hidden content-center ${!aslab.avatar ? 'bg-gray-100 shadow' : ''}` }>
-                                                { aslab.avatar ? (
-                                                    <img
-                                                        src={`/storage/aslab/${aslab.avatar}`}
-                                                        alt={ `aslab-avatar-${aslab.username}` }
-                                                    />
-                                                ) : (
-                                                    <UserRound className="mx-auto" />
-                                                )}
-                                            </div>
-                                            <div className="space-y-1 flex-1 truncate overflow-hidden">
-                                                <p className="text-sm font-medium">
-                                                    { aslab.nama }
-                                                </p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    { aslab.username }
-                                                </p>
-                                                <p className="!-mt-0.5 text-sm text-muted-foreground">
-                                                    { aslab.jabatan }
-                                                </p>
-                                            </div>
+                                {aslabs.map((aslab, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex items-center space-x-4 rounded-md border p-4 truncate [&_p]:truncate"
+                                    >
+                                        <div
+                                            className={`w-8 h-8 rounded-full overflow-hidden content-center ${
+                                                !aslab.avatar
+                                                    ? "bg-gray-100 shadow"
+                                                    : ""
+                                            }`}
+                                        >
+                                            {aslab.avatar ? (
+                                                <img
+                                                    src={`/storage/aslab/${aslab.avatar}`}
+                                                    alt={`aslab-avatar-${aslab.username}`}
+                                                />
+                                            ) : (
+                                                <UserRound className="mx-auto" />
+                                            )}
                                         </div>
-                                    )))
-                                }
+                                        <div className="space-y-1 flex-1 truncate overflow-hidden">
+                                            <p className="text-sm font-medium">
+                                                {aslab.nama}
+                                            </p>
+                                            <p className="text-sm text-muted-foreground">
+                                                {aslab.username}
+                                            </p>
+                                            <p className="!-mt-0.5 text-sm text-muted-foreground">
+                                                {aslab.jabatan}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
                             </CardContent>
                         </ScrollArea>
                         <CardFooter className="mt-auto">
-                            <Button className="w-full" onClick={() => router.visit(route('admin.aslab.index'))}>
-                                Manajemen Aslab <ArrowRight/>
+                            <Button
+                                className="w-full"
+                                onClick={() =>
+                                    router.visit(route("admin.aslab.index"))
+                                }
+                            >
+                                Manajemen Aslab <ArrowRight />
                             </Button>
                         </CardFooter>
                     </Card>
@@ -159,30 +236,58 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                     <Card className="p-3 content-center w-full lg:w-2/3 lg:min-w-[26rem] min-h-80 lg:min-h-[30rem] rounded">
                         <ScrollArea>
                             <CardHeader>
-                                <CardTitle>Statistik Praktikum terbaru</CardTitle>
+                                <CardTitle>
+                                    Statistik Praktikum terbaru
+                                </CardTitle>
                                 <CardDescription>
-                                    Data kelulusan { chartDataPraktikum.length } praktikum terbaru
+                                    Data kelulusan {chartDataPraktikum.length}{" "}
+                                    praktikum terbaru
                                 </CardDescription>
                             </CardHeader>
-                            <ChartContainer config={ chartConfig } className="min-h-[200px] w-80 md:w-[38rem] md:min-w-96 lg:w-[38rem] mx-auto">
-                                <BarChart accessibilityLayer data={ chartDataPraktikum }>
-                                    <CartesianGrid vertical={ false }/>
+                            <ChartContainer
+                                config={chartConfig}
+                                className="min-h-[200px] w-80 md:w-[38rem] md:min-w-96 lg:w-[38rem] mx-auto"
+                            >
+                                <BarChart
+                                    accessibilityLayer
+                                    data={chartDataPraktikum}
+                                >
+                                    <CartesianGrid vertical={false} />
                                     <XAxis
                                         dataKey="praktikum"
-                                        tickLine={ false }
-                                        tickMargin={ 10 }
-                                        axisLine={ false }
+                                        tickLine={false}
+                                        tickMargin={10}
+                                        axisLine={false}
                                         tickFormatter={(value) => {
                                             const words = value.split(" ");
-                                            const initials = words[0][0] + words[1][0];
-                                            return `${initials}-${words.slice(-1)[0]}`;
+                                            const initials =
+                                                words[0][0] + words[1][0];
+                                            return `${initials}-${
+                                                words.slice(-1)[0]
+                                            }`;
                                         }}
                                     />
-                                    <ChartTooltip content={ <ChartTooltipContent/> }/>
-                                    <ChartLegend content={ <ChartLegendContent/> }/>
-                                    <Bar dataKey="terverifikasi" fill="var(--color-terverifikasi)" radius={ 4 }/>
-                                    <Bar dataKey="lulus" fill="var(--color-lulus)" radius={ 4 }/>
-                                    <Bar dataKey="gugur" fill="var(--color-gugur)" radius={ 4 }/>
+                                    <ChartTooltip
+                                        content={<ChartTooltipContent />}
+                                    />
+                                    <ChartLegend
+                                        content={<ChartLegendContent />}
+                                    />
+                                    <Bar
+                                        dataKey="terverifikasi"
+                                        fill="var(--color-terverifikasi)"
+                                        radius={4}
+                                    />
+                                    <Bar
+                                        dataKey="lulus"
+                                        fill="var(--color-lulus)"
+                                        radius={4}
+                                    />
+                                    <Bar
+                                        dataKey="gugur"
+                                        fill="var(--color-gugur)"
+                                        radius={4}
+                                    />
                                 </BarChart>
                             </ChartContainer>
                         </ScrollArea>
@@ -190,33 +295,40 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                     <Card className="flex flex-col w-full lg:w-1/3 lg:min-w-[23rem] h-[30rem] overflow-y-auto rounded">
                         <ScrollArea>
                             <CardHeader>
-                                <CardTitle>Aslab Aktif (SARAN KONTEN?)</CardTitle>
+                                <CardTitle>
+                                    Aslab Aktif (SARAN KONTEN?)
+                                </CardTitle>
                                 <CardDescription>
-                                    { aslabs.length } Aslab aktif saat ini
+                                    {aslabs.length} Aslab aktif saat ini
                                 </CardDescription>
                             </CardHeader>
                             <CardContent className="grid gap-4">
-                                {
-                                    aslabs.map((aslab, index) => ((
-                                        <div key={index} className="flex items-center space-x-4 rounded-md border p-4 truncate [&_p]:truncate">
-                                            <div className="h-7">
-                                                <img src={ MahiruCirle } alt="profile" width={ 30 }/>
-                                            </div>
-                                            <div className="space-y-1 flex-1 truncate overflow-hidden">
-                                                <p className="text-sm font-medium leading-none">
-                                                    { aslab.nama }
-                                                </p>
-                                                <p className="text-sm text-muted-foreground">
-                                                    { aslab.username }
-                                                </p>
-                                            </div>
+                                {aslabs.map((aslab, index) => (
+                                    <div
+                                        key={index}
+                                        className="flex items-center space-x-4 rounded-md border p-4 truncate [&_p]:truncate"
+                                    >
+                                        <div className="h-7">
+                                            <img
+                                                src={MahiruCirle}
+                                                alt="profile"
+                                                width={30}
+                                            />
                                         </div>
-                                    )))
-                                }
+                                        <div className="space-y-1 flex-1 truncate overflow-hidden">
+                                            <p className="text-sm font-medium leading-none">
+                                                {aslab.nama}
+                                            </p>
+                                            <p className="text-sm text-muted-foreground">
+                                                {aslab.username}
+                                            </p>
+                                        </div>
+                                    </div>
+                                ))}
                             </CardContent>
                             <CardFooter className="mt-auto">
                                 <Button className="w-full">
-                                    Manajemen Aslab <ArrowRight/>
+                                    Manajemen Aslab <ArrowRight />
                                 </Button>
                             </CardFooter>
                         </ScrollArea>
@@ -224,5 +336,5 @@ export default function AdminDashboardPage({ auth, aslabs, kuis }: PageProps<{
                 </div>
             </AdminLayout>
         </>
-    )
+    );
 }

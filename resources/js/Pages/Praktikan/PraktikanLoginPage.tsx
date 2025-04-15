@@ -134,7 +134,7 @@ export default function PraktikanLoginPage() {
                             <CardHeader className="space-y-1 flex flex-col items-center">
                                 <img
                                     src={LogoLabInformatika}
-                                    alt="logo-jarkom"
+                                    alt="logo-lab-informatika"
                                     width={140}
                                     className="mx-auto"
                                 />

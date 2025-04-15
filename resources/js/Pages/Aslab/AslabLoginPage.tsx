@@ -10,7 +10,11 @@ import {
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { Button } from "@/components/ui/button";
-import { LogoJarkom, LogoLogin } from "@/lib/StaticImagesLib";
+import {
+    LogoJarkom,
+    LogoLabInformatika,
+    LogoLogin,
+} from "@/lib/StaticImagesLib";
 import { Eye, EyeOff } from "lucide-react";
 import { z } from "zod";
 import { Head, router } from "@inertiajs/react";
@@ -119,8 +123,8 @@ export default function AslabLoginPage() {
                             <form onSubmit={handleFormSubmit}>
                                 <CardHeader className="space-y-1 flex flex-col items-center">
                                     <img
-                                        src={LogoJarkom}
-                                        alt="logo-jarkom"
+                                        src={LogoLabInformatika}
+                                        alt="logo-labinformatika"
                                         width={140}
                                         className="mx-auto"
                                     />
@@ -191,8 +195,8 @@ export default function AslabLoginPage() {
                                         {form.onsubmit
                                             ? "Memuat..."
                                             : form.onSuccess
-                                                ? "Berhasil"
-                                                : "Masuk"}
+                                            ? "Berhasil"
+                                            : "Masuk"}
                                     </Button>
                                     <p
                                         className={`h-6 text-sm text-red-600 font-medium ${

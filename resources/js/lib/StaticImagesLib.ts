@@ -5,9 +5,9 @@ import ShorekeeperPP from "@/assets/ShorekeeperPP.webp";
 import FuminocchiPP from "@/assets/FuminocchiPP.jpeg";
 import NoaPP from "@/assets/NoaPP.jpeg";
 import LandingPrak from "@/assets/landing-prak.webp";
-import LandingPrak1 from "@/assets/landing-prak1.webp";
-import LandingPrak2 from "@/assets/landing-prak2.webp";
-import LandingPrak3 from "@/assets/landing-prak3.webp";
+import LandingPrak1 from "@/assets/landing-prak2.webp";
+import LandingPrak2 from "@/assets/landing-prak3.jpg";
+import LandingPrak3 from "@/assets/landing-prak4.jpg";
 import Spectro from "@/assets/ele-spectro.png";
 import Havoc from "@/assets/ele-havoc.png";
 import Glacio from "@/assets/ele-glacio.png";
@@ -17,8 +17,10 @@ import LogoLogin from "@/assets/login-image.png";
 import LogoLabInformatika from "@/assets/logo-itats-new.png";
 import LogoItats from "@/assets/logo-itats.jpg";
 import LogoRPL from "@/assets/logo-rpl.png";
+import BgLoginPage from "@/assets/bg-login-page.png";
 
 export {
+    BgLoginPage,
     LogoRPL,
     LogoItats,
     LogoJarkom,

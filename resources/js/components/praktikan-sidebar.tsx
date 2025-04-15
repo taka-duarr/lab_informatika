@@ -1,9 +1,9 @@
-import { ChevronDown } from "lucide-react"
+import { ChevronDown } from "lucide-react";
 import {
     Collapsible,
     CollapsibleContent,
     CollapsibleTrigger,
-} from "@/components/ui/collapsible"
+} from "@/components/ui/collapsible";
 import {
     Sidebar,
     SidebarContent,
@@ -16,7 +16,7 @@ import {
     SidebarMenuSubButton,
     SidebarMenuSubItem,
     SidebarRail,
-} from "@/components/ui/sidebar"
+} from "@/components/ui/sidebar";
 import { LogoLabInformatika } from "@/lib/StaticImagesLib";
 import { Link } from "@inertiajs/react";
 
@@ -38,13 +38,13 @@ const data: {
             items: [
                 {
                     title: "Registrasi Praktikum",
-                    url: route('praktikan.praktikum.create'),
-                    route: 'praktikan.praktikum.create'
+                    url: route("praktikan.praktikum.create"),
+                    route: "praktikan.praktikum.create",
                 },
                 {
                     title: "Histori Praktikum",
-                    url: route('praktikan.praktikum.index'),
-                    route: 'praktikan.praktikum.index'
+                    url: route("praktikan.praktikum.index"),
+                    route: "praktikan.praktikum.index",
                 },
             ],
         },
@@ -54,13 +54,13 @@ const data: {
             items: [
                 {
                     title: "Kuis mendatang",
-                    url: route('praktikan.kuis.index'),
-                    route: 'praktikan.kuis.index'
+                    url: route("praktikan.kuis.index"),
+                    route: "praktikan.kuis.index",
                 },
                 {
                     title: "Histori Kuis",
-                    url: route('praktikan.kuis.history'),
-                    route: 'praktikan.kuis.history'
+                    url: route("praktikan.kuis.history"),
+                    route: "praktikan.kuis.history",
                 },
             ],
         },
@@ -68,17 +68,19 @@ const data: {
             title: "Informasi Penting",
             url: "#",
             items: [
-                // {
-                //     title: "Manajemen Praktikan",
-                //     url: route('admin.praktikan.index'),
-                //     route: 'admin.praktikan.index'
-                // },
+                {
+                    title: "Berita Terbaru",
+                    url: route("berita.index"),
+                    route: "berita.index",
+                },
             ],
         },
     ],
-}
+};
 
-export function PraktikanSidebar({ ...props }: React.ComponentProps<typeof Sidebar>) {
+export function PraktikanSidebar({
+    ...props
+}: React.ComponentProps<typeof Sidebar>) {
     return (
         <Sidebar {...props}>
             <SidebarHeader className="bg-white">
@@ -86,7 +88,11 @@ export function PraktikanSidebar({ ...props }: React.ComponentProps<typeof Sideb
                     <SidebarMenuItem>
                         <div className="px-3 flex gap-1 items-center">
                             <div className="flex aspect-square size-16 items-center justify-center rounded-lg text-sidebar-primary-foreground">
-                                <img src={ LogoLabInformatika } width={ 80 } alt="jarkom-jaya"/>
+                                <img
+                                    src={LogoLabInformatika}
+                                    width={80}
+                                    alt="jarkom-jaya"
+                                />
                             </div>
                             <p className="font-semibold text-lg select-none">
                                 Labinformatika
@@ -100,29 +106,39 @@ export function PraktikanSidebar({ ...props }: React.ComponentProps<typeof Sideb
                     <SidebarMenu>
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild>
-                                <Link href="/">
-                                    Halaman Utama
-                                </Link>
+                                <Link href="/">Halaman Utama</Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild isActive={ route().current() === 'praktikan.dashboard' }>
-                                <Link href={route('praktikan.dashboard')}>
+                            <SidebarMenuButton
+                                asChild
+                                isActive={
+                                    route().current() === "praktikan.dashboard"
+                                }
+                            >
+                                <Link href={route("praktikan.dashboard")}>
                                     Dashboard
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>
-                            <SidebarMenuButton asChild isActive={ route().current() === 'praktikan.profile' }>
-                                <Link href={route('praktikan.profile')}>
+                            <SidebarMenuButton
+                                asChild
+                                isActive={
+                                    route().current() === "praktikan.profile"
+                                }
+                            >
+                                <Link href={route("praktikan.profile")}>
                                     Profil Saya
                                 </Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
-                        { data.navMain.map((item) => (
+                        {data.navMain.map((item) => (
                             <Collapsible
                                 key={item.title}
-                                defaultOpen={item.items.some((itm) => route().current() === itm.route)}
+                                defaultOpen={item.items.some(
+                                    (itm) => route().current() === itm.route
+                                )}
                                 className="group/collapsible"
                             >
                                 <SidebarMenuItem>
@@ -136,12 +152,21 @@ export function PraktikanSidebar({ ...props }: React.ComponentProps<typeof Sideb
                                         <CollapsibleContent>
                                             <SidebarMenuSub>
                                                 {item.items.map((item) => (
-                                                    <SidebarMenuSubItem key={item.title}>
+                                                    <SidebarMenuSubItem
+                                                        key={item.title}
+                                                    >
                                                         <SidebarMenuSubButton
                                                             asChild
-                                                            isActive={route().current() === item.route}
+                                                            isActive={
+                                                                route().current() ===
+                                                                item.route
+                                                            }
                                                         >
-                                                            <Link href={item.url}>{item.title}</Link>
+                                                            <Link
+                                                                href={item.url}
+                                                            >
+                                                                {item.title}
+                                                            </Link>
                                                         </SidebarMenuSubButton>
                                                     </SidebarMenuSubItem>
                                                 ))}
@@ -150,11 +175,11 @@ export function PraktikanSidebar({ ...props }: React.ComponentProps<typeof Sideb
                                     ) : null}
                                 </SidebarMenuItem>
                             </Collapsible>
-                        )) }
+                        ))}
                     </SidebarMenu>
                 </SidebarGroup>
             </SidebarContent>
             <SidebarRail />
         </Sidebar>
-    )
+    );
 }

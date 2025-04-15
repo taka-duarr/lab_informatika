@@ -19,6 +19,7 @@ import {
     LandingPrak,
     LandingPrak2,
     LandingPrak3,
+    LandingPrak1,
     LogoJarkom,
     LogoLabInformatika,
     LogoRPL,
@@ -72,7 +73,12 @@ export default function LandingPage({
         } | null;
     }[];
 }>) {
-    const landingImages = [LandingPrak, LandingPrak2, LandingPrak3];
+    const landingImages = [
+        LandingPrak,
+        LandingPrak1,
+        LandingPrak2,
+        LandingPrak3,
+    ];
     const featuresRef = useRef<HTMLDivElement | null>(null);
     const [currentImageIndex, setCurrentImageIndex] = useState(0);
     const jmlLandingImages = landingImages.length;

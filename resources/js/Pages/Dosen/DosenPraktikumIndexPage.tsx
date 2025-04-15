@@ -1,17 +1,17 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import { CardDescription, CardTitle } from "@/components/ui/card";
-import { ColumnDef } from "@tanstack/react-table"
-import {
-    ArrowUpDown,
-    CheckCircle2,
-    CircleX,
-    FileSearch,
-} from "lucide-react"
+import { ColumnDef } from "@tanstack/react-table";
+import { ArrowUpDown, CheckCircle2, CircleX, FileSearch } from "lucide-react";
 import { romanToNumber } from "@/lib/utils";
 import { Head, router } from "@inertiajs/react";
 import { PageProps, PaginationData } from "@/types";
 import DataTable from "@/components/data-table";
-import { Tooltip, TooltipContent, TooltipProvider, TooltipTrigger } from "@/components/ui/tooltip";
+import {
+    Tooltip,
+    TooltipContent,
+    TooltipProvider,
+    TooltipTrigger,
+} from "@/components/ui/tooltip";
 import * as React from "react";
 import { DosenLayout } from "@/layouts/DosenLayout";
 
@@ -27,7 +27,10 @@ type Praktikum = {
     praktikan_count: number;
 };
 
-export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<{
+export default function DosenPraktikumIndexPage({
+    auth,
+    pagination,
+}: PageProps<{
     pagination: PaginationData<Praktikum[]>;
 }>) {
     console.log(pagination);
@@ -38,7 +41,9 @@ export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<
                 return (
                     <Button
                         variant="ghost"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
                         className="w-full justify-start"
                     >
                         Praktikum
@@ -59,7 +64,9 @@ export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<
                 return (
                     <Button
                         variant="ghost"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
                         className="w-full justify-start"
                     >
                         Periode
@@ -75,8 +82,12 @@ export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<
                 );
             },
             sortingFn: (rowA, rowB) => {
-                const valueA = romanToNumber(rowA.getValue<string>("periode.nama"));
-                const valueB = romanToNumber(rowB.getValue<string>("periode.nama"));
+                const valueA = romanToNumber(
+                    rowA.getValue<string>("periode.nama")
+                );
+                const valueB = romanToNumber(
+                    rowB.getValue<string>("periode.nama")
+                );
                 return valueA - valueB;
             },
         },
@@ -86,7 +97,9 @@ export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<
                 return (
                     <Button
                         variant="ghost"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
                         className="w-full justify-start"
                     >
                         Tahun
@@ -106,7 +119,9 @@ export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<
                 return (
                     <Button
                         variant="ghost"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
                         className="w-full min-w-20 justify-start"
                     >
                         Status
@@ -118,21 +133,27 @@ export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<
                 const status = row.original.status;
                 return (
                     <div className="flex items-center gap-1 min-w-20 text-xs ml-3 font-medium">
-                        { status
-                            ? (
-                                <>
-                                    <CheckCircle2 className="text-green-600" strokeWidth={2.5} width={22} />
-                                    <p className="text-start ">Aktif</p>
-                                </>
-                            ) : (
-                                <>
-                                    <CircleX className="text-red-600" strokeWidth={2.5} width={22} />
-                                    <p className="text-start ">Nonaktif</p>
-                                </>
-                            )
-                        }
+                        {status ? (
+                            <>
+                                <CheckCircle2
+                                    className="text-green-600"
+                                    strokeWidth={2.5}
+                                    width={22}
+                                />
+                                <p className="text-start ">Aktif</p>
+                            </>
+                        ) : (
+                            <>
+                                <CircleX
+                                    className="text-red-600"
+                                    strokeWidth={2.5}
+                                    width={22}
+                                />
+                                <p className="text-start ">Nonaktif</p>
+                            </>
+                        )}
                     </div>
-                )
+                );
             },
         },
         {
@@ -146,7 +167,7 @@ export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<
             },
             cell: ({ row }) => (
                 <div className="min-w-28 indent-4">
-                    { row.getValue("praktikan_count")} Praktikan
+                    {row.getValue("praktikan_count")} Praktikan
                 </div>
             ),
         },
@@ -164,15 +185,19 @@ export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<
                                     variant="outline"
                                     size="icon"
                                     className="mr-3 w-8 h-8 bg-blue-600 text-white hover:bg-blue-600/90 hover:text-white"
-                                    onClick={() => router.visit(route('dosen.praktikum.details', { id: originalRow.id }))}
+                                    onClick={() =>
+                                        router.visit(
+                                            route("dosen.praktikum.details", {
+                                                id: originalRow.id,
+                                            })
+                                        )
+                                    }
                                 >
                                     <FileSearch width={20} />
                                 </Button>
                             </TooltipTrigger>
                             <TooltipContent>
-                                <p className="text-xs">
-                                    Detail Praktikum
-                                </p>
+                                <p className="text-xs">Detail Praktikum</p>
                             </TooltipContent>
                         </Tooltip>
                     </TooltipProvider>
@@ -184,9 +209,7 @@ export default function DosenPraktikumIndexPage({ auth, pagination }: PageProps<
     return (
         <DosenLayout auth={auth}>
             <Head title="Dosen - Manajemen Praktikum" />
-            <CardTitle>
-                Manajemen Praktikum
-            </CardTitle>
+            <CardTitle>Manajemen Praktikum</CardTitle>
             <CardDescription className="!mb-8">
                 Data Praktikum yang terdaftar
             </CardDescription>
