@@ -159,7 +159,11 @@ Route::prefix('sesi-praktikum')->name('sesi-praktikum.')->middleware('withAuth:a
     Route::post('/delete', [SesiPraktikumController::class, 'destroy'])->name('delete');
 });
 Route::prefix('praktikum-praktikan')->name('praktikum-praktikan.')->middleware('withAuth:admin')->group(function () {
-    Route::post('/create', [PraktikumPraktikanController::class, 'store'])->name('create');
+    Route::post('/create', [PraktikumPraktikanController::class, 'store'])
+    ->withoutMiddleware('withAuth:admin') 
+    ->middleware('withAuth:admin,praktikan')
+    ->name('create');
+    
     Route::post('/create-mass', [PraktikumPraktikanController::class, 'storeMass'])->name('create-mass');
     Route::post('/update', [PraktikumPraktikanController::class, 'update'])->name('update');
     Route::post('/delete', [PraktikumPraktikanController::class, 'destroy'])->name('delete');
