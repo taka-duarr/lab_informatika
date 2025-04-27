@@ -192,7 +192,7 @@ class PraktikanController extends Controller
         }
 
         try {
-            Praktikan::where('id', $authPraktikan->id)->update([
+            Praktikan::findOrFail($authPraktikan->id)->update([
                 'jenis_kelamin' => $validated['jenis_kelamin'] ?? null,
             ]);
 
@@ -241,7 +241,7 @@ class PraktikanController extends Controller
         ]);
 
         try {
-            Praktikan::where('id', $validated['id'])->delete();
+            Praktikan::findOrFail($validated['id'])->delete();
             return Response::json([
                 'message' => 'Data Praktikan berhasil dihapus!',
             ]);
@@ -489,4 +489,3 @@ class PraktikanController extends Controller
         }
     }
 }
-

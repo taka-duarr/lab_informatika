@@ -78,7 +78,7 @@ class JenisPraktikumController extends Controller
         ]);
 
         try {
-            JenisPraktikum::where('id', $validated['id'])->update([
+            JenisPraktikum::findOrFail($validated['id'])->update([
                 'nama' => $validated['nama'],
                 'laboratorium_id' => $validated['laboratorium_id'],
             ]);
@@ -100,7 +100,7 @@ class JenisPraktikumController extends Controller
         ]);
 
         try {
-            JenisPraktikum::where('id', $validated['id'])->delete();
+            JenisPraktikum::findOrFail($validated['id'])->delete();
 
             return Response::json([
                 'message' => 'Jenis Praktikum berhasil dihapus'

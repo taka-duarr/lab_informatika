@@ -63,7 +63,7 @@ class KuisPraktikanController extends Controller
                 ], 409);
             }
 
-            $kuis = Kuis::find($validated['kuis_id']);
+            $kuis = Kuis::findOrFail($validated['kuis_id']);
 
             if ($kuis->kode) {
                 if(($validated['kode'] ?? null) !== $kuis->kode) {

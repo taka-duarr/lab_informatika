@@ -7,10 +7,12 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Auditable;
 
-class Laboratorium extends Model
+class Laboratorium extends Model implements AuditableContract
 {
-    use HasUuids;
+    use HasUuids,Auditable;
     protected $table = 'laboratorium';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

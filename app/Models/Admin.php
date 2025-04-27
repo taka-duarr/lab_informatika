@@ -6,10 +6,12 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Foundation\Auth\User as Authenticatable;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Auditable;
 
-class Admin extends Authenticatable
+class Admin extends Authenticatable implements AuditableContract
 {
-    use HasUuids;
+    use HasUuids,Auditable;
     protected $table = 'admin';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

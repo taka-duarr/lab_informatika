@@ -127,7 +127,7 @@ class BeritaController extends Controller
         ]);
 
         try {
-            Berita::where('id', $validated['id'])->update([
+            Berita::findOrFail($validated['id'])->update([
                 'judul' => $validated['judul'],
                 'slug' => Str::slug($validated['slug']),
                 'deskripsi' => $validated['deskripsi'],
@@ -151,7 +151,7 @@ class BeritaController extends Controller
             'id' => 'required|uuid|exists:berita,id',
         ]);
         try {
-            Berita::where('id', $validated['id'])->delete();
+            Berita::findOrFail($validated['id'])->delete();
             return Response::json([
                 'message' => 'Berita berhasil dihapus',
             ]);

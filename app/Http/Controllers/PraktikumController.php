@@ -115,7 +115,7 @@ class PraktikumController extends Controller
         ]);
 
         try {
-            Praktikum::where('id', $validated['id'])->update([
+            Praktikum::findOrFail($validated['id'])->update([
                 'nama' => $validated['nama'],
                 'tahun' => $validated['tahun'],
                 'status' => $validated['status'],
@@ -146,7 +146,7 @@ class PraktikumController extends Controller
         ]);
 
         try {
-            Praktikum::where('id', $validated['id'])->update([
+            Praktikum::findOrFail($validated['id'])->update([
                 'status' => $validated['status']
             ]);
 
@@ -172,7 +172,7 @@ class PraktikumController extends Controller
         ]);
 
         try {
-            Praktikum::where('id', $validated['id'])->delete();
+            Praktikum::findOrFail($validated['id'])->delete();
             return Response::json([
                 'message' => 'Praktikum berhasil dihapus!'
             ]);

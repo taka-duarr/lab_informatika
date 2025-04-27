@@ -179,7 +179,9 @@ class AslabController extends Controller
         ]);
 
         try {
-            Aslab::where('id', $validated['id'])->delete();
+            $aslab = Aslab::findOrFail($validated['id']);
+            $aslab->delete();
+            
 
             return Response::json([
                 'message' => 'Data Aslab berhasil dihapus',

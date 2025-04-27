@@ -77,7 +77,7 @@ class LaboratoriumController extends Controller
         ]);
 
         try {
-            $laboratorium = Laboratorium::find($validated['id']);
+            $laboratorium = Laboratorium::findOrFail($validated['id']);
             $laboratorium->update([
                 'nama' => $validated['nama'],
             ]);
@@ -99,7 +99,7 @@ class LaboratoriumController extends Controller
         ]);
 
         try {
-            Laboratorium::where('id', $validated['id'])->delete();
+            Laboratorium::findOrFail($validated['id'])->delete();
             return Response::json([
                 'message' => 'Laboratorium berhasil dihapus!',
             ]);

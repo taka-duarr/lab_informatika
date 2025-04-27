@@ -51,7 +51,7 @@ class AdminController extends Controller
         ]);
 
         try {
-            Admin::where('id', $validated['id'])->update([
+            Admin::findOrFail($validated['id'])->update([
                 'nama' => $validated['nama'],
                 'username' => $validated['username'],
                 'laboratorium_id' => $validated['laboratorium_id']
@@ -99,7 +99,9 @@ class AdminController extends Controller
             'id' => 'required|exists:admin,id',
         ]);
         try {
-            Admin::where('id', $validated['id'])->delete();
+            // Admin::where('id', $validated['id'])->delete();
+            $admin = Admin::findOrFail($validated['id']);
+            $admin->delete();
 
             return Response::json([
                 'message' => 'Admin berhasil dihapus'

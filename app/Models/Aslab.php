@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Foundation\Auth\User as Authenticatable;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Auditable;
 
-class Aslab extends Authenticatable
+class Aslab extends Authenticatable implements AuditableContract
 {
-    use HasUuids;
+    use HasUuids,Auditable;
+    
     protected $table = 'aslab';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
@@ -25,4 +28,7 @@ class Aslab extends Authenticatable
     {
         return $this->belongsToMany(JenisPraktikum::class, 'aslab_jenis_praktikum', 'aslab_id', 'jenis_praktikum_id');
     }
+
+
+
 }

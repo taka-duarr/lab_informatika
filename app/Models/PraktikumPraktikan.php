@@ -6,10 +6,13 @@ use Illuminate\Database\Eloquent\Concerns\HasUuids;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Auditable;
 
-class PraktikumPraktikan extends Model
+
+class PraktikumPraktikan extends Model implements AuditableContract
 {
-    use HasUuids;
+    use HasUuids, Auditable;
     protected $table = 'praktikum_praktikan';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

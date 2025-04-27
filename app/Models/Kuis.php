@@ -7,10 +7,13 @@ use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Auditable;
 
-class Kuis extends Model
+
+class Kuis extends Model implements AuditableContract
 {
-    use HasUuids;
+    use HasUuids, Auditable;
 
     protected $table = 'kuis';
     protected $guarded = ['id'];

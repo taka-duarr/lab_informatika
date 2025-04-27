@@ -8,10 +8,13 @@ use Illuminate\Database\Eloquent\Relations\BelongsTo;
 use Illuminate\Database\Eloquent\Relations\BelongsToMany;
 use Illuminate\Database\Eloquent\Relations\HasMany;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use OwenIt\Auditing\Contracts\Auditable as AuditableContract;
+use OwenIt\Auditing\Auditable;
 
-class JenisPraktikum extends Model
+
+class JenisPraktikum extends Model implements AuditableContract
 {
-    use HasUuids;
+    use HasUuids,Auditable;
     protected $table = 'jenis_praktikum';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];

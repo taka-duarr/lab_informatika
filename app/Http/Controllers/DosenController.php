@@ -124,7 +124,7 @@ class DosenController extends Controller
                 ], 403);
             }
 
-            Dosen::where('id', $authDosen->id)->update([
+            Dosen::findOrFail($authDosen->id)->update([
                 'password' => Hash::make($validated['password'], ['rounds' => 12]),
             ]);
 
@@ -146,7 +146,7 @@ class DosenController extends Controller
         ]);
 
         try {
-            Dosen::where('id', $validated['id'])->delete();
+            Dosen::findOrFail($validated['id'])->delete();
             return Response::json([
                 'message' => 'Dosen berhasil dihapus!',
             ]);
@@ -169,7 +169,7 @@ class DosenController extends Controller
                 ], 403);
             }
 
-            $dosen = Dosen::find($validated['id']);
+            $dosen = Dosen::findOrFail($validated['id']);
 
             if (!$dosen) {
                 return Response::json([
