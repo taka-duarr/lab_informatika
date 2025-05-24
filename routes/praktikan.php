@@ -1,0 +1,21 @@
+<?php
+
+use App\Http\Controllers\Pages\PraktikanPagesController;
+use Illuminate\Support\Facades\Route;
+
+Route::prefix('praktikan')->name('praktikan.')->middleware('guard:praktikan')->group(function () {
+    Route::get('/dashboard', [PraktikanPagesController::class, 'dashboardPage'])->name('dashboard');
+    Route::get('/profil', [PraktikanPagesController::class, 'profilePage'])->name('profile');
+
+    Route::prefix('praktikum')->name('praktikum.')->group(function () {
+        Route::get('/', [PraktikanPagesController::class, 'praktikumIndexPage'])->name('index');
+        Route::get('/details/{id}', [PraktikanPagesController::class, 'praktikumDetailsPage'])->name('details');
+        Route::get('/register', [PraktikanPagesController::class, 'praktikumCreatePage'])->name('create');
+    });
+    Route::prefix('kuis')->name('kuis.')->group(function () {
+        Route::get('/', [PraktikanPagesController::class, 'kuisIndexPage'])->name('index');
+        Route::get('/history', [PraktikanPagesController::class, 'kuisHistoryPage'])->name('history');
+        Route::get('/exam/{id}', [PraktikanPagesController::class, 'kuisExamPage'])->name('exam');
+        Route::get('/result/{id}', [PraktikanPagesController::class, 'kuisResultPage'])->name('result');
+    });
+});
