@@ -53,12 +53,14 @@ Route::get('/test', function () {
 });
 
 Route::get('/', [UniversalPagesController::class, 'welcome']);
-Route::get('/hall-of-fames', function () {return Inertia::render('HallOfFamesPage');})->name('hall-of-fames');
+// Route::get('/hall-of-fames', function () {
+//     return Inertia::render('HallOfFamesPage');
+// })->name('hall-of-fames');
 Route::get('/ban-list', [PraktikanPagesController::class, 'banListPage'])->name('ban-list');
 
 // <-- LOGIN PAGE ROUTE --> //
 Route::middleware('noAuth')->group(function () {
-    Route::get('/shadow', [AdminPagesController::class, 'loginPage'])->name('admin.login');
+    Route::get('/shadow-monarch', [AdminPagesController::class, 'loginPage'])->name('admin.login');
     Route::get('/login', [PraktikanPagesController::class, 'loginPage'])->name('praktikan.login');
     Route::get('/login-aslab', [AslabPagesController::class, 'loginPage'])->name('aslab.login');
     Route::get('/login-dosen', [DosenPagesController::class, 'loginPage'])->name('dosen.login');
@@ -160,9 +162,9 @@ Route::prefix('sesi-praktikum')->name('sesi-praktikum.')->middleware('withAuth:a
 });
 Route::prefix('praktikum-praktikan')->name('praktikum-praktikan.')->middleware('withAuth:admin')->group(function () {
     Route::post('/create', [PraktikumPraktikanController::class, 'store'])
-    ->withoutMiddleware('withAuth:admin')
-    ->middleware('withAuth:admin,praktikan')
-    ->name('create');
+        ->withoutMiddleware('withAuth:admin')
+        ->middleware('withAuth:admin,praktikan')
+        ->name('create');
 
     Route::post('/create-mass', [PraktikumPraktikanController::class, 'storeMass'])->name('create-mass');
     Route::post('/update', [PraktikumPraktikanController::class, 'update'])->name('update');

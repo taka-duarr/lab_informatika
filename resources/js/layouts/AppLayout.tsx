@@ -112,16 +112,15 @@ export const AppLayout = ({
                                 sepenuhnya pendaftaran paperless.
                             </p>
                         </li>
-                        <li className="grid grid-cols-12 gap-1 text-sm text-gray-800">
+                       <li className="grid grid-cols-12 gap-1 text-sm text-gray-800">
                             <img
                                 src={Glacio}
                                 width={25}
-                                alt="spectro"
+                                alt="glacio"
                                 className="col-span-1"
                             />
                             <p className="col-span-11">
-                                <strong>Halaman Aslab & Dosen,</strong>,
-                                OnGoing...
+                                <strong>Halaman Aslab & Dosen</strong>, fitur yang tersedia meliputi manajemen kelas praktikum, pengelolaan soal kuis, rekapitulasi nilai, serta akses ke daftar praktikan dan progres pengerjaan kuis. Fitur ini mempermudah pengawasan dan pengelolaan kegiatan praktikum secara menyeluruh.
                             </p>
                         </li>
                     </ul>

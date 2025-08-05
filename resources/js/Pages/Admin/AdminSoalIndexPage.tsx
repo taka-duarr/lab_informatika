@@ -1,4 +1,4 @@
-import { Button } from "@/components/ui/button"
+import { Button } from "@/components/ui/button";
 import {
     DropdownMenu,
     DropdownMenuContent,
@@ -6,13 +6,19 @@ import {
     DropdownMenuLabel,
     DropdownMenuSeparator,
     DropdownMenuTrigger,
-} from "@/components/ui/dropdown-menu"
+} from "@/components/ui/dropdown-menu";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { CardDescription, CardTitle } from "@/components/ui/card";
+import { ColumnDef } from "@tanstack/react-table";
 import {
-    ColumnDef,
-} from "@tanstack/react-table"
-import { ArrowUpDown, MoreHorizontal, Pencil, Trash2, Plus, Loader2, Upload } from "lucide-react"
+    ArrowUpDown,
+    MoreHorizontal,
+    Pencil,
+    Trash2,
+    Plus,
+    Loader2,
+    Upload,
+} from "lucide-react";
 import { FormEvent, useState } from "react";
 import { TableSearchForm } from "@/components/table-search-form";
 import { Head, router } from "@inertiajs/react";
@@ -23,14 +29,20 @@ import { cn } from "@/lib/utils";
 import { Label } from "@/components/ui/label";
 import { Input } from "@/components/ui/input";
 import { z } from "zod";
-import { Accordion, AccordionContent, AccordionItem, AccordionTrigger } from "@/components/ui/accordion";
+import {
+    Accordion,
+    AccordionContent,
+    AccordionItem,
+    AccordionTrigger,
+} from "@/components/ui/accordion";
 import { Badge } from "@/components/ui/badge";
 import {
     AlertDialog,
     AlertDialogCancel,
     AlertDialogContent,
-    AlertDialogDescription, AlertDialogHeader,
-    AlertDialogTitle
+    AlertDialogDescription,
+    AlertDialogHeader,
+    AlertDialogTitle,
 } from "@/components/ui/alert-dialog";
 import { deltaParse, RenderQuillDelta } from "@/components/delta-parse";
 import DataTable from "@/components/data-table";
@@ -48,7 +60,10 @@ type Soal = {
         nama: string;
     }[];
 };
-export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
+export default function AdminSoalIndexPage({
+    auth,
+    pagination,
+}: PageProps<{
     pagination: PaginationData<Soal[]>;
 }>) {
     const { toast } = useToast();
@@ -59,12 +74,12 @@ export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
         onSubmit: boolean;
     };
     const deleteFormInit: DeleteForm = {
-        id: '',
-        validation: '',
-        onSubmit: false
+        id: "",
+        validation: "",
+        onSubmit: false,
     };
-    const [ openDeleteForm, setOpenDeleteForm ] = useState(false);
-    const [ deleteForm, setDeleteForm ] = useState<DeleteForm>(deleteFormInit);
+    const [openDeleteForm, setOpenDeleteForm] = useState(false);
+    const [deleteForm, setDeleteForm] = useState<DeleteForm>(deleteFormInit);
 
     const columns: ColumnDef<Soal>[] = [
         {
@@ -73,27 +88,34 @@ export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
                 return (
                     <Button
                         variant="ghost"
-                        onClick={() => column.toggleSorting(column.getIsSorted() === "asc")}
+                        onClick={() =>
+                            column.toggleSorting(column.getIsSorted() === "asc")
+                        }
                         className="w-full justify-start "
                     >
                         Label
                         <ArrowUpDown />
                     </Button>
-                )
+                );
             },
             cell: ({ row }) => {
                 const labelArr = row.original.label;
                 return (
                     <div className="pl-3 flex flex-wrap gap-2 min-w-40 max-w-60 w-auto overflow-hidden">
-                        { labelArr && labelArr.length > 0 ? (
+                        {labelArr && labelArr.length > 0 ? (
                             labelArr.map((label) => (
-                                <Badge key={ label.id } className="py-1 px-2 text-xs">
-                                    { label.nama }
+                                <Badge
+                                    key={label.id}
+                                    className="py-1 px-2 text-xs"
+                                >
+                                    {label.nama}
                                 </Badge>
                             ))
                         ) : (
-                            <span className="text-gray-500 italic">Tidak ada label</span>
-                        ) }
+                            <span className="text-gray-500 italic">
+                                Tidak ada label
+                            </span>
+                        )}
                     </div>
                 );
             },
@@ -106,17 +128,21 @@ export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
                     <>
                         <Accordion type="single" collapsible className="w-full">
                             <AccordionItem value="item-1">
-                                <AccordionTrigger>Lihat pertanyaan</AccordionTrigger>
+                                <AccordionTrigger>
+                                    Lihat pertanyaan
+                                </AccordionTrigger>
                                 <AccordionContent>
                                     <RenderQuillDelta
-                                        delta={deltaParse(row.original.pertanyaan)}
+                                        delta={deltaParse(
+                                            row.original.pertanyaan
+                                        )}
                                         className="!items-start justify-center"
                                     />
                                 </AccordionContent>
                             </AccordionItem>
                         </Accordion>
                     </>
-                )
+                );
             },
         },
         {
@@ -134,16 +160,26 @@ export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
-                            <DropdownMenuItem onClick={ () => router.visit(route('admin.kuis.soal.update', { q: originalRow.id })) }>
+                            <DropdownMenuItem
+                                onClick={() =>
+                                    router.visit(
+                                        route("admin.kuis.soal.update", {
+                                            q: originalRow.id,
+                                        })
+                                    )
+                                }
+                            >
                                 <Pencil /> Ubah data
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={ () => {
-                                setOpenDeleteForm(true);
-                                setDeleteForm((prevState) => ({
-                                    ...prevState,
-                                    id: originalRow.id,
-                                }));
-                            } }>
+                            <DropdownMenuItem
+                                onClick={() => {
+                                    setOpenDeleteForm(true);
+                                    setDeleteForm((prevState) => ({
+                                        ...prevState,
+                                        id: originalRow.id,
+                                    }));
+                                }}
+                            >
                                 <Trash2 /> Hapus data
                             </DropdownMenuItem>
                             <DropdownMenuSeparator />
@@ -159,7 +195,9 @@ export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
         setDeleteForm((prevState) => ({ ...prevState, onSubmit: true }));
         const { id } = deleteForm;
         const deleteSchema = z.object({
-            id: z.string({ message: 'Format Soal Kuis tidak valid! '}).min(1, { message: 'Format Soal Kuis tidak valid!' }),
+            id: z
+                .string({ message: "Format Soal Kuis tidak valid! " })
+                .min(1, { message: "Format Soal Kuis tidak valid!" }),
         });
         const deleteParse = deleteSchema.safeParse({
             id: id,
@@ -175,27 +213,32 @@ export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
             return;
         }
 
-        axios.post<{
-            message: string;
-        }>(route('soal.delete'), {
-            id: id,
-        })
+        axios
+            .post<{
+                message: string;
+            }>(route("soal.delete"), {
+                id: id,
+            })
             .then((res) => {
                 setDeleteForm(deleteFormInit);
                 setOpenDeleteForm(false);
                 toast({
-                    variant: 'default',
-                    className: 'bg-green-500 text-white',
+                    variant: "default",
+                    className: "bg-green-500 text-white",
                     title: "Berhasil!",
                     description: res.data.message,
                 });
-                router.reload({ only: ['pagination'] });
+                router.reload({ only: ["pagination"] });
             })
             .catch((err: unknown) => {
-                const errMsg: string = err instanceof AxiosError && err.response?.data?.message
-                    ? err.response.data.message
-                    : 'Error tidak diketahui terjadi!';
-                setDeleteForm((prevState) => ({ ...prevState, onSubmit: false }));
+                const errMsg: string =
+                    err instanceof AxiosError && err.response?.data?.message
+                        ? err.response.data.message
+                        : "Error tidak diketahui terjadi!";
+                setDeleteForm((prevState) => ({
+                    ...prevState,
+                    onSubmit: false,
+                }));
                 toast({
                     variant: "destructive",
                     title: "Permintaan gagal diproses!",
@@ -207,18 +250,24 @@ export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
     return (
         <AdminLayout auth={auth}>
             <Head title="Admin - Manajemen SoalKuis" />
-            <CardTitle>
-                Manajemen Soal Kuis
-            </CardTitle>
-            <CardDescription>
-                Data Soal Kuis
-            </CardDescription>
+            <CardTitle>Manajemen Soal Kuis</CardTitle>
+            <CardDescription>Data Soal Kuis</CardDescription>
             <div className="flex flex-col lg:flex-row gap-2 items-start justify-between">
                 <div className="space-x-2">
-                    <Button className="mt-4" onClick={ () => router.visit(route('admin.kuis.soal.create')) }>
+                    <Button
+                        className="mt-4"
+                        onClick={() =>
+                            router.visit(route("admin.kuis.soal.create"))
+                        }
+                    >
                         Buat <Plus />
                     </Button>
-                    <Button className="mt-4" onClick={ () => router.visit(route('admin.kuis.soal.create-upload')) }>
+                    <Button
+                        className="mt-4"
+                        onClick={() =>
+                            router.visit(route("admin.kuis.soal.create-upload"))
+                        }
+                    >
                         Upload <Upload />
                     </Button>
                 </div>
@@ -230,36 +279,43 @@ export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
                 pagination={pagination}
             />
 
-            {/*--DELETE-FORM--*/ }
-            <AlertDialog open={ openDeleteForm } onOpenChange={ setOpenDeleteForm }>
-                <AlertDialogContent className="my-alert-dialog-content" onOpenAutoFocus={ (e) => e.preventDefault() }>
+            {/*--DELETE-FORM--*/}
+            <AlertDialog open={openDeleteForm} onOpenChange={setOpenDeleteForm}>
+                <AlertDialogContent
+                    className="my-alert-dialog-content"
+                    onOpenAutoFocus={(e) => e.preventDefault()}
+                >
                     <AlertDialogHeader>
-                        <AlertDialogTitle>
-                            Hapus Soal Kuis
-                        </AlertDialogTitle>
+                        <AlertDialogTitle>Hapus Soal Kuis</AlertDialogTitle>
                         <AlertDialogDescription className="flex flex-col gap-0.5">
-                                <span className="text-red-600 font-bold">
-                                    Anda akan menghapus Soal Kuis!
-                                </span>
+                            <span className="text-red-600 font-bold">
+                                Anda akan menghapus Soal Kuis!
+                            </span>
                             <span className="*:text-red-600">
-                                    Data Soal Kuis akan dihapus
-                                </span>
-                            <br/>
+                                Data Soal Kuis akan dihapus
+                            </span>
+                            <br />
                             <span className="text-red-600">
-                                    Data yang terhapus tidak akan bisa dikembalikan! harap gunakan dengan hati-hati
-                                </span>
+                                Data yang terhapus tidak akan bisa dikembalikan!
+                                harap gunakan dengan hati-hati
+                            </span>
                         </AlertDialogDescription>
                     </AlertDialogHeader>
-                    <form className={ cn("grid items-start gap-4") } onSubmit={ handleDeleteFormSubmit }>
+                    <form
+                        className={cn("grid items-start gap-4")}
+                        onSubmit={handleDeleteFormSubmit}
+                    >
                         <div className="grid gap-2">
-                            <Label htmlFor="validation">Validasi aksi anda</Label>
+                            <Label htmlFor="validation">
+                                Validasi aksi anda
+                            </Label>
                             <Input
                                 type="text"
                                 name="validation"
                                 id="validation"
-                                value={ deleteForm.validation }
-                                placeholder="JARKOM JAYA"
-                                onChange={ (event) =>
+                                value={deleteForm.validation}
+                                placeholder="INFORMATIKA JAYA"
+                                onChange={(event) =>
                                     setDeleteForm((prevState) => ({
                                         ...prevState,
                                         validation: event.target.value,
@@ -267,22 +323,32 @@ export default function AdminSoalIndexPage({ auth, pagination }: PageProps<{
                                 }
                                 autoComplete="off"
                             />
-                            <p>Ketik <strong>JARKOM JAYA</strong> untuk melanjutkan</p>
+                            <p>
+                                Ketik <strong>INFORMATIKA JAYA</strong> untuk
+                                melanjutkan
+                            </p>
                         </div>
-                        <Button type="submit" disabled={ deleteForm.onSubmit || deleteForm.validation !== 'JARKOM JAYA' }>
-                            { deleteForm.onSubmit
-                                ? (
-                                    <>Memproses <Loader2 className="animate-spin"/></>
-                                ) : (
-                                    <span>Simpan</span>
-                                )
+                        <Button
+                            type="submit"
+                            disabled={
+                                deleteForm.onSubmit ||
+                                deleteForm.validation !== "INFORMATIKA JAYA"
                             }
+                        >
+                            {deleteForm.onSubmit ? (
+                                <>
+                                    Memproses{" "}
+                                    <Loader2 className="animate-spin" />
+                                </>
+                            ) : (
+                                <span>Simpan</span>
+                            )}
                         </Button>
                     </form>
                     <AlertDialogCancel>Batal</AlertDialogCancel>
                 </AlertDialogContent>
             </AlertDialog>
-            {/*---DELETE-FORM---*/ }
+            {/*---DELETE-FORM---*/}
         </AdminLayout>
     );
 }

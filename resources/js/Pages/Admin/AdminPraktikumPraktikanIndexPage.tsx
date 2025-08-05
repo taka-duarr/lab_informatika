@@ -11,8 +11,10 @@ import {
     CircleCheckBig,
     Clock,
     Copy,
-    Download, FileDown,
-    FolderCheck, FolderSync,
+    Download,
+    FileDown,
+    FolderCheck,
+    FolderSync,
     Loader2,
     MoreHorizontal,
     Trash2,
@@ -73,7 +75,11 @@ import DataTable from "@/components/data-table";
 import { Separator } from "@/components/ui/separator";
 import * as React from "react";
 import { exportKartuPraktikum } from "@/components/kartu-praktikum";
-import { Popover, PopoverContent, PopoverTrigger } from "@/components/ui/popover";
+import {
+    Popover,
+    PopoverContent,
+    PopoverTrigger,
+} from "@/components/ui/popover";
 import { Switch } from "@/components/ui/switch";
 
 type Praktikan = {
@@ -255,13 +261,19 @@ export default function AdminPraktikumPraktikanIndexPage({
     const [onSubmitUploadContents, setOnSubmitUploadContents] =
         useState<boolean>(false);
 
-    const [verifikasiPraktikan, setVerifikasiPraktikan] = useState<VerifikasiPraktikan>(verifikasiPraktikanInit);
-    const [updateVerifikasiPraktikan, setUpdateVerifikasiPraktikan] = useState<UpdateVerifikasiPraktikan>(updateVerifikasiPraktikanInit);
-    const [openVerifikasiPraktikan, setOpenVerifikasiPraktikan] = useState<boolean>(false);
-    const [openUpdateVerifikasiPraktikan, setOpenUpdateVerifikasiPraktikan] = useState<boolean>(false);
-    const [inValidVerifikasiPraktikan, setInvalidVerifikasiPraktikan] = useState<boolean>(false);
+    const [verifikasiPraktikan, setVerifikasiPraktikan] =
+        useState<VerifikasiPraktikan>(verifikasiPraktikanInit);
+    const [updateVerifikasiPraktikan, setUpdateVerifikasiPraktikan] =
+        useState<UpdateVerifikasiPraktikan>(updateVerifikasiPraktikanInit);
+    const [openVerifikasiPraktikan, setOpenVerifikasiPraktikan] =
+        useState<boolean>(false);
+    const [openUpdateVerifikasiPraktikan, setOpenUpdateVerifikasiPraktikan] =
+        useState<boolean>(false);
+    const [inValidVerifikasiPraktikan, setInvalidVerifikasiPraktikan] =
+        useState<boolean>(false);
     const [openDeletePraktikan, setOpenDeletePraktikan] = useState(false);
-    const [deletePraktikan, setDeletePraktikan] = useState<DeletePraktikan>(deletePraktikanInit);
+    const [deletePraktikan, setDeletePraktikan] =
+        useState<DeletePraktikan>(deletePraktikanInit);
     const handleSetUploadFile = (file: File) => {
         setUploadFile({
             file,
@@ -284,7 +296,8 @@ export default function AdminPraktikumPraktikanIndexPage({
             toast({
                 variant: "destructive",
                 title: "Aslab tidak tersedia!",
-                description: "Tidak ada data Aslab yang tersedia untuk dipilih.",
+                description:
+                    "Tidak ada data Aslab yang tersedia untuk dipilih.",
             });
             setOnFetchIdPraktikan(false);
             setOnSubmitUploadContents(false);
@@ -293,7 +306,8 @@ export default function AdminPraktikumPraktikanIndexPage({
             toast({
                 variant: "destructive",
                 title: "Dosen tidak tersedia!",
-                description: "Tidak ada data Dosen yang tersedia untuk dipilih.",
+                description:
+                    "Tidak ada data Dosen yang tersedia untuk dipilih.",
             });
             setOnFetchIdPraktikan(false);
             setOnSubmitUploadContents(false);
@@ -303,7 +317,15 @@ export default function AdminPraktikumPraktikanIndexPage({
         const tempDosens = [...dosens];
 
         const submitData = uploadContents.map((cntnt) => {
-            const { nama, npm, sesi_praktikum_id, aslab_id, isRandomAslab, dosen_id, isRandomDosen } = cntnt;
+            const {
+                nama,
+                npm,
+                sesi_praktikum_id,
+                aslab_id,
+                isRandomAslab,
+                dosen_id,
+                isRandomDosen,
+            } = cntnt;
 
             let selectedAslabId = aslab_id;
             if (isRandomAslab) {
@@ -376,17 +398,22 @@ export default function AdminPraktikumPraktikanIndexPage({
                 axios
                     .post(route("praktikum-praktikan.create-mass"), {
                         praktikum_id: praktikum.id,
-                        praktikans: submitData.map((content) => {
-                            const praktikan = praktikansData.find((praktikan) => praktikan.npm === content.npm);
-                            return praktikan
-                                ? {
-                                    id: praktikan.id,
-                                    aslab_id: content.aslab_id,
-                                    dosen_id: content.dosen_id,
-                                    sesi_praktikum_id: content.sesi_praktikum_id,
-                                }
-                                : null;
-                        }).filter(Boolean),
+                        praktikans: submitData
+                            .map((content) => {
+                                const praktikan = praktikansData.find(
+                                    (praktikan) => praktikan.npm === content.npm
+                                );
+                                return praktikan
+                                    ? {
+                                          id: praktikan.id,
+                                          aslab_id: content.aslab_id,
+                                          dosen_id: content.dosen_id,
+                                          sesi_praktikum_id:
+                                              content.sesi_praktikum_id,
+                                      }
+                                    : null;
+                            })
+                            .filter(Boolean),
                     })
                     .then((res) => {
                         handleCancelUploadFile();
@@ -397,7 +424,14 @@ export default function AdminPraktikumPraktikanIndexPage({
                             title: "Berhasil!",
                             description: res.data.message,
                         });
-                        router.reload({ only: ["praktikum", "aslabs", "dosens", "sesiPraktikums"] });
+                        router.reload({
+                            only: [
+                                "praktikum",
+                                "aslabs",
+                                "dosens",
+                                "sesiPraktikums",
+                            ],
+                        });
                     })
                     .catch((err: unknown) => {
                         handleCancelUploadFile();
@@ -427,7 +461,6 @@ export default function AdminPraktikumPraktikanIndexPage({
                     description: errMsg,
                 });
             });
-
     };
 
     const handleOpenDeletePraktikan = (praktikan: {
@@ -540,7 +573,10 @@ export default function AdminPraktikumPraktikanIndexPage({
         }));
         setOpenVerifikasiPraktikan(true);
     };
-    const handleOpenUpdateVerifikasi = (initData: UpdateVerifikasiPraktikan = updateVerifikasiPraktikanInit, open: boolean = true) => {
+    const handleOpenUpdateVerifikasi = (
+        initData: UpdateVerifikasiPraktikan = updateVerifikasiPraktikanInit,
+        open: boolean = true
+    ) => {
         setUpdateVerifikasiPraktikan({
             id: initData.id,
             nama: initData.nama,
@@ -551,7 +587,7 @@ export default function AdminPraktikumPraktikanIndexPage({
             isRandomAslab: initData.isRandomAslab,
             isRandomDosen: initData.isRandomDosen,
             terverifikasi: initData.terverifikasi,
-            onSubmit: false
+            onSubmit: false,
         });
         setOpenUpdateVerifikasiPraktikan(open);
     };
@@ -567,7 +603,9 @@ export default function AdminPraktikumPraktikanIndexPage({
             setUpdateVerifikasiPraktikan(updateVerifikasiPraktikanInit);
         }
     };
-    const handleSubmitVerifikasiPraktikan = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmitVerifikasiPraktikan = (
+        event: FormEvent<HTMLFormElement>
+    ) => {
         event.preventDefault();
         setVerifikasiPraktikan((prevState) => ({
             ...prevState,
@@ -677,7 +715,9 @@ export default function AdminPraktikumPraktikanIndexPage({
                 });
             });
     };
-    const handleSubmitUpdateVerifikasiPraktikan = (event: FormEvent<HTMLFormElement>) => {
+    const handleSubmitUpdateVerifikasiPraktikan = (
+        event: FormEvent<HTMLFormElement>
+    ) => {
         event.preventDefault();
         setUpdateVerifikasiPraktikan((prevState) => ({
             ...prevState,
@@ -691,7 +731,7 @@ export default function AdminPraktikumPraktikanIndexPage({
             isRandomAslab,
             dosen_id,
             isRandomDosen,
-            terverifikasi
+            terverifikasi,
         } = updateVerifikasiPraktikan;
 
         let selectedAslabId = aslab_id;
@@ -760,7 +800,10 @@ export default function AdminPraktikumPraktikanIndexPage({
                 terverifikasi: terverifikasi,
             })
             .then((res) => {
-                handleOpenUpdateVerifikasi(updateVerifikasiPraktikanInit, false);
+                handleOpenUpdateVerifikasi(
+                    updateVerifikasiPraktikanInit,
+                    false
+                );
                 toast({
                     variant: "default",
                     className: "bg-green-500 text-white",
@@ -859,23 +902,28 @@ export default function AdminPraktikumPraktikanIndexPage({
             accessorFn: (row) => row.aslab?.nama || "-",
             id: "aslab.dosen",
             header: () => {
-                return (
-                    <div className="ml-2">
-                        Aslab - Dosen
-                    </div>
-                );
+                return <div className="ml-2">Aslab - Dosen</div>;
             },
             cell: ({ row }) => {
                 const aslab = row.original.aslab;
                 const dosen = row.original.dosen;
                 return (
                     <Popover modal={true}>
-                        <PopoverTrigger asChild className="w-min mx-auto items-center">
-                            <AlertCircle strokeWidth={2.2} className="cursor-pointer" />
+                        <PopoverTrigger
+                            asChild
+                            className="w-min mx-auto items-center"
+                        >
+                            <AlertCircle
+                                strokeWidth={2.2}
+                                className="cursor-pointer"
+                            />
                         </PopoverTrigger>
                         <PopoverContent className="w-auto">
                             <div className="px-2 text-sm font-medium">
-                                <p className="text-center">{row.original.nama} - {row.original.username}</p>
+                                <p className="text-center">
+                                    {row.original.nama} -{" "}
+                                    {row.original.username}
+                                </p>
                                 <Separator className="my-2 h-0.5 bg-primary/70" />
                                 <div className="flex ">
                                     <p className="w-36">Asisten Laboratorium</p>
@@ -985,7 +1033,11 @@ export default function AdminPraktikumPraktikanIndexPage({
                         <DropdownMenuContent align="end">
                             <DropdownMenuLabel>Aksi</DropdownMenuLabel>
                             <DropdownMenuItem
-                                className={`${originalRow.terverifikasi ? 'flex' : 'hidden'}`}
+                                className={`${
+                                    originalRow.terverifikasi
+                                        ? "flex"
+                                        : "hidden"
+                                }`}
                                 disabled={!originalRow.terverifikasi}
                                 onClick={() =>
                                     handleOpenUpdateVerifikasi({
@@ -993,19 +1045,25 @@ export default function AdminPraktikumPraktikanIndexPage({
                                         id: originalRow.id,
                                         nama: originalRow.nama,
                                         username: originalRow.username,
-                                        sesi_praktikum_id: originalRow.sesi?.id ?? '',
-                                        aslab_id: originalRow.aslab?.id ?? '',
-                                        dosen_id: originalRow.dosen?.id ?? '',
+                                        sesi_praktikum_id:
+                                            originalRow.sesi?.id ?? "",
+                                        aslab_id: originalRow.aslab?.id ?? "",
+                                        dosen_id: originalRow.dosen?.id ?? "",
                                         isRandomAslab: !originalRow.aslab?.id,
                                         isRandomDosen: !originalRow.dosen?.id,
-                                        terverifikasi: originalRow.terverifikasi
+                                        terverifikasi:
+                                            originalRow.terverifikasi,
                                     })
                                 }
                             >
                                 <FolderSync /> Ubah Data
                             </DropdownMenuItem>
                             <DropdownMenuItem
-                                className={`${originalRow.terverifikasi ? 'hidden' : 'flex'}`}
+                                className={`${
+                                    originalRow.terverifikasi
+                                        ? "hidden"
+                                        : "flex"
+                                }`}
                                 disabled={originalRow.terverifikasi}
                                 onClick={() =>
                                     handleOpenVerifikasi(row.original.id)
@@ -1098,7 +1156,13 @@ export default function AdminPraktikumPraktikanIndexPage({
                     );
 
                     if (raw_data.length > 0) {
-                        const ACCEPT_HEADERS: string[] = ["npm", "nama", "aslab_id", "dosen_id", "sesi_praktikum_id"];
+                        const ACCEPT_HEADERS: string[] = [
+                            "npm",
+                            "nama",
+                            "aslab_id",
+                            "dosen_id",
+                            "sesi_praktikum_id",
+                        ];
 
                         let invalidHeaders: string[] = [];
                         const receivedHeaders: string[] = raw_data[0].map(
@@ -1170,18 +1234,24 @@ export default function AdminPraktikumPraktikanIndexPage({
 
                         setUploadContents(
                             sanitizedData.map((data: string[]) => {
-                                const aslabFind = aslabs.find((aslab) => aslab.id === data[2]);
-                                const dosenFind = dosens.find((dosen) => dosen.id === data[3]);
-                                const sesiFind = sesiPraktikums.find((sesi) => sesi.id === data[4]);
+                                const aslabFind = aslabs.find(
+                                    (aslab) => aslab.id === data[2]
+                                );
+                                const dosenFind = dosens.find(
+                                    (dosen) => dosen.id === data[3]
+                                );
+                                const sesiFind = sesiPraktikums.find(
+                                    (sesi) => sesi.id === data[4]
+                                );
                                 return {
                                     npm: data[0],
                                     nama: data[1],
-                                    aslab_id: aslabFind ? data[2] : '',
-                                    dosen_id: dosenFind ? data[3] : '',
-                                    sesi_praktikum_id: sesiFind ? data[4] : '',
+                                    aslab_id: aslabFind ? data[2] : "",
+                                    dosen_id: dosenFind ? data[3] : "",
+                                    sesi_praktikum_id: sesiFind ? data[4] : "",
                                     isRandomAslab: !aslabFind,
-                                    isRandomDosen: !dosenFind
-                                }
+                                    isRandomDosen: !dosenFind,
+                                };
                             })
                         );
                     } else {
@@ -1238,31 +1308,31 @@ export default function AdminPraktikumPraktikanIndexPage({
             toast({
                 variant: "destructive",
                 title: "Operasi dibatalkan",
-                description:
-                    "Belum ada Praktikan yang sudah terverifikasi !",
+                description: "Belum ada Praktikan yang sudah terverifikasi !",
             });
             return;
         }
         const praktikumPraktikansData = {
             ...praktikum,
-            praktikan: praktikansVerified
+            praktikan: praktikansVerified,
         };
 
         exportKartuPraktikum(praktikumPraktikansData)
             .then((res) => {
                 toast({
                     variant: res.success ? "default" : "destructive",
-                    className: res.success ? "bg-green-500 text-white" : '',
+                    className: res.success ? "bg-green-500 text-white" : "",
                     title: res.title,
                     description: res.message,
                 });
             })
-            .catch((err: { message: string } ) => {
-                const errMsg = err?.message ?? 'Error tidak diketahui terjadi..'
+            .catch((err: { message: string }) => {
+                const errMsg =
+                    err?.message ?? "Error tidak diketahui terjadi..";
                 toast({
                     variant: "destructive",
                     title: "Operasi dibatalkan",
-                    description: errMsg
+                    description: errMsg,
                 });
             });
     };
@@ -1621,9 +1691,18 @@ export default function AdminPraktikumPraktikanIndexPage({
                     >
                         <div className="h-80 xl:h-full overflow-y-auto pr-2.5">
                             {uploadContents.map((content, index) => (
-                                <div key={index} className="!mt-2 !mb-5 flex gap-0 justify-between rounded-sm overflow-hidden border-[1.5px] border-muted-foreground/30">
-                                    <h6 className={ `w-11 text-center content-center p-3 font-medium ${index % 2 ===  0 ? 'bg-primary text-white' : 'bg-muted text-primary' }` }>
-                                        { index + 1}
+                                <div
+                                    key={index}
+                                    className="!mt-2 !mb-5 flex gap-0 justify-between rounded-sm overflow-hidden border-[1.5px] border-muted-foreground/30"
+                                >
+                                    <h6
+                                        className={`w-11 text-center content-center p-3 font-medium ${
+                                            index % 2 === 0
+                                                ? "bg-primary text-white"
+                                                : "bg-muted text-primary"
+                                        }`}
+                                    >
+                                        {index + 1}
                                     </h6>
                                     <div className="w-full px-3 py-4">
                                         <div className="space-y-4">
@@ -1644,12 +1723,16 @@ export default function AdminPraktikumPraktikanIndexPage({
                                                         ];
                                                         updated[index].npm =
                                                             event.target.value;
-                                                        setUploadContents(updated);
+                                                        setUploadContents(
+                                                            updated
+                                                        );
                                                     }}
                                                 />
                                             </div>
                                             <div className="grid gap-2">
-                                                <Label htmlFor={`nama-${index}`}>
+                                                <Label
+                                                    htmlFor={`nama-${index}`}
+                                                >
                                                     Nama
                                                 </Label>
                                                 <Input
@@ -1663,22 +1746,34 @@ export default function AdminPraktikumPraktikanIndexPage({
                                                         ];
                                                         updated[index].nama =
                                                             event.target.value;
-                                                        setUploadContents(updated);
+                                                        setUploadContents(
+                                                            updated
+                                                        );
                                                     }}
                                                 />
                                             </div>
                                             <div className="space-y-1.5">
                                                 <div className="grid gap-2">
-                                                    <Label>Asisten Laboratorium</Label>
+                                                    <Label>
+                                                        Asisten Laboratorium
+                                                    </Label>
                                                     <Select
-                                                        disabled={content.isRandomAslab}
+                                                        disabled={
+                                                            content.isRandomAslab
+                                                        }
                                                         value={content.aslab_id}
-                                                        onValueChange={(val) => {
+                                                        onValueChange={(
+                                                            val
+                                                        ) => {
                                                             const updated = [
                                                                 ...uploadContents,
                                                             ];
-                                                            updated[index].aslab_id = val;
-                                                            setUploadContents(updated);
+                                                            updated[
+                                                                index
+                                                            ].aslab_id = val;
+                                                            setUploadContents(
+                                                                updated
+                                                            );
                                                         }}
                                                     >
                                                         <SelectTrigger className="w-full">
@@ -1691,23 +1786,39 @@ export default function AdminPraktikumPraktikanIndexPage({
                                                             />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {aslabs.length > 0 ? (
-                                                                aslabs.map((aslab) => (
-                                                                    <SelectItem
-                                                                        key={aslab.id}
-                                                                        value={aslab.id}
-                                                                    >
-                                                                        {aslab.nama}
-                                                                    </SelectItem>
-                                                                ))
+                                                            {aslabs.length >
+                                                            0 ? (
+                                                                aslabs.map(
+                                                                    (aslab) => (
+                                                                        <SelectItem
+                                                                            key={
+                                                                                aslab.id
+                                                                            }
+                                                                            value={
+                                                                                aslab.id
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                aslab.nama
+                                                                            }
+                                                                        </SelectItem>
+                                                                    )
+                                                                )
                                                             ) : (
                                                                 <SelectItem
                                                                     value={`null-${Math.random()
-                                                                        .toString(36)
-                                                                        .substring(2, 6)}`}
+                                                                        .toString(
+                                                                            36
+                                                                        )
+                                                                        .substring(
+                                                                            2,
+                                                                            6
+                                                                        )}`}
                                                                     disabled
                                                                 >
-                                                                    Tidak ada Aslab tersedia
+                                                                    Tidak ada
+                                                                    Aslab
+                                                                    tersedia
                                                                 </SelectItem>
                                                             )}
                                                         </SelectContent>
@@ -1715,39 +1826,62 @@ export default function AdminPraktikumPraktikanIndexPage({
                                                 </div>
                                                 <div className="items-center flex gap-1.5">
                                                     <Checkbox
-                                                        id={ `random-aslab-${index}` }
-                                                        onCheckedChange={(checked) => {
+                                                        id={`random-aslab-${index}`}
+                                                        onCheckedChange={(
+                                                            checked
+                                                        ) => {
                                                             const updated = [
                                                                 ...uploadContents,
                                                             ];
-                                                            updated[index].isRandomAslab = !!checked;
-                                                            updated[index].aslab_id = !!checked
-                                                                ? ''
-                                                                : content.aslab_id;
-                                                            setUploadContents(updated);
+                                                            updated[
+                                                                index
+                                                            ].isRandomAslab =
+                                                                !!checked;
+                                                            updated[
+                                                                index
+                                                            ].aslab_id =
+                                                                !!checked
+                                                                    ? ""
+                                                                    : content.aslab_id;
+                                                            setUploadContents(
+                                                                updated
+                                                            );
                                                         }}
-                                                        checked={content.isRandomAslab}
+                                                        checked={
+                                                            content.isRandomAslab
+                                                        }
                                                     />
                                                     <Label
-                                                        htmlFor={ `random-aslab-${index}` }
+                                                        htmlFor={`random-aslab-${index}`}
                                                         className="text-sm opacity-80"
                                                     >
-                                                        Asisten Laboratorium Acak
+                                                        Asisten Laboratorium
+                                                        Acak
                                                     </Label>
                                                 </div>
                                             </div>
                                             <div className="space-y-1.5">
                                                 <div className="grid gap-2">
-                                                    <Label>Dosen Pembimbing</Label>
+                                                    <Label>
+                                                        Dosen Pembimbing
+                                                    </Label>
                                                     <Select
-                                                        disabled={content.isRandomDosen}
+                                                        disabled={
+                                                            content.isRandomDosen
+                                                        }
                                                         value={content.dosen_id}
-                                                        onValueChange={(val) => {
+                                                        onValueChange={(
+                                                            val
+                                                        ) => {
                                                             const updated = [
                                                                 ...uploadContents,
                                                             ];
-                                                            updated[index].dosen_id = val;
-                                                            setUploadContents(updated);
+                                                            updated[
+                                                                index
+                                                            ].dosen_id = val;
+                                                            setUploadContents(
+                                                                updated
+                                                            );
                                                         }}
                                                     >
                                                         <SelectTrigger className="w-full">
@@ -1760,23 +1894,39 @@ export default function AdminPraktikumPraktikanIndexPage({
                                                             />
                                                         </SelectTrigger>
                                                         <SelectContent>
-                                                            {dosens.length > 0 ? (
-                                                                dosens.map((dosen) => (
-                                                                    <SelectItem
-                                                                        key={dosen.id}
-                                                                        value={dosen.id}
-                                                                    >
-                                                                        {dosen.nama}
-                                                                    </SelectItem>
-                                                                ))
+                                                            {dosens.length >
+                                                            0 ? (
+                                                                dosens.map(
+                                                                    (dosen) => (
+                                                                        <SelectItem
+                                                                            key={
+                                                                                dosen.id
+                                                                            }
+                                                                            value={
+                                                                                dosen.id
+                                                                            }
+                                                                        >
+                                                                            {
+                                                                                dosen.nama
+                                                                            }
+                                                                        </SelectItem>
+                                                                    )
+                                                                )
                                                             ) : (
                                                                 <SelectItem
                                                                     value={`null-${Math.random()
-                                                                        .toString(36)
-                                                                        .substring(2, 6)}`}
+                                                                        .toString(
+                                                                            36
+                                                                        )
+                                                                        .substring(
+                                                                            2,
+                                                                            6
+                                                                        )}`}
                                                                     disabled
                                                                 >
-                                                                    Tidak ada Dosen tersedia
+                                                                    Tidak ada
+                                                                    Dosen
+                                                                    tersedia
                                                                 </SelectItem>
                                                             )}
                                                         </SelectContent>
@@ -1784,21 +1934,33 @@ export default function AdminPraktikumPraktikanIndexPage({
                                                 </div>
                                                 <div className="items-center flex gap-1.5">
                                                     <Checkbox
-                                                        id={ `random-dosen-${index}` }
-                                                        onCheckedChange={(checked) => {
+                                                        id={`random-dosen-${index}`}
+                                                        onCheckedChange={(
+                                                            checked
+                                                        ) => {
                                                             const updated = [
                                                                 ...uploadContents,
                                                             ];
-                                                            updated[index].isRandomDosen = !!checked;
-                                                            updated[index].dosen_id = !!checked
-                                                                ? ''
-                                                                : content.dosen_id;
-                                                            setUploadContents(updated);
+                                                            updated[
+                                                                index
+                                                            ].isRandomDosen =
+                                                                !!checked;
+                                                            updated[
+                                                                index
+                                                            ].dosen_id =
+                                                                !!checked
+                                                                    ? ""
+                                                                    : content.dosen_id;
+                                                            setUploadContents(
+                                                                updated
+                                                            );
                                                         }}
-                                                        checked={content.isRandomDosen}
+                                                        checked={
+                                                            content.isRandomDosen
+                                                        }
                                                     />
                                                     <Label
-                                                        htmlFor={ `random-dosen-${index}` }
+                                                        htmlFor={`random-dosen-${index}`}
                                                         className="text-sm opacity-80"
                                                     >
                                                         Dosen Pembimbing Acak
@@ -1808,54 +1970,87 @@ export default function AdminPraktikumPraktikanIndexPage({
                                             <div className="grid gap-2">
                                                 <Label>Sesi Praktikum</Label>
                                                 <Select
-                                                    value={content.sesi_praktikum_id}
+                                                    value={
+                                                        content.sesi_praktikum_id
+                                                    }
                                                     onValueChange={(val) => {
                                                         const updated = [
                                                             ...uploadContents,
                                                         ];
-                                                        updated[index].sesi_praktikum_id = val;
-                                                        setUploadContents(updated);
+                                                        updated[
+                                                            index
+                                                        ].sesi_praktikum_id =
+                                                            val;
+                                                        setUploadContents(
+                                                            updated
+                                                        );
                                                     }}
                                                 >
-                                                    <SelectTrigger className={ `w-full ${!content.sesi_praktikum_id ? 'border-red-600 !border-2 text-red-600 font-medium' : '' }` }>
+                                                    <SelectTrigger
+                                                        className={`w-full ${
+                                                            !content.sesi_praktikum_id
+                                                                ? "border-red-600 !border-2 text-red-600 font-medium"
+                                                                : ""
+                                                        }`}
+                                                    >
                                                         <SelectValue placeholder="Pilih Sesi" />
                                                     </SelectTrigger>
                                                     <SelectContent>
-                                                        {sesiPraktikums.length > 0 ? (
-                                                            sesiPraktikums.map((sesi) => {
-                                                                const isDisabled =
-                                                                    sesi.kuota !== null &&
-                                                                    (sesi.sisa_kuota ?? 0) <= 0;
-                                                                return (
-                                                                    <SelectItem
-                                                                        key={sesi.id}
-                                                                        value={sesi.id}
-                                                                        disabled={isDisabled}
-                                                                    >
-                                                                        {`${sesi.nama} - ${
-                                                                            sesi.hari
-                                                                        } (${parseSesiTime(
-                                                                            sesi.waktu_mulai,
-                                                                            currentDate
-                                                                        )} - ${parseSesiTime(
-                                                                            sesi.waktu_selesai,
-                                                                            currentDate
-                                                                        )}) ${
-                                                                            isDisabled
-                                                                                ? "(Kuota Penuh)"
-                                                                                : ""
-                                                                        }`}
-                                                                    </SelectItem>
-                                                                );
-                                                            })
+                                                        {sesiPraktikums.length >
+                                                        0 ? (
+                                                            sesiPraktikums.map(
+                                                                (sesi) => {
+                                                                    const isDisabled =
+                                                                        sesi.kuota !==
+                                                                            null &&
+                                                                        (sesi.sisa_kuota ??
+                                                                            0) <=
+                                                                            0;
+                                                                    return (
+                                                                        <SelectItem
+                                                                            key={
+                                                                                sesi.id
+                                                                            }
+                                                                            value={
+                                                                                sesi.id
+                                                                            }
+                                                                            disabled={
+                                                                                isDisabled
+                                                                            }
+                                                                        >
+                                                                            {`${
+                                                                                sesi.nama
+                                                                            } - ${
+                                                                                sesi.hari
+                                                                            } (${parseSesiTime(
+                                                                                sesi.waktu_mulai,
+                                                                                currentDate
+                                                                            )} - ${parseSesiTime(
+                                                                                sesi.waktu_selesai,
+                                                                                currentDate
+                                                                            )}) ${
+                                                                                isDisabled
+                                                                                    ? "(Kuota Penuh)"
+                                                                                    : ""
+                                                                            }`}
+                                                                        </SelectItem>
+                                                                    );
+                                                                }
+                                                            )
                                                         ) : (
                                                             <SelectItem
                                                                 value={`null-${Math.random()
-                                                                    .toString(36)
-                                                                    .substring(2, 6)}`}
+                                                                    .toString(
+                                                                        36
+                                                                    )
+                                                                    .substring(
+                                                                        2,
+                                                                        6
+                                                                    )}`}
                                                                 disabled
                                                             >
-                                                                Tidak ada sesi tersedia
+                                                                Tidak ada sesi
+                                                                tersedia
                                                             </SelectItem>
                                                         )}
                                                     </SelectContent>
@@ -1873,7 +2068,9 @@ export default function AdminPraktikumPraktikanIndexPage({
                                 onSubmitUploadContents ||
                                 uploadContents.length < 1 ||
                                 uploadFile.onLoad ||
-                                uploadContents.some((content) => !content.sesi_praktikum_id)
+                                uploadContents.some(
+                                    (content) => !content.sesi_praktikum_id
+                                )
                             }
                         >
                             {onFetchIdPraktikan || onSubmitUploadContents ? (
@@ -1939,7 +2136,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                                 name="validation"
                                 id="validation"
                                 value={deletePraktikan.validation}
-                                placeholder="JARKOM JAYA"
+                                placeholder="INFORMATIKA JAYA"
                                 onChange={(event) =>
                                     setDeletePraktikan((prevState) => ({
                                         ...prevState,
@@ -1949,7 +2146,7 @@ export default function AdminPraktikumPraktikanIndexPage({
                                 autoComplete="off"
                             />
                             <p>
-                                Ketik <strong>JARKOM JAYA</strong> untuk
+                                Ketik <strong>INFORMATIKA JAYA</strong> untuk
                                 melanjutkan
                             </p>
                         </div>
@@ -1957,7 +2154,8 @@ export default function AdminPraktikumPraktikanIndexPage({
                             type="submit"
                             disabled={
                                 deletePraktikan.onSubmit ||
-                                deletePraktikan.validation !== "JARKOM JAYA"
+                                deletePraktikan.validation !==
+                                    "INFORMATIKA JAYA"
                             }
                         >
                             {deletePraktikan.onSubmit ? (
@@ -2261,13 +2459,17 @@ export default function AdminPraktikumPraktikanIndexPage({
                             <div className="grid gap-2">
                                 <Label>Asisten Laboratorium</Label>
                                 <Select
-                                    disabled={updateVerifikasiPraktikan.isRandomAslab}
+                                    disabled={
+                                        updateVerifikasiPraktikan.isRandomAslab
+                                    }
                                     value={updateVerifikasiPraktikan.aslab_id}
                                     onValueChange={(val) =>
-                                        setUpdateVerifikasiPraktikan((prevState) => ({
-                                            ...prevState,
-                                            aslab_id: val,
-                                        }))
+                                        setUpdateVerifikasiPraktikan(
+                                            (prevState) => ({
+                                                ...prevState,
+                                                aslab_id: val,
+                                            })
+                                        )
                                     }
                                 >
                                     <SelectTrigger className="w-full">
@@ -2305,15 +2507,19 @@ export default function AdminPraktikumPraktikanIndexPage({
                             <div className="items-center flex gap-1.5">
                                 <Checkbox
                                     id="random-aslab-update"
-                                    checked={updateVerifikasiPraktikan.isRandomAslab}
+                                    checked={
+                                        updateVerifikasiPraktikan.isRandomAslab
+                                    }
                                     onCheckedChange={(checked) =>
-                                        setUpdateVerifikasiPraktikan((prevState) => ({
-                                            ...prevState,
-                                            isRandomAslab: !!checked,
-                                            aslab_id: !!checked
-                                                ? ""
-                                                : prevState.aslab_id,
-                                        }))
+                                        setUpdateVerifikasiPraktikan(
+                                            (prevState) => ({
+                                                ...prevState,
+                                                isRandomAslab: !!checked,
+                                                aslab_id: !!checked
+                                                    ? ""
+                                                    : prevState.aslab_id,
+                                            })
+                                        )
                                     }
                                 />
                                 <Label
@@ -2328,13 +2534,17 @@ export default function AdminPraktikumPraktikanIndexPage({
                             <div className="grid gap-2">
                                 <Label>Dosen Pembimbing</Label>
                                 <Select
-                                    disabled={updateVerifikasiPraktikan.isRandomDosen}
+                                    disabled={
+                                        updateVerifikasiPraktikan.isRandomDosen
+                                    }
                                     value={updateVerifikasiPraktikan.dosen_id}
                                     onValueChange={(val) =>
-                                        setUpdateVerifikasiPraktikan((prevState) => ({
-                                            ...prevState,
-                                            dosen_id: val,
-                                        }))
+                                        setUpdateVerifikasiPraktikan(
+                                            (prevState) => ({
+                                                ...prevState,
+                                                dosen_id: val,
+                                            })
+                                        )
                                     }
                                 >
                                     <SelectTrigger className="w-full">
@@ -2373,15 +2583,19 @@ export default function AdminPraktikumPraktikanIndexPage({
                                 <Checkbox
                                     id="random-dosen-update"
                                     onCheckedChange={(checked) =>
-                                        setUpdateVerifikasiPraktikan((prevState) => ({
-                                            ...prevState,
-                                            isRandomDosen: !!checked,
-                                            dosen_id: !!checked
-                                                ? ""
-                                                : prevState.dosen_id,
-                                        }))
+                                        setUpdateVerifikasiPraktikan(
+                                            (prevState) => ({
+                                                ...prevState,
+                                                isRandomDosen: !!checked,
+                                                dosen_id: !!checked
+                                                    ? ""
+                                                    : prevState.dosen_id,
+                                            })
+                                        )
                                     }
-                                    checked={updateVerifikasiPraktikan.isRandomDosen}
+                                    checked={
+                                        updateVerifikasiPraktikan.isRandomDosen
+                                    }
                                 />
                                 <Label
                                     htmlFor="random-dosen-update"
@@ -2394,12 +2608,16 @@ export default function AdminPraktikumPraktikanIndexPage({
                         <div className="grid gap-2">
                             <Label>Sesi Praktikum</Label>
                             <Select
-                                value={updateVerifikasiPraktikan.sesi_praktikum_id}
+                                value={
+                                    updateVerifikasiPraktikan.sesi_praktikum_id
+                                }
                                 onValueChange={(val) =>
-                                    setUpdateVerifikasiPraktikan((prevState) => ({
-                                        ...prevState,
-                                        sesi_praktikum_id: val,
-                                    }))
+                                    setUpdateVerifikasiPraktikan(
+                                        (prevState) => ({
+                                            ...prevState,
+                                            sesi_praktikum_id: val,
+                                        })
+                                    )
                                 }
                             >
                                 <SelectTrigger className="w-full">
@@ -2450,12 +2668,16 @@ export default function AdminPraktikumPraktikanIndexPage({
                                     <Label>Status Verifikasi</Label>
                                 </div>
                                 <Switch
-                                    checked={updateVerifikasiPraktikan.terverifikasi}
+                                    checked={
+                                        updateVerifikasiPraktikan.terverifikasi
+                                    }
                                     onCheckedChange={(checked) => {
-                                        setUpdateVerifikasiPraktikan((prevState) => ({
-                                            ...prevState,
-                                            terverifikasi: checked
-                                        }));
+                                        setUpdateVerifikasiPraktikan(
+                                            (prevState) => ({
+                                                ...prevState,
+                                                terverifikasi: checked,
+                                            })
+                                        );
                                     }}
                                 />
                             </div>
@@ -2481,7 +2703,9 @@ export default function AdminPraktikumPraktikanIndexPage({
                             )}
                         </Button>
                     </form>
-                    <AlertDialogCancel disabled={updateVerifikasiPraktikan.onSubmit}>
+                    <AlertDialogCancel
+                        disabled={updateVerifikasiPraktikan.onSubmit}
+                    >
                         Batal
                     </AlertDialogCancel>
                 </AlertDialogContent>

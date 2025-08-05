@@ -923,7 +923,7 @@ export default function AdminAdminIndexPage({
                                 name="validation"
                                 id="validation"
                                 value={deleteForm.validation}
-                                placeholder="JARKOM JAYA"
+                                placeholder="INFORMATIKA JAYA"
                                 onChange={(event) =>
                                     setDeleteForm((prevState) => ({
                                         ...prevState,
@@ -933,7 +933,7 @@ export default function AdminAdminIndexPage({
                                 autoComplete="off"
                             />
                             <p>
-                                Ketik <strong>JARKOM JAYA</strong> untuk
+                                Ketik <strong>INFORMATIKA JAYA</strong> untuk
                                 melanjutkan
                             </p>
                         </div>
@@ -941,7 +941,7 @@ export default function AdminAdminIndexPage({
                             type="submit"
                             disabled={
                                 deleteForm.onSubmit ||
-                                deleteForm.validation !== "JARKOM JAYA"
+                                deleteForm.validation !== "INFORMATIKA JAYA"
                             }
                         >
                             {deleteForm.onSubmit ? (
