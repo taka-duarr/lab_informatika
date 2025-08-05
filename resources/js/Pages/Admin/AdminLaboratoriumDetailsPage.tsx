@@ -86,7 +86,6 @@ export default function AdminLaboratoriumDetailsPage({ auth, laboratorium }: Pag
                 const prevData = [
                     ...prevState.data,
                 ];
-                console.log('euy')
                 return {
                     ...prevState,
                     data: [ ...val as JenisNilai[] ],
@@ -220,7 +219,7 @@ export default function AdminLaboratoriumDetailsPage({ auth, laboratorium }: Pag
             });
     };
 
-    console.log(jenisNilaiForm)
+    // console.log(jenisNilaiForm)
 
     return (
         <>

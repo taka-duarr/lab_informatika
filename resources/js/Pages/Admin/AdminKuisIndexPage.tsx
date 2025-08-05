@@ -227,7 +227,7 @@ export default function AdminKuisIndexPage({ auth, pagination, currentDate }: Pa
             });
     };
 
-    console.log(pagination);
+    // console.log(pagination);
 
     return (
         <AdminLayout auth={auth}>

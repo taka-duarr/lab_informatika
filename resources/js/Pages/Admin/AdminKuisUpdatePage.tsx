@@ -334,7 +334,7 @@ export default function AdminKuisUpdatePage({ auth, praktikums, labels, kuis }: 
         );
     };
 
-    console.log(kuis)
+    // console.log(kuis)
 
     return (
         <>

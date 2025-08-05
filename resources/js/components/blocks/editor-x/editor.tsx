@@ -35,7 +35,7 @@ export function Editor({
   onChange?: (editorState: EditorState) => void
   onSerializedChange?: (editorSerializedState: SerializedEditorState) => void
 }) {
-    console.log(editorSerializedState)
+    // console.log(editorSerializedState)
   return (
     <div className="overflow-hidden rounded-lg border bg-background shadow">
       <LexicalComposer

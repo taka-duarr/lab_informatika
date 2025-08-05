@@ -45,7 +45,7 @@ class AdminPagesController extends Controller
         $queryPraktikum = Praktikum::select(['nama as praktikum'])
             ->with(['praktikan'])
             ->get();
-//        dd($queryPraktikum);
+        //        dd($queryPraktikum);
 
         if ($authAdmin->laboratorium_id) {
             $queryAslab->where('aslab.laboratorium_id', $authAdmin->laboratorium_id);
@@ -161,11 +161,10 @@ class AdminPagesController extends Controller
         $admins = $query->paginate($viewPerPage)->withQueryString();
 
         return Inertia::render('Admin/AdminAdminIndexPage', [
-            'is_myShorekeeper' => $authAdmin->username === "shorekeeper",
+            'isSuper' => $authAdmin->username === "superADM",
             'pagination' => fn() => $admins,
-            'laboratoriums' => fn() => Laboratorium::select('id','nama')->orderBy('nama', 'asc')->get()
+            'laboratoriums' => fn() => Laboratorium::select('id', 'nama')->orderBy('nama', 'asc')->get()
         ]);
-
     }
     public function aslabIndexPage(Request $request)
     {
@@ -457,7 +456,7 @@ class AdminPagesController extends Controller
             $periodePraktikums = $queryPeriodePraktikum->orderBy('created_at', 'desc')->get();
 
             return Inertia::render('Admin/AdminPraktikumDetailsPage', [
-                'currentDate' => fn () => Carbon::now('Asia/Jakarta'),
+                'currentDate' => fn() => Carbon::now('Asia/Jakarta'),
                 'praktikum' => fn() => $praktikum->only([
                     'id',
                     'nama',
@@ -489,7 +488,7 @@ class AdminPagesController extends Controller
         }
 
         try {
-            $praktikum = Praktikum::select('id', 'nama', 'tahun', 'jenis_praktikum_id','periode_praktikum_id')
+            $praktikum = Praktikum::select('id', 'nama', 'tahun', 'jenis_praktikum_id', 'periode_praktikum_id')
                 ->where('id', $idParam)
                 ->with([
                     'jenis:id,nama,laboratorium_id',
@@ -499,7 +498,7 @@ class AdminPagesController extends Controller
                         ->select('id', 'praktikum_id', 'nama')
                         ->orderBy('nama', 'asc'),
                     'praktikan' => fn($query) => $query
-                        ->select('praktikan.id', 'praktikan.nama', 'praktikan.username','praktikan.avatar')
+                        ->select('praktikan.id', 'praktikan.nama', 'praktikan.username', 'praktikan.avatar')
                         ->addSelect([
                             'krs' => 'praktikum_praktikan.krs',
                             'pembayaran' => 'praktikum_praktikan.pembayaran',
@@ -531,9 +530,9 @@ class AdminPagesController extends Controller
                     'nama' => $praktikum->nama,
                     'tahun' => $praktikum->tahun,
                     'laboratorium' => $praktikum->jenis->laboratorium,
-                    'jenis' => $praktikum->jenis->only('id','nama'),
+                    'jenis' => $praktikum->jenis->only('id', 'nama'),
                     'periode' => $praktikum->periode,
-                    'pertemuan'=> $praktikum->pertemuan,
+                    'pertemuan' => $praktikum->pertemuan,
                     'praktikan' => $praktikum->praktikan->map(fn($p) => [
                         'id' => $p->id,
                         'avatar' => $p->avatar,
@@ -800,16 +799,16 @@ class AdminPagesController extends Controller
         return Inertia::render('Admin/AdminKuisCreatePage', [
             'currentDate' => Carbon::now('Asia/Jakarta')->toDateTimeString(),
             'labels' => fn() => Label::select('id', 'nama')->orderBy('created_at', 'desc')->get(),
-            'praktikums' => fn() => Praktikum::select('id','nama')
+            'praktikums' => fn() => Praktikum::select('id', 'nama')
                 ->where('praktikum.status', true)
                 ->when($laboratoriumId, function ($query) use ($laboratoriumId) {
                     $query->whereHas('jenis', function ($query) use ($laboratoriumId) {
                         $query->where('laboratorium_id', $laboratoriumId);
                     });
-                })                ->with([
+                })->with([
                     'pertemuan:id,nama,praktikum_id',
                     'sesi_praktikum' => function ($query) {
-                        $query->select(['id','nama','hari','waktu_mulai','waktu_selesai','praktikum_id']);
+                        $query->select(['id', 'nama', 'hari', 'waktu_mulai', 'waktu_selesai', 'praktikum_id']);
                         $query->orderBy('sesi_praktikum.nama', 'asc');
                     }
                 ])
@@ -846,13 +845,13 @@ class AdminPagesController extends Controller
                     'praktikum_id' => $kuis->pertemuan->praktikum_id,
                     'pertemuan_id' => $kuis->pertemuan_id,
                     'sesi_praktikum_id' => $kuis->sesi_praktikum_id,
-                    'soal' => $kuis->soal->map(fn ($item) => [
+                    'soal' => $kuis->soal->map(fn($item) => [
                         'id' => $item->id,
                         'pertanyaan' => $item->pertanyaan,
                     ]),
                 ],
                 'labels' => fn() => Label::select('id', 'nama')->orderBy('created_at', 'desc')->get(),
-                'praktikums' => fn() => Praktikum::select('id','nama')
+                'praktikums' => fn() => Praktikum::select('id', 'nama')
                     ->where('praktikum.status', true)
                     ->when($laboratoriumId, function ($query) use ($laboratoriumId) {
                         $query->whereHas('jenis', function ($query) use ($laboratoriumId) {
@@ -862,7 +861,7 @@ class AdminPagesController extends Controller
                     ->with([
                         'pertemuan:id,nama,praktikum_id',
                         'sesi_praktikum' => function ($query) {
-                            $query->select(['id','nama','hari','waktu_mulai','waktu_selesai','praktikum_id']);
+                            $query->select(['id', 'nama', 'hari', 'waktu_mulai', 'waktu_selesai', 'praktikum_id']);
                             $query->orderBy('sesi_praktikum.nama', 'asc');
                         }
                     ])

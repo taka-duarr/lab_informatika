@@ -47,7 +47,7 @@ type Praktikum = {
 export default function AdminPraktikumIndexPage({ auth, pagination }: PageProps<{
     pagination: PaginationData<Praktikum[]>;
 }>) {
-    console.log(pagination.data);
+    // console.log(pagination.data);
     const { toast } = useToast();
     type DeleteForm = {
         id: string;

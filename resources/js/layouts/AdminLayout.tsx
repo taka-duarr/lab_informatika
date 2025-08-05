@@ -31,7 +31,7 @@ export const AdminLayout = ({
                         </h3>
                     </div>
                     <ProfileDropdown auth={auth} />
-                </header>
+                </header>   
                 <div className="p-3 bg-muted">
                     <Card className="p-5 md:p-6 space-y-4 bg-white rounded-md border min-h-[calc(100vh-10rem)]">
                         {children}

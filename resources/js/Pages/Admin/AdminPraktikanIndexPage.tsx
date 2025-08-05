@@ -38,7 +38,7 @@ type Praktikan = {
 export default function AdminPraktikanIndexPage({ auth, pagination }: PageProps<{
     pagination: PaginationData<Praktikan[]>;
 }>) {
-    console.log(pagination);
+    // console.log(pagination);
     const { toast } = useToast();
     type CreateForm = {
         nama: string;

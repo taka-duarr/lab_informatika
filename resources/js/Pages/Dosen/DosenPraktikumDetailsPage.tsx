@@ -198,7 +198,6 @@ export default function AslabPraktikumDetailsPage({ auth, currentDate, praktikum
         },
     ];
 
-    console.log(praktikum)
 
     return (
         <>

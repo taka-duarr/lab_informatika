@@ -45,7 +45,7 @@ type Berita = {
 export default function AdminBeritaIndexPage({ auth, pagination }: PageProps<{
     pagination: PaginationData<Berita[]>;
 }>) {
-    console.log(pagination.data);
+    // console.log(pagination.data);
     const { toast } = useToast();
     type DeleteForm = {
         id: string;

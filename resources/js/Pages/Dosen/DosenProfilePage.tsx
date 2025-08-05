@@ -24,7 +24,6 @@ export default function DosenProfilePage({ auth, dosen }: PageProps<{
         }[];
     };
 }>) {
-    console.log(dosen)
     if (!auth.user) {
         return (
             <ErrorPage status={401} />

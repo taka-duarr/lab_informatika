@@ -28,7 +28,7 @@ export default function AslabDashboardPage({ auth, praktikans, praktikums }: Pag
         avatar: string | null;
     }[];
 }>) {
-    console.log(praktikums)
+    // console.log(praktikums)
     return (
         <>
             <Head title="Aslab - Dashboard" />

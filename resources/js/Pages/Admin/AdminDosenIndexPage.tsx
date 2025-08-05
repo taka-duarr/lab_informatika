@@ -50,7 +50,7 @@ export default function AdminDosenIndexPage({ auth, pagination, laboratoriums }:
         nama: string;
     }[];
 }>) {
-    console.log(pagination);
+    // console.log(pagination);
 
     const authAdmin = auth.user;
     if (!authAdmin && auth.role !== "admin") {

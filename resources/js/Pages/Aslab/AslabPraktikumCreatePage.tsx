@@ -200,7 +200,7 @@ export default function AslabPraktikumCreatePage({ auth, currentDate, laboratori
         )
     };
 
-    console.log(createForm)
+    // console.log(createForm)
     return (
         <>
             <AslabLayout auth={auth}>

@@ -11,14 +11,14 @@ use OwenIt\Auditing\Auditable;
 
 class Admin extends Authenticatable implements AuditableContract
 {
-    use HasUuids,Auditable;
+    use HasUuids, Auditable;
     protected $table = 'admin';
     protected $primaryKey = 'id';
     protected $guarded = ['id'];
 
     public static function getKeeUsername()
     {
-        return 'shorekeeper';
+        return 'superADM';
     }
     public function laboratorium(): BelongsTo
     {

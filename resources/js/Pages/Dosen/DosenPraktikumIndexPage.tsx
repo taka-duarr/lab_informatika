@@ -33,7 +33,6 @@ export default function DosenPraktikumIndexPage({
 }: PageProps<{
     pagination: PaginationData<Praktikum[]>;
 }>) {
-    console.log(pagination);
     const columns: ColumnDef<Praktikum>[] = [
         {
             accessorKey: "nama",

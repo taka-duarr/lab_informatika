@@ -739,7 +739,7 @@ export default function AslabPraktikumPraktikanIndexPage({ auth, currentDate, pr
         }
     }, [ uploadContents ]);
 
-    console.log(praktikum);
+    // console.log(praktikum);
 
     return (
         <>
