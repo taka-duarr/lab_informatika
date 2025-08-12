@@ -265,7 +265,7 @@ class PraktikanController extends Controller
         $npmParam = $request->get('npm');
 
         try {
-            $query = Praktikan::select($columnsParam ?? ['id','nama','username']);
+            $query = Praktikan::select($columnsParam ?? ['id', 'nama', 'username']);
 
             if ($searchParam) {
                 $query->where('nama', 'like', '%' . $searchParam . '%');
@@ -330,6 +330,8 @@ class PraktikanController extends Controller
                 'avatar_url' => $filename,
             ], 200);
         } catch (\Exception $exception) {
+            dd($exception->getMessage());
+
             DB::rollBack();
 
             if (isset($avatarPath)) {
@@ -407,9 +409,9 @@ class PraktikanController extends Controller
                 ], 409);
             }
 
-            $url = env('API_VERIFY_NPM');
-            $apiKey = env('KEY_VERIFY_NPM');
-
+            $url = "https://api-classroom.itats.ac.id/api/v1/verify-npm";
+            $apiKey = "24e04114a7be8b74940ff7228407e2e33a4f53ce4bf6b7520070d62f2de219923920ff6817cf69e627b0b6a878868052e3da4682b8476e85f7ef81b2b65e3fac";
+            // dd($url);
             if (empty($url)) {
                 return Response::json([
                     'message' => 'ENV Error! Mohon hubungi pihak pengembang ^-^'
