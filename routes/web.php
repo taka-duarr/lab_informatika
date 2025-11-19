@@ -188,13 +188,13 @@ Route::prefix('kuis')->name('kuis.')->middleware('withAuth:admin')->group(functi
     Route::post('/update', [KuisController::class, 'update'])->name('update');
     Route::post('/delete', [KuisController::class, 'destroy'])->name('delete');
 });
-Route::prefix('kuis-praktikan')->name('kuis-praktikan.')->middleware('withAuth:admin')->group(function () {
+Route::prefix('kuis-praktikan')->name('kuis-praktikan.')->middleware('withAuth:praktikan')->group(function () {
     Route::post('/create', [KuisPraktikanController::class, 'store'])->name('create');
     Route::post('/update', [KuisPraktikanController::class, 'update'])->name('update');
     Route::post('/delete', [KuisPraktikanController::class, 'destroy'])->name('delete');
     Route::post('/submit-end', [KuisPraktikanController::class, 'submitEnd'])->name('submit-end');
 });
-Route::prefix('jawaban-kuis')->name('jawaban-kuis.')->middleware('withAuth:admin')->group(function () {
+Route::prefix('jawaban-kuis')->name('jawaban-kuis.')->middleware('withAuth:praktikan')->group(function () {
     Route::post('/create', [JawabanKuisController::class, 'store'])->name('create');
     Route::post('/update', [JawabanKuisController::class, 'update'])->name('update');
     Route::post('/delete', [JawabanKuisController::class, 'destroy'])->name('delete');
