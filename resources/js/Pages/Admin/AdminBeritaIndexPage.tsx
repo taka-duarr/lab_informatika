@@ -165,7 +165,7 @@ export default function AdminBeritaIndexPage({
                             <DropdownMenuItem
                                 onClick={() =>
                                     router.visit(
-                                        route("admin.praktikum.details", {
+                                        route("admin.berita.update", {
                                             q: originalRow.id,
                                         })
                                     )
@@ -177,7 +177,7 @@ export default function AdminBeritaIndexPage({
                                 onClick={() =>
                                     router.visit(
                                         route(
-                                            "admin.praktikum.praktikan.index",
+                                            "admin.berita.praktikan.index",
                                             { q: originalRow.id }
                                         )
                                     )
@@ -231,7 +231,7 @@ export default function AdminBeritaIndexPage({
         axios
             .post<{
                 message: string;
-            }>(route("praktikum.delete"), {
+            }>(route("berita.delete"), {
                 id: id,
             })
             .then((res) => {

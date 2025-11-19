@@ -209,6 +209,8 @@ Route::prefix('berita')->name('berita.')->group(function () {
         Route::post('/create', [BeritaController::class, 'store'])->name('create');
         Route::post('/update', [BeritaController::class, 'update'])->name('update');
         Route::post('/delete', [BeritaController::class, 'destroy'])->name('delete');
+        Route::get('/berita/update', [AdminPagesController::class, 'beritaUpdatePage'])
+        ->name('admin.berita.update');
     });
 });
 

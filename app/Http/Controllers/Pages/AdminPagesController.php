@@ -969,4 +969,33 @@ class AdminPagesController extends Controller
             'jenisPraktikums' => fn() => $jenisPraktikums,
         ]);
     }
+
+    public function beritaUpdatePage(Request $request)
+{
+    $authAdmin = Auth::guard('admin')->user();
+    if (!$authAdmin) {
+        abort(401);
+    }
+
+    $id = $request->query('q');
+    if (!$id) abort(404);
+
+    $berita = Berita::findOrFail($id);
+
+    return Inertia::render('Admin/AdminBeritaUpdatePage', [
+        'berita' => fn() => $berita->only([
+            'id',
+            'judul',
+            'slug',
+            'deskripsi',
+            'prasyarat',
+            'konten',
+            'laboratorium_id',
+            'jenis_praktikum_id',
+        ]),
+        'laboratoriums' => fn() => Laboratorium::select('id', 'nama')->get(),
+        'jenisPraktikums' => fn() => JenisPraktikum::select('id', 'nama')->get(),
+    ]);
+}
+
 }

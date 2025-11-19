@@ -10,6 +10,7 @@ use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
 use Illuminate\Database\QueryException;
 use Inertia\Inertia;
+use Illuminate\Validation\Rule;
 use function Symfony\Component\String\b;
 
 class BeritaController extends Controller
@@ -116,7 +117,12 @@ class BeritaController extends Controller
         $validated = $request->validate([
             'id' => 'required|uuid|exists:berita,id',
             'judul' => 'required|string|max:255',
-            'slug' => 'required|string|max:255|unique:berita,slug',
+            'slug' => [
+            'required',
+            'string',
+            'max:255',
+            Rule::unique('berita', 'slug')->ignore($request->id),
+        ],
             'deskripsi' => 'required|string|max:255',
             'prasyarat' => 'required|string',
             'konten' => 'required|string',
@@ -133,7 +139,7 @@ class BeritaController extends Controller
                 'deskripsi' => $validated['deskripsi'],
                 'prasyarat' => $validated['prasyarat'],
                 'konten' => $validated['konten'],
-                'admin_id' => $validated['admin_id'],
+                'admin_id' => $validated['admin_id'] ?? null,
                 'laboratorium_id' => $validated['laboratorium_id'],
                 'jenis_praktikum_id' => $validated['jenis_praktikum_id'],
             ]);
