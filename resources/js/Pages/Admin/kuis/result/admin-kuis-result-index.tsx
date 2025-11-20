@@ -132,6 +132,10 @@ export default function AdminKuisResult({ auth, kuis }: PageProps<{
             },
         },
     ];
+    const exportHasilKuis = (kuis: Kuis) => {
+        window.location.href = route("admin.kuis.export", { id: kuis.id });
+    };
+
 
     return (
         <>
@@ -139,8 +143,7 @@ export default function AdminKuisResult({ auth, kuis }: PageProps<{
                 <Head title={`Admin - Hasil Kuis ${kuis.nama}`} />
                 <CardTitle>Data Praktikan</CardTitle>
                 <CardDescription>
-                    Menampilkan data Hasil Kuis{" "}
-                    {kuis.nama}
+                    Menampilkan data Hasil Kuis {kuis.nama}
                 </CardDescription>
 
                 <div className="flex flex-row items-center justify-between gap-2">
@@ -155,15 +158,17 @@ export default function AdminKuisResult({ auth, kuis }: PageProps<{
                                 <ChevronDown />
                             </Button>
                         </DropdownMenuTrigger>
+
                         <DropdownMenuContent className="w-auto">
                             <DropdownMenuLabel>Unduh Berkas</DropdownMenuLabel>
                             <DropdownMenuSeparator />
-                            <DropdownMenuItem>
-                                Absensi Praktikum <strong>(xlsx)</strong>
+
+                            <DropdownMenuItem
+                                onSelect={() => exportHasilKuis(kuis)}
+                            >
+                                Hasil Kuis <strong>(xlsx)</strong>
                             </DropdownMenuItem>
-                            <DropdownMenuItem>
-                                Kartu Praktikum <strong>(pdf)</strong>
-                            </DropdownMenuItem>
+
                             <DropdownMenuSeparator />
                         </DropdownMenuContent>
                     </DropdownMenu>
