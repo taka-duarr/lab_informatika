@@ -53,9 +53,9 @@ Route::get('/test', function () {
 });
 
 Route::get('/', [UniversalPagesController::class, 'welcome']);
-// Route::get('/hall-of-fames', function () {
-//     return Inertia::render('HallOfFamesPage');
-// })->name('hall-of-fames');
+Route::get('/hall-of-fames', function () {
+    return Inertia::render('HallOfFamesPage');
+})->name('hall-of-fames');
 Route::get('/ban-list', [PraktikanPagesController::class, 'banListPage'])->name('ban-list');
 
 // <-- LOGIN PAGE ROUTE --> //
@@ -187,7 +187,14 @@ Route::prefix('kuis')->name('kuis.')->middleware('withAuth:admin')->group(functi
     Route::post('/create', [KuisController::class, 'store'])->name('create');
     Route::post('/update', [KuisController::class, 'update'])->name('update');
     Route::post('/delete', [KuisController::class, 'destroy'])->name('delete');
+       Route::get('/{id}/export', [KuisController::class, 'exportHasil'])
+        ->name('export');
 });
+
+Route::prefix('admin/kuis')->name('admin.kuis.')->middleware('withAuth:admin')->group(function () {
+    Route::get('/{id}/export', [KuisController::class, 'exportHasil'])->name('export');
+});
+
 Route::prefix('kuis-praktikan')->name('kuis-praktikan.')->middleware('withAuth:praktikan')->group(function () {
     Route::post('/create', [KuisPraktikanController::class, 'store'])->name('create');
     Route::post('/update', [KuisPraktikanController::class, 'update'])->name('update');

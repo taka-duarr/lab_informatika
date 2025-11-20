@@ -9,6 +9,10 @@ use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
 use Illuminate\Support\Str;
+use Maatwebsite\Excel\Facades\Excel;
+use App\Exports\HasilKuisExport;
+
+
 
 class KuisController extends Controller
 {
@@ -209,4 +213,39 @@ class KuisController extends Controller
             ], 500);
         }
     }
+
+public function exportHasil(string $id)
+{
+    $kuis = Kuis::with([
+        'pertemuan.praktikum', 
+        'praktikans'
+    ])->findOrFail($id);
+
+    // Nama Praktikum & Pertemuan
+    $praktikumName = $kuis->pertemuan->praktikum->nama ?? "Praktikum";
+    $pertemuanName = $kuis->pertemuan->nama ?? "Pertemuan";
+
+    // Ubah menjadi format yang aman untuk nama file
+    $praktikumClean = str_replace(' ', '_', $praktikumName);
+    $pertemuanClean = str_replace(' ', '_', $pertemuanName);
+
+    // Buat nama file dinamis
+    $filename = "hasil_kuis_{$praktikumClean}_{$pertemuanClean}.xlsx";
+
+    // Buat data collection
+    $collection = collect($kuis->praktikans)->map(function ($p, $i) {
+        return [
+            'No' => $i + 1,
+            'NPM' => $p->username,
+            'Nama' => $p->nama,
+            'Skor' => $p->pivot->skor,
+            'Selesai' => $p->selesai ? 'Ya' : 'Tidak',
+        ];
+    });
+
+    return Excel::download(new HasilKuisExport($collection), $filename);
+}
+
+
+
 }
