@@ -129,7 +129,7 @@ export default function AdminLoginPage() {
                                         className="mx-auto"
                                     />
                                     <CardTitle className="text-2xl font-bold text-center">
-                                        Labinformatika
+                                        Labinformatikaaa
                                     </CardTitle>
                                     <CardDescription className="text-center">
                                         Masuk sebagai Admin
