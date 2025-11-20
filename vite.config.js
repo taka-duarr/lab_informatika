@@ -5,9 +5,18 @@ import react from '@vitejs/plugin-react';
 export default defineConfig({
     plugins: [
         laravel({
-            input: 'resources/js/app.tsx',
+            input: "resources/js/app.tsx",
             refresh: true,
         }),
         react(),
     ],
+
+    optimizeDeps: {
+        // Hindari error lodash-es dan excalidraw
+        exclude: ["lodash-es", "@excalidraw/excalidraw"],
+    },
+    ssr: {
+        // Cegah Vite mencoba pre-bundle modul ini
+        noExternal: ["@excalidraw/excalidraw"],
+    },  
 });

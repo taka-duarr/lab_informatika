@@ -250,7 +250,10 @@ function TableActionMenu({
 
         const tableObserver = getTableObserverFromTableElement(tableElement)
         if (tableObserver !== null) {
-          tableObserver.clearHighlight()
+            // FIX
+            if (tableObserver.$clearHighlight) {
+                tableObserver.$clearHighlight();
+            }
         }
 
         tableNode.markDirty()
