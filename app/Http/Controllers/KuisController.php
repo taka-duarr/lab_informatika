@@ -234,12 +234,13 @@ public function exportHasil(string $id)
 
     // Buat data collection
     $collection = collect($kuis->praktikans)->map(function ($p, $i) {
+        // dd($p);
         return [
             'No' => $i + 1,
             'NPM' => $p->username,
             'Nama' => $p->nama,
             'Skor' => $p->pivot->skor,
-            'Selesai' => $p->selesai ? 'Ya' : 'Tidak',
+            'Selesai' => $p->pivot->selesai ? 'Ya' : 'Tidak',
         ];
     });
 
