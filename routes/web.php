@@ -187,8 +187,8 @@ Route::prefix('kuis')->name('kuis.')->middleware('withAuth:admin')->group(functi
     Route::post('/create', [KuisController::class, 'store'])->name('create');
     Route::post('/update', [KuisController::class, 'update'])->name('update');
     Route::post('/delete', [KuisController::class, 'destroy'])->name('delete');
-       Route::get('/{id}/export', [KuisController::class, 'exportHasil'])
-        ->name('export');
+    //    Route::get('/{id}/export', [KuisController::class, 'exportHasil'])
+    //     ->name('export');
 });
 
 Route::prefix('admin/kuis')->name('admin.kuis.')->middleware('withAuth:admin')->group(function () {

@@ -76,7 +76,7 @@ Route::prefix('admin')->name('admin.')->middleware('guard:admin')->group(functio
         Route::get('/{praktikum_id}', [AdminPagesController::class, 'nilaiDetailsPage'])->name('details');
     });
 
-    Route::get('/kuis/export/{id}', [KuisController::class, 'exportHasil'])
-    ->name('admin.kuis.export');
+    // Route::get('/kuis/export/{id}', [KuisController::class, 'exportHasil'])
+    // ->name('admin.kuis.export');
 
 });
