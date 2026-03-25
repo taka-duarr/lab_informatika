@@ -320,7 +320,7 @@ class PraktikanController extends Controller
             $filename = Str::slug(Str::uuid()->toString()) . '.' . $extension;
 
             $image = Image::read($upload)->toJpeg(70);
-            Storage::disk('praktikan')->put($filename, $image);
+            Storage::disk('praktikan')->put($filename, (string) $image);
             $praktikan->update(['avatar' => $filename]);
 
             DB::commit();
@@ -330,12 +330,10 @@ class PraktikanController extends Controller
                 'avatar_url' => $filename,
             ], 200);
         } catch (\Exception $exception) {
-            dd($exception->getMessage());
-
             DB::rollBack();
 
-            if (isset($avatarPath)) {
-                Storage::disk('praktikan')->delete($avatarPath);
+            if (isset($filename)) {
+                Storage::disk('praktikan')->delete($filename);
             }
 
             return response()->json([

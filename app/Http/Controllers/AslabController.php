@@ -213,7 +213,7 @@ class AslabController extends Controller
             $filename = Str::slug(Str::uuid()->toString()) . '.' . $extension;
 
             $image = Image::read($upload)->toJpeg(70);
-            Storage::disk('aslab')->put($filename, $image);
+            Storage::disk('aslab')->put($filename, (string) $image);
             $aslab->update(['avatar' => $filename]);
 
             DB::commit();
@@ -225,8 +225,8 @@ class AslabController extends Controller
         } catch (\Exception $exception) {
             DB::rollBack();
 
-            if (isset($avatarPath)) {
-                Storage::disk('aslab')->delete($avatarPath);
+            if (isset($filename)) {
+                Storage::disk('aslab')->delete($filename);
             }
 
             return response()->json([
