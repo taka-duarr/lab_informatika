@@ -408,7 +408,7 @@ class AdminPagesController extends Controller
             'currentDate' => Carbon::now()->timezone('Asia/Jakarta')->toDateString(),
             'laboratoriums' => fn() => Laboratorium::select('id', 'nama')->get(),
             'jenisPraktikums' => fn() => $jenisPraktikums,
-            'periodePraktikums' => fn() => $periodePraktikums->sortBy(fn($periode) => $this->romanToInt($periode->nama))
+            'periodePraktikums' => fn() => $periodePraktikums->sortBy(fn($periode) => $this->romanToInt($periode->nama))->values()
         ]);
     }
     public function praktikumDetailsPage(Request $request)
@@ -469,7 +469,7 @@ class AdminPagesController extends Controller
                     'sesi_praktikum'
                 ]),
                 'jenisPraktikums' => fn() => $jenisPraktikums,
-                'periodePraktikums' => fn() => $periodePraktikums->sortBy(fn($periode) => $this->romanToInt($periode->nama))
+                'periodePraktikums' => fn() => $periodePraktikums->sortBy(fn($periode) => $this->romanToInt($periode->nama))->values()
             ]);
         } catch (QueryException $exception) {
             abort(500);
