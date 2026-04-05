@@ -193,6 +193,7 @@ Route::prefix('kuis')->name('kuis.')->middleware('withAuth:admin')->group(functi
 
 Route::prefix('admin/kuis')->name('admin.kuis.')->middleware('withAuth:admin')->group(function () {
     Route::get('/{id}/export', [KuisController::class, 'exportHasil'])->name('export');
+    Route::post('/reset-praktikan', [KuisController::class, 'resetPraktikan'])->name('reset-praktikan');
 });
 
 Route::prefix('kuis-praktikan')->name('kuis-praktikan.')->middleware('withAuth:praktikan')->group(function () {

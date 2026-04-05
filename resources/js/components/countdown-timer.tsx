@@ -8,33 +8,48 @@ interface CountdownTimerProps {
 }
 
 function CountdownTimer({ startTime, endTime, onTimeUp }: CountdownTimerProps) {
-    const [timeLeft, setTimeLeft] = useState<number>(() => {
-        const now = new Date(startTime).getTime();
-        const end = new Date(endTime).getTime();
-        return Math.max(0, Math.floor((end - now) / 1000));
-    });
-
+    const localEndTimeRef = useRef<number>(0);
+    const onTimeUpRef = useRef(onTimeUp);
     const hasSubmittedRef = useRef<boolean>(false); // Prevent multiple calls
 
     useEffect(() => {
-        if (timeLeft === 0 && onTimeUp && !hasSubmittedRef.current) {
-            hasSubmittedRef.current = true; // Mark as submitted
-            onTimeUp();
-            return;
-        }
+        onTimeUpRef.current = onTimeUp;
+    }, [onTimeUp]);
 
+    if (localEndTimeRef.current === 0) {
+        const serverNow = new Date(startTime).getTime();
+        const serverEnd = new Date(endTime).getTime();
+        localEndTimeRef.current = Date.now() + (serverEnd - serverNow);
+    }
+
+    const [timeLeft, setTimeLeft] = useState<number>(() => {
+        return Math.max(0, Math.floor((localEndTimeRef.current - Date.now()) / 1000));
+    });
+
+    useEffect(() => {
         const interval = setInterval(() => {
-            setTimeLeft((prevTimeLeft) => {
-                if (prevTimeLeft <= 1) {
-                    clearInterval(interval);
-                    return 0;
+            const remainingLocal = localEndTimeRef.current - Date.now();
+            const newTimeLeft = Math.max(0, Math.floor(remainingLocal / 1000));
+            setTimeLeft(newTimeLeft);
+
+            if (newTimeLeft <= 0) {
+                clearInterval(interval);
+                if (onTimeUpRef.current && !hasSubmittedRef.current) {
+                    hasSubmittedRef.current = true;
+                    onTimeUpRef.current();
                 }
-                return prevTimeLeft - 1;
-            });
+            }
         }, 1000);
 
         return () => clearInterval(interval);
-    }, [timeLeft, onTimeUp]);
+    }, []);
+
+    useEffect(() => {
+        if (timeLeft <= 0 && onTimeUpRef.current && !hasSubmittedRef.current) {
+            hasSubmittedRef.current = true;
+            onTimeUpRef.current();
+        }
+    }, [timeLeft]);
 
     const minutes = Math.floor(timeLeft / 60);
     const seconds = timeLeft % 60;

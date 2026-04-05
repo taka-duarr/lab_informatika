@@ -247,6 +247,28 @@ public function exportHasil(string $id)
     return Excel::download(new HasilKuisExport($collection), $filename);
 }
 
+    public function resetPraktikan(Request $request)
+    {
+        $validated = $request->validate([
+            'kuis_id' => 'required|uuid|exists:kuis,id',
+            'praktikan_id' => 'required|uuid|exists:praktikan,id',
+        ]);
 
+        try {
+            DB::transaction(function () use ($validated) {
+                \App\Models\KuisPraktikan::where('kuis_id', $validated['kuis_id'])
+                    ->where('praktikan_id', $validated['praktikan_id'])
+                    ->delete();
+            });
+
+            return Response::json([
+                'message' => 'Data Kuis Praktikan berhasil direset.',
+            ]);
+        } catch (\Exception $e) {
+            return Response::json([
+                'message' => config('app.debug') ? $e->getMessage() : 'Server gagal memproses permintaan.',
+            ], 500);
+        }
+    }
 
 }
