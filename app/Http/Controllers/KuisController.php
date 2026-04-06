@@ -201,6 +201,8 @@ class KuisController extends Controller
         try {
             DB::transaction(function () use ($validated) {
                 $kuis = Kuis::findOrFail($validated['id']);
+                $kuis->soal()->detach();
+                \App\Models\KuisPraktikan::where('kuis_id', $kuis->id)->delete();
                 $kuis->delete();
             });
 
