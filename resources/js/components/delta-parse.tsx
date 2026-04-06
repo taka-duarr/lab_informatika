@@ -1,4 +1,4 @@
-import type { Delta } from "quill";
+import type Delta from "quill-delta";
 import { QuillDeltaToHtmlConverter } from "quill-delta-to-html";
 import parse from "html-react-parser";
 

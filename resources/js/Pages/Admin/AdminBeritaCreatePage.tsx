@@ -16,7 +16,7 @@ import { Textarea } from "@/components/ui/textarea";
 import { FreezeTextInput } from "@/components/freeze-text-input";
 import { CustomSeparator } from "@/components/custom-separator";
 import { QuillEditor } from "@/components/quill-editor";
-import type { Delta } from "quill";
+import type Delta from "quill-delta";
 import { deltaInit } from "@/lib/StaticDataLib";
 
 export default function AdminBeritaCreatePage({ auth, laboratoriums, jenisPraktikums }: PageProps<{

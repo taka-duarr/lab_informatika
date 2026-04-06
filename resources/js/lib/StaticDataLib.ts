@@ -1,4 +1,4 @@
-import type { Delta } from "quill";
+import type Delta from "quill-delta";
 
 export const _MyWebConfig = {
     VIEW_PER_PAGE: [ 15, 30, 50, 100 ],

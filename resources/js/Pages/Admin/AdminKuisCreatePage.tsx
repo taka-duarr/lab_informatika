@@ -20,7 +20,7 @@ import {
     SelectValue
 } from "@/components/ui/select";
 import { QuillEditor } from "@/components/quill-editor";
-import { Delta } from "quill";
+import Delta from "quill-delta";
 import { TransferListBox } from "@/components/transfer-list-box";
 import ReactSelect from "react-select";
 import { DateTimePicker } from "@/components/date-time-picker";

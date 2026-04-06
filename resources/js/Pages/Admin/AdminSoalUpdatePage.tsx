@@ -5,7 +5,7 @@ import { CardDescription, CardTitle } from "@/components/ui/card";
 import { useToast } from "@/hooks/use-toast";
 import { ArrowLeft, Save } from "lucide-react";
 import { QuillEditor } from "@/components/quill-editor";
-import type { Delta } from "quill";
+import type Delta from "quill-delta";
 import { AnswersEditor } from "@/components/answers-editor";
 import { Label } from "@/components/ui/label";
 import { Button } from "@/components/ui/button";

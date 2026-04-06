@@ -1,5 +1,6 @@
 import React, { CSSProperties, useEffect, useRef, useState } from "react";
-import Quill, { Delta } from "quill";
+import Quill from "quill";
+import Delta from "quill-delta";
 import "quill/dist/quill.snow.css";
 
 export const QuillBeritaEditor = ({ value, onValueChange, height = '100px' }: {

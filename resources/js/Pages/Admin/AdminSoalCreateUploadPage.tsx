@@ -6,7 +6,7 @@ import { CardDescription, CardTitle, CardContent } from "@/components/ui/card";
 import { QuillEditor } from "@/components/quill-editor";
 import { AnswersEditor } from "@/components/answers-editor";
 import * as XLSX from "xlsx";
-import { Delta } from "quill";
+import Delta from "quill-delta";
 import { useToast } from "@/hooks/use-toast";
 import { Download, Loader2, TriangleAlert } from "lucide-react";
 import { Button } from "@/components/ui/button";
