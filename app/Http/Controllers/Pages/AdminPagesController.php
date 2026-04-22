@@ -884,7 +884,7 @@ class AdminPagesController extends Controller
 
         $kuis = Kuis::select(['kuis.id', 'kuis.nama'])
             ->with(['praktikans' => function ($query) {
-                $query->select(['praktikan.id', 'nama', 'username'])->withPivot('skor', 'selesai', 'updated_at');
+                $query->select(['praktikan.id', 'nama', 'username'])->withPivot('skor', 'selesai', 'blocked', 'updated_at');
             }])
             ->find($id);
 
@@ -904,6 +904,7 @@ class AdminPagesController extends Controller
                             'username' => $praktikan->username,
                             'skor' => $praktikan->pivot->skor,
                             'selesai' => $praktikan->pivot->selesai,
+                            'blocked' => $praktikan->pivot->blocked,
                             'updated_at' => optional($praktikan->pivot->updated_at)?->toDateTimeString(),
                         ];
                     }),

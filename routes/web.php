@@ -194,6 +194,7 @@ Route::prefix('kuis')->name('kuis.')->middleware('withAuth:admin')->group(functi
 Route::prefix('admin/kuis')->name('admin.kuis.')->middleware('withAuth:admin')->group(function () {
     Route::get('/{id}/export', [KuisController::class, 'exportHasil'])->name('export');
     Route::post('/reset-praktikan', [KuisController::class, 'resetPraktikan'])->name('reset-praktikan');
+    Route::post('/unblock-praktikan', [KuisPraktikanController::class, 'unblock'])->name('unblock-praktikan');
 });
 
 Route::prefix('kuis-praktikan')->name('kuis-praktikan.')->middleware('withAuth:praktikan')->group(function () {
@@ -201,6 +202,7 @@ Route::prefix('kuis-praktikan')->name('kuis-praktikan.')->middleware('withAuth:p
     Route::post('/update', [KuisPraktikanController::class, 'update'])->name('update');
     Route::post('/delete', [KuisPraktikanController::class, 'destroy'])->name('delete');
     Route::post('/submit-end', [KuisPraktikanController::class, 'submitEnd'])->name('submit-end');
+    Route::post('/block', [KuisPraktikanController::class, 'block'])->name('block');
 });
 Route::prefix('jawaban-kuis')->name('jawaban-kuis.')->middleware('withAuth:praktikan')->group(function () {
     Route::post('/create', [JawabanKuisController::class, 'store'])->name('create');

@@ -98,6 +98,12 @@ class JawabanKuisController extends Controller
                 ], 403);
             }
 
+            if ($kuisPraktikan->blocked) {
+                return Response::json([
+                    'message' => 'Kuis kamu sedang diblokir. Hubungi admin untuk membuka blokir.'
+                ], 403);
+            }
+
             $now = Carbon::now('Asia/Jakarta');
 
             if (
