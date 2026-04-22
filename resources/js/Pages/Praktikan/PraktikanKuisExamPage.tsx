@@ -63,6 +63,10 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
         waktu_selesai: string;
     };
 }>) {
+    const QUIZ_AWAY_TOLERANCE = 3;
+    const awayStorageKey = (suffix: string) =>
+        `kuis:${kuis_praktikan.id}:${suffix}`;
+
     const { toast } = useToast();
     const authUser = auth.user;
     if (!authUser) {
@@ -88,6 +92,8 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
         onSuccess: boolean;
     }>(submitJawabanInit);
     const [ openSubmitEnd, setOpenSubmitEnd ] = useState<boolean>(false);
+    const [ showAwayAlert, setShowAwayAlert ] = useState<boolean>(false);
+    const [ awayAlertCount, setAwayAlertCount ] = useState<number>(0);
     const [ submitEnd, setSubmitEnd ] = useState<{
         onSubmit: boolean;
         onError: boolean;
@@ -95,8 +101,17 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
         message: string;
         subMessage: string;
     }>(submitEndInit);
+    const submitEndRef = useRef(submitEnd);
+
+    useEffect(() => {
+        submitEndRef.current = submitEnd;
+    }, [submitEnd]);
 
     const handleSubmitEndKuis = () => {
+        if (submitEndRef.current.onSubmit) {
+            return;
+        }
+
         setSubmitEnd({
             ...submitEndInit,
             onSubmit: true,
@@ -112,6 +127,9 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
             praktikan_id: authUser.id
         })
             .then(() => {
+                localStorage.removeItem(awayStorageKey("started"));
+                localStorage.removeItem(awayStorageKey("away-count"));
+                localStorage.removeItem(awayStorageKey("away-last"));
                 router.visit(route('praktikan.kuis.result', { id: kuis_praktikan.id }));
             })
             .catch((err: unknown) => {
@@ -292,6 +310,67 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
         }
     }, [kuis_praktikan.is_overdue]);
 
+    useEffect(() => {
+        const alertCount = Number(localStorage.getItem(awayStorageKey("away-count"))) || 0;
+        setAwayAlertCount(alertCount);
+
+        if (QUIZ_AWAY_TOLERANCE < 1 || kuis_praktikan.is_overdue) {
+            return;
+        }
+
+        localStorage.setItem(awayStorageKey("started"), "true");
+
+        const handleUserAway = () => {
+            if (submitEndRef.current.onSubmit) {
+                return;
+            }
+
+            const hasStarted = localStorage.getItem(awayStorageKey("started"));
+            if (!hasStarted) {
+                return;
+            }
+
+            const now = Date.now();
+            const lastAway =
+                Number(localStorage.getItem(awayStorageKey("away-last"))) || 0;
+
+            if (now - lastAway < 2000) {
+                return;
+            }
+
+            localStorage.setItem(awayStorageKey("away-last"), now.toString());
+
+            const currentCount =
+                Number(localStorage.getItem(awayStorageKey("away-count"))) || 0;
+            const newCount = currentCount + 1;
+
+            localStorage.setItem(awayStorageKey("away-count"), newCount.toString());
+            setAwayAlertCount(newCount);
+
+            if (newCount >= QUIZ_AWAY_TOLERANCE) {
+                setShowAwayAlert(false);
+                handleSubmitEndKuis();
+                return;
+            }
+
+            setShowAwayAlert(true);
+        };
+
+        const handleVisibilityChange = () => {
+            if (document.hidden) {
+                handleUserAway();
+            }
+        };
+
+        window.addEventListener("blur", handleUserAway);
+        document.addEventListener("visibilitychange", handleVisibilityChange);
+
+        return () => {
+            window.removeEventListener("blur", handleUserAway);
+            document.removeEventListener("visibilitychange", handleVisibilityChange);
+        };
+    }, [kuis_praktikan.id, kuis_praktikan.is_overdue]);
+
     return (
         <>
             { submitEnd.onSubmit && (
@@ -421,6 +500,31 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
                             }}
                         >
                             Selesaikan
+                        </Button>
+                    </DialogFooter>
+                </DialogContent>
+            </Dialog>
+
+            <Dialog open={showAwayAlert} onOpenChange={setShowAwayAlert}>
+                <DialogContent className="my-alert-dialog-content">
+                    <DialogHeader>
+                        <DialogTitle>Keluar dari Halaman Terdeteksi</DialogTitle>
+                        <DialogDescription>
+                            Sistem mendeteksi kamu berpindah dari halaman kuis. Jika ini terjadi
+                            sebanyak {QUIZ_AWAY_TOLERANCE} kali, kuis akan otomatis diselesaikan.
+                        </DialogDescription>
+                    </DialogHeader>
+                    <Separator className="bg-primary/50" />
+                    <div className="text-sm text-primary">
+                        Pelanggaran: {awayAlertCount}/{QUIZ_AWAY_TOLERANCE}
+                    </div>
+                    <DialogFooter>
+                        <Button
+                            type="button"
+                            className="bg-amber-500 hover:bg-amber-500/85 text-zinc-950"
+                            onClick={() => setShowAwayAlert(false)}
+                        >
+                            Saya Mengerti
                         </Button>
                     </DialogFooter>
                 </DialogContent>
