@@ -33,7 +33,7 @@ class Kuis extends Model implements AuditableContract
     public function praktikans()
     {
         return $this->belongsToMany(Praktikan::class, 'kuis_praktikan')
-            ->withPivot(['skor', 'selesai'])
+            ->withPivot(['skor', 'selesai', 'blocked'])
             ->withTimestamps();
     }
     public function kuis_praktikan(): HasMany

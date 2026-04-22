@@ -9,6 +9,7 @@ use App\Models\Soal;
 use App\Models\SoalKuis;
 use Illuminate\Database\QueryException;
 use Illuminate\Http\Request;
+use Illuminate\Support\Carbon;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Response;
@@ -64,6 +65,13 @@ class KuisPraktikanController extends Controller
             }
 
             $kuis = Kuis::findOrFail($validated['kuis_id']);
+            $now = Carbon::now('Asia/Jakarta');
+
+            if ($kuis->waktu_mulai > $now || $kuis->waktu_selesai < $now) {
+                return Response::json([
+                    'message' => 'Kuis sedang tidak berlangsung.'
+                ], 403);
+            }
 
             if ($kuis->kode) {
                 if(($validated['kode'] ?? null) !== $kuis->kode) {
@@ -136,6 +144,10 @@ class KuisPraktikanController extends Controller
                 return Response::json(['message' => 'Kuis Praktikan tidak ditemukan'], 404);
             }
 
+            if ($kuisPraktikan->blocked) {
+                return Response::json(['message' => 'Kuis sedang diblokir oleh sistem.'], 403);
+            }
+
             $jawabanKuis = JawabanKuis::query()
                 ->join('soal_kuis', 'jawaban_kuis.soal_id', '=', 'soal_kuis.soal_id')
                 ->where('soal_kuis.kuis_id', $kuisPraktikan->kuis_id)
@@ -174,6 +186,68 @@ class KuisPraktikanController extends Controller
         } catch (QueryException $exception) {
             DB::rollBack();
             return $this->queryExceptionResponse($exception);
+        }
+    }
+
+    public function block(Request $request)
+    {
+        $validated = $request->validate([
+            'kuis_praktikan_id' => 'required|uuid|exists:kuis_praktikan,id',
+            'praktikan_id' => 'required|uuid|exists:praktikan,id',
+        ]);
+
+        $authPraktikan = Auth::guard('praktikan')->user();
+        if (!$authPraktikan || $authPraktikan->id !== $validated['praktikan_id']) {
+            return Response::json([
+                'message' => 'Unauthorized.'
+            ], 401);
+        }
+
+        try {
+            $kuisPraktikan = KuisPraktikan::where('id', $validated['kuis_praktikan_id'])
+                ->where('praktikan_id', $validated['praktikan_id'])
+                ->where('selesai', false)
+                ->firstOrFail();
+
+            $kuisPraktikan->update([
+                'blocked' => true,
+                'blocked_at' => Carbon::now('Asia/Jakarta'),
+            ]);
+
+            return Response::json([
+                'message' => 'Kuis berhasil diblokir.',
+            ]);
+        } catch (\Exception $exception) {
+            return Response::json([
+                'message' => config('app.debug') ? $exception->getMessage() : 'Server gagal memproses permintaan.',
+            ], 500);
+        }
+    }
+
+    public function unblock(Request $request)
+    {
+        $validated = $request->validate([
+            'kuis_id' => 'required|uuid|exists:kuis,id',
+            'praktikan_id' => 'required|uuid|exists:praktikan,id',
+        ]);
+
+        try {
+            $kuisPraktikan = KuisPraktikan::where('kuis_id', $validated['kuis_id'])
+                ->where('praktikan_id', $validated['praktikan_id'])
+                ->firstOrFail();
+
+            $kuisPraktikan->update([
+                'blocked' => false,
+                'blocked_at' => null,
+            ]);
+
+            return Response::json([
+                'message' => 'Praktikan berhasil dibuka blokirnya.',
+            ]);
+        } catch (\Exception $exception) {
+            return Response::json([
+                'message' => config('app.debug') ? $exception->getMessage() : 'Server gagal memproses permintaan.',
+            ], 500);
         }
     }
 }

@@ -9,7 +9,8 @@ import {
     CircleCheck,
     CornerDownLeft,
     LayoutGrid,
-    Loader2
+    Loader2,
+    RefreshCw
 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { ScrollArea } from "@/components/ui/scroll-area";
@@ -61,6 +62,7 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
         is_overdue: boolean;
         waktu_mulai: string;
         waktu_selesai: string;
+        blocked: boolean;
     };
 }>) {
     const QUIZ_AWAY_TOLERANCE = 3;
@@ -107,6 +109,12 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
         submitEndRef.current = submitEnd;
     }, [submitEnd]);
 
+    const clearAwayStorage = useCallback(() => {
+        localStorage.removeItem(awayStorageKey("started"));
+        localStorage.removeItem(awayStorageKey("away-count"));
+        localStorage.removeItem(awayStorageKey("away-last"));
+    }, [kuis_praktikan.id]);
+
     const handleSubmitEndKuis = () => {
         if (submitEndRef.current.onSubmit) {
             return;
@@ -127,9 +135,7 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
             praktikan_id: authUser.id
         })
             .then(() => {
-                localStorage.removeItem(awayStorageKey("started"));
-                localStorage.removeItem(awayStorageKey("away-count"));
-                localStorage.removeItem(awayStorageKey("away-last"));
+                clearAwayStorage();
                 router.visit(route('praktikan.kuis.result', { id: kuis_praktikan.id }));
             })
             .catch((err: unknown) => {
@@ -145,6 +151,44 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
             })
 
     };
+
+    const handleBlockKuis = useCallback(() => {
+        if (submitEndRef.current.onSubmit) {
+            return;
+        }
+
+        setSubmitEnd({
+            ...submitEndInit,
+            onSubmit: true,
+            message: 'Kuis Diblokir',
+            subMessage: 'Mengalihkan ke halaman blokir...'
+        });
+
+        axios.post<{ message: string }>(route('kuis-praktikan.block'), {
+            kuis_praktikan_id: kuis_praktikan.id,
+            praktikan_id: authUser.id,
+        })
+            .then(() => {
+                clearAwayStorage();
+                router.visit(route('praktikan.kuis.exam', { id: kuis_praktikan.id }));
+            })
+            .catch((err: unknown) => {
+                const errMsg: string = err instanceof AxiosError && err.response?.data?.message
+                    ? err.response.data.message
+                    : 'Error tidak diketahui terjadi!';
+
+                setSubmitEnd({
+                    ...submitEndInit,
+                    onError: true,
+                    message: errMsg,
+                    subMessage: 'Mohon Coba lagi..',
+                });
+            });
+    }, [authUser.id, clearAwayStorage, kuis_praktikan.id]);
+
+    const handleRefreshPage = useCallback(() => {
+        router.reload();
+    }, []);
 
     const DataSoal = useMemo(() => {
         const baseUUID = auth.user?.id ?? uuid();
@@ -349,7 +393,7 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
 
             if (newCount >= QUIZ_AWAY_TOLERANCE) {
                 setShowAwayAlert(false);
-                handleSubmitEndKuis();
+                handleBlockKuis();
                 return;
             }
 
@@ -369,7 +413,7 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
             window.removeEventListener("blur", handleUserAway);
             document.removeEventListener("visibilitychange", handleVisibilityChange);
         };
-    }, [kuis_praktikan.id, kuis_praktikan.is_overdue]);
+    }, [handleBlockKuis, kuis_praktikan.id, kuis_praktikan.is_overdue]);
 
     return (
         <>
@@ -420,29 +464,41 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
                         <h6 className="text-base indent-2">
                             Soal { navigation.currentIndex + 1 } dari { DataSoal.length }
                         </h6>
-                        <div className="w-36 flex flex-row gap-1 items-center text-xs font-medium">
-                            { submitJawaban.onSubmit
-                                ? (
-                                    <>
-                                        <Loader2 width={ 18 } className="text-blue-500 animate-spin" />
-                                        <p className="text-blue-500">Sedang Menyimpan...</p>
-                                    </>
-                                ) : submitJawaban.onSuccess
+                        <div className="flex flex-row gap-2 items-center">
+                            <div className="w-36 flex flex-row gap-1 items-center text-xs font-medium">
+                                { submitJawaban.onSubmit
                                     ? (
                                         <>
-                                            <CircleCheck width={ 18 } className="text-green-600" />
-                                            <p className="text-green-600">Berhasil menyimpan</p>
+                                            <Loader2 width={ 18 } className="text-blue-500 animate-spin" />
+                                            <p className="text-blue-500">Sedang Menyimpan...</p>
                                         </>
-                                    ) : submitJawaban.onError
+                                    ) : submitJawaban.onSuccess
                                         ? (
                                             <>
-                                                <CircleAlert width={ 18 } className="text-red-600" />
-                                                <p className="text-red-600">Gagal Menyimpan..</p>
+                                                <CircleCheck width={ 18 } className="text-green-600" />
+                                                <p className="text-green-600">Berhasil menyimpan</p>
                                             </>
-                                        ) : (
-                                            <></>
-                                        )
-                            }
+                                        ) : submitJawaban.onError
+                                            ? (
+                                                <>
+                                                    <CircleAlert width={ 18 } className="text-red-600" />
+                                                    <p className="text-red-600">Gagal Menyimpan..</p>
+                                                </>
+                                            ) : (
+                                                <></>
+                                            )
+                                }
+                            </div>
+                            <Button
+                                variant="outline"
+                                size="sm"
+                                onClick={handleRefreshPage}
+                                title="Refresh halaman"
+                                className="gap-1"
+                            >
+                                <RefreshCw width={16} />
+                                Refresh
+                            </Button>
                         </div>
                     </header>
                     <Separator className="my-3 bg-muted-foreground/70 h-0.5"/>

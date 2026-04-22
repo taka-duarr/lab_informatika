@@ -406,11 +406,11 @@ class PraktikanPagesController extends Controller
 
         $now = Carbon::now('Asia/Jakarta');
 
-        $kuisPraktikan = KuisPraktikan::select(['id', 'kuis_id', 'praktikan_id', 'selesai'])
+        $kuisPraktikan = KuisPraktikan::select(['id', 'kuis_id', 'praktikan_id', 'selesai', 'blocked'])
             ->where('id', $id)
             ->where('praktikan_id', $authPraktikan->id)
             ->with([
-                'kuis:id,waktu_mulai,waktu_selesai',
+                'kuis:id,nama,waktu_mulai,waktu_selesai',
                 'kuis.soal_kuis:id,kuis_id,soal_id',
                 'kuis.soal_kuis.soal:id,pertanyaan,pilihan_jawaban',
                 'jawaban_kuis:id,soal_id,jawaban,kuis_praktikan_id',
@@ -429,6 +429,15 @@ class PraktikanPagesController extends Controller
             abort(403, 'Kuis ini sudah selesai dan tidak dapat dikerjakan kembali.');
         }
 
+        if ($kuisPraktikan->blocked) {
+            return Inertia::render('Praktikan/PraktikanKuisBlockedPage', [
+                'kuis_praktikan' => fn() => [
+                    'id' => $kuisPraktikan->id,
+                    'nama' => $kuisPraktikan->kuis->nama,
+                ],
+            ]);
+        }
+
         return Inertia::render('Praktikan/PraktikanKuisExamPage', [
             'serverTime' => Carbon::now('Asia/Jakarta')->toDateTimeString(),
             'kuis_praktikan' => fn() => [
@@ -436,6 +445,7 @@ class PraktikanPagesController extends Controller
                 'waktu_mulai' => $kuisPraktikan->kuis->waktu_mulai,
                 'waktu_selesai' => $kuisPraktikan->kuis->waktu_selesai,
                 'is_overdue' => $isOverdue,
+                'blocked' => $kuisPraktikan->blocked,
             ],
             'soals' => fn() => $kuisPraktikan->kuis->soal_kuis->map(fn($soal_kuis) => [
                 'id' => $soal_kuis->soal->id,

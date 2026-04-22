@@ -35,6 +35,7 @@ type Praktikan = {
     username: string;
     skor: number;
     selesai: boolean;
+    blocked: boolean;
     updated_at: string | null;
 };
 type Kuis = {
@@ -61,6 +62,7 @@ export default function AdminKuisResult({ auth, kuis }: PageProps<{
     };
     const [openResetForm, setOpenResetForm] = useState(false);
     const [resetForm, setResetForm] = useState<ResetForm>(resetFormInit);
+    const [unblockingPraktikanId, setUnblockingPraktikanId] = useState<string | null>(null);
 
     const columns: ColumnDef<Praktikan>[] = [
         {
@@ -139,23 +141,35 @@ export default function AdminKuisResult({ auth, kuis }: PageProps<{
             ),
             cell: ({ row }) => {
                 const selesai = row.original.selesai;
+                const blocked = row.original.blocked;
                 return (
                     <div
-                        className={`w-32 flex gap-1 items-center justify-center ${
-                            selesai ? "text-green-600" : "text-red-500"
-                        } text-sm`}
+                        className={`w-32 flex gap-2 items-center justify-center ${
+                            blocked ? "text-amber-600" : selesai ? "text-green-600" : "text-red-500"
+                        } text-sm font-medium`}
                     >
-                        {selesai ? (
+                        {blocked ? (
+                            <>
+                                <CircleAlert
+                                    size={20}
+                                    strokeWidth={2.5}
+                                    color="#d97706"
+                                />
+                                <span>TERBLOKIR</span>
+                            </>
+                        ) : selesai ? (
                             <>
                                 <CircleCheckBig
                                     size={20}
                                     strokeWidth={2.5}
                                     color="green"
                                 />
+                                <span>SELESAI</span>
                             </>
                         ) : (
                             <>
                                 <CircleAlert size={20} strokeWidth={2.5} />
+                                <span>BELUM</span>
                             </>
                         )}
                     </div>
@@ -189,6 +203,47 @@ export default function AdminKuisResult({ auth, kuis }: PageProps<{
                             >
                                 <RotateCcw /> Reset Data Kuis
                             </DropdownMenuItem>
+                            {originalRow.blocked && (
+                                <DropdownMenuItem
+                                    disabled={unblockingPraktikanId === originalRow.id}
+                                    onClick={() => {
+                                        setUnblockingPraktikanId(originalRow.id);
+                                        axios
+                                            .post<{
+                                                message: string;
+                                            }>(route("admin.kuis.unblock-praktikan"), {
+                                                kuis_id: kuis.id,
+                                                praktikan_id: originalRow.id,
+                                            })
+                                            .then((res) => {
+                                                toast({
+                                                    variant: "default",
+                                                    className: "bg-green-500 text-white",
+                                                    title: "Berhasil!",
+                                                    description: res.data.message,
+                                                });
+                                                router.reload({ only: ["kuis"] });
+                                            })
+                                            .catch((err: unknown) => {
+                                                const errMsg: string =
+                                                    err instanceof AxiosError && err.response?.data?.message
+                                                        ? err.response.data.message
+                                                        : "Error tidak diketahui terjadi!";
+                                                toast({
+                                                    variant: "destructive",
+                                                    title: "Permintaan gagal diproses!",
+                                                    description: errMsg,
+                                                });
+                                            })
+                                            .finally(() => {
+                                                setUnblockingPraktikanId(null);
+                                            });
+                                    }}
+                                >
+                                    <Loader2 className={unblockingPraktikanId === originalRow.id ? "animate-spin" : ""} />
+                                    Unblock Praktikan
+                                </DropdownMenuItem>
+                            )}
                             <DropdownMenuSeparator />
                         </DropdownMenuContent>
                     </DropdownMenu>
@@ -354,4 +409,3 @@ export default function AdminKuisResult({ auth, kuis }: PageProps<{
         </>
     );
 }
-
