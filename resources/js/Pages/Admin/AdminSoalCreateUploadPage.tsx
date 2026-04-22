@@ -96,19 +96,19 @@ export default function AdminSoalCreateUploadPage({ auth, labels }: PageProps<{
         pertanyaan: z.object({
             ops: z.array(
                 z.object({
-                    insert: z.string().min(1, "Pertanyaan tidak boleh kosong"),
+                    insert: z.coerce.string().min(1, "Pertanyaan tidak boleh kosong"),
                 })
             ).min(1, "Pertanyaan harus memiliki minimal 1 elemen"),
         }),
         pilihan_jawaban: z
             .array(
                 z.object({
-                    value: z.string().min(1, "Jawaban harus memiliki key"),
-                    label: z.string().min(1, "Pilihan jawaban tidak boleh kosong"),
+                    value: z.coerce.string().min(1, "Jawaban harus memiliki key"),
+                    label: z.coerce.string().min(1, "Pilihan jawaban tidak boleh kosong"),
                 })
             )
             .min(2, "Harus ada minimal 2 pilihan jawaban"),
-        kunci_jawaban: z.string().min(1, "Kunci jawaban tidak boleh kosong"),
+        kunci_jawaban: z.coerce.string().min(1, "Kunci jawaban tidak boleh kosong"),
     });
 
     const handleFormSubmit = () => {
