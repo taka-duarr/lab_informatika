@@ -347,14 +347,14 @@ export default function PraktikanRegistrationPage() {
                                     <span className="text-red-600 font-bold text-sm">*</span>Password minimal 6 karakter
                                 </CardDescription>
                                 <div className="space-y-2">
-                                    <Label htmlFor="nama-preview">Nama Mahasiswa</Label>
+                                    <Label htmlFor="nama">Nama Mahasiswa</Label>
                                     <Input
-                                        id="nama-preview"
-                                        name="nama-preview"
+                                        id="nama"
+                                        name="nama"
                                         type="text"
-                                        placeholder="Nama Mahasiswa"
+                                        placeholder="Nama Lengkap"
                                         value={ createForm.nama }
-                                        readOnly
+                                        onChange={ handleCreateFormInput }
                                     />
                                 </div>
                                 <div className="grid gap-2">

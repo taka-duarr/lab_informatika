@@ -407,9 +407,10 @@ class PraktikanController extends Controller
                 ], 409);
             }
 
+            /*
             $url = "https://api-classroom.itats.ac.id/api/v1/verify-npm";
             $apiKey = "24e04114a7be8b74940ff7228407e2e33a4f53ce4bf6b7520070d62f2de219923920ff6817cf69e627b0b6a878868052e3da4682b8476e85f7ef81b2b65e3fac";
-            // dd($url);
+            
             if (empty($url)) {
                 return Response::json([
                     'message' => 'ENV Error! Mohon hubungi pihak pengembang ^-^'
@@ -429,7 +430,7 @@ class PraktikanController extends Controller
                 ], 200);
             }
 
-            $isNotExists = ($response->json('data') === null) && ($response->json('exists') === false);
+            $isNotExists = $response->status() === 404 || (($response->json('data') === null) && ($response->json('exists') === false));
             $resData = [
                 'message' => $isNotExists
                     ? 'Data Mahasiswa tidak ditemukan'
@@ -441,6 +442,17 @@ class PraktikanController extends Controller
             }
 
             return Response::json($resData, $isNotExists ? 200 : 500);
+            */
+
+            // Bypassed API Classroom validation
+            return Response::json([
+                'message' => 'NPM dapat digunakan, silahkan isi data Anda',
+                'data' => [
+                    'nama' => '',
+                    'npm' => $validated['npm']
+                ],
+                'exists' => true
+            ], 200);
         } catch (QueryException $exception) {
             return $this->queryExceptionResponse($exception);
         } catch (\Exception $exception) {
