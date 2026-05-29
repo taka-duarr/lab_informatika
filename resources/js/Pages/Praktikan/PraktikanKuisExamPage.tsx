@@ -242,8 +242,10 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
     }, [DataSoal.length]);
 
     const handlePilihJawaban = useCallback((id: string, value: string) => {
-        const prevAnswers = navigation.answers;
+        let prevAnswerForId: string | undefined;
+        
         setNavigation((prevState) => {
+            prevAnswerForId = prevState.answers[id];
             return {
                 ...prevState,
                 answers: { ...prevState.answers, [id]: value },
@@ -267,6 +269,18 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
                     ...submitJawabanInit,
                     onSuccess: true
                 });
+                
+                setTimeout(() => {
+                    setNavigation((prevState) => {
+                        if (DataSoal[prevState.currentIndex]?.id === id) {
+                            return {
+                                ...prevState,
+                                currentIndex: (prevState.currentIndex + 1) % DataSoal.length
+                            };
+                        }
+                        return prevState;
+                    });
+                }, 300);
             })
             .catch((err: unknown) => {
                 const errMsg: string = err instanceof AxiosError && err.response?.data?.message
@@ -274,9 +288,13 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
                     : 'Error tidak diketahui terjadi!';
 
                 setNavigation((prevState) => {
-                    return { ...prevState,
-                        answers: prevAnswers
-                    };
+                    const newAnswers = { ...prevState.answers };
+                    if (prevAnswerForId !== undefined) {
+                        newAnswers[id] = prevAnswerForId;
+                    } else {
+                        delete newAnswers[id];
+                    }
+                    return { ...prevState, answers: newAnswers };
                 });
 
                 setSubmitJawaban({
@@ -290,7 +308,7 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
                     description: errMsg,
                 });
             });
-    }, []);
+    }, [DataSoal, kuis_praktikan.id, toast]);
 
     const AnswerOptions = useMemo(() => {
         const currentSoal = DataSoal[navigation.currentIndex];
