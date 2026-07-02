@@ -4,6 +4,7 @@ use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AslabController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\BeritaController;
+use App\Http\Controllers\DaftarTamuController;
 use App\Http\Controllers\DosenController;
 use App\Http\Controllers\JawabanKuisController;
 use App\Http\Controllers\JenisNilaiController;
@@ -58,6 +59,12 @@ Route::get('/hall-of-fames', function () {
 })->name('hall-of-fames');
 Route::get('/ban-list', [PraktikanPagesController::class, 'banListPage'])->name('ban-list');
 
+// <-- DAFTAR TAMU ROUTE --> //
+Route::get('/daftartamu', [UniversalPagesController::class, 'daftarTamuPage'])->name('daftartamu.page');
+Route::post('/daftartamu/create', [DaftarTamuController::class, 'store'])->name('daftartamu.create');
+Route::post('/daftartamu/{id}/checkout', [DaftarTamuController::class, 'checkout'])->name('daftartamu.checkout');
+// <-- END OF DAFTAR TAMU ROUTE --> //
+
 // <-- LOGIN PAGE ROUTE --> //
 Route::middleware('noAuth')->group(function () {
     Route::get('/shadow-monarch', [AdminPagesController::class, 'loginPage'])->name('admin.login');
@@ -90,6 +97,12 @@ Route::prefix('admin')->name('admin.')->middleware('withAuth:admin')->group(func
     Route::post('/update-password', [AdminController::class, 'updatePassword'])->name('update-password');
     Route::post('/delete', [AdminController::class, 'destroy'])->name('delete');
     Route::post('/upload-avatar', [AdminController::class, 'uploadAvatar'])->name('upload-avatar');
+});
+
+Route::prefix('admin/daftartamu')->name('admin.daftartamu.')->middleware('withAuth:admin')->group(function () {
+    Route::post('/import', [DaftarTamuController::class, 'import'])->name('import');
+    Route::post('/{id}/update', [DaftarTamuController::class, 'update'])->name('update');
+    Route::post('/{id}/delete', [DaftarTamuController::class, 'destroy'])->name('delete');
 });
 Route::prefix('aslab')->name('aslab.')->group(function () {
     Route::middleware('withAuth:admin')->group(function () {

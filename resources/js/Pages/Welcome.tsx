@@ -14,6 +14,12 @@ import {
     ChevronsDown,
     UserCircle2,
     UserRound,
+    Crown,
+    Wrench,
+    Network,
+    FileText,
+    Wallet,
+    Laptop,
 } from "lucide-react";
 import {
     LandingPrak,
@@ -22,7 +28,6 @@ import {
     LandingPrak1,
     LogoJarkom,
     LogoLabInformatika,
-    LogoRPL,
 } from "@/lib/StaticImagesLib";
 import { Tabs, TabsContent, TabsList, TabsTrigger } from "@/components/ui/tabs";
 import {
@@ -40,6 +45,7 @@ import { Badge } from "@/components/ui/badge";
 import { ScrollArea, ScrollBar } from "@/components/ui/scroll-area";
 import { format } from "date-fns";
 import { id as localdeId } from "date-fns/locale";
+import Autoplay from "embla-carousel-autoplay";
 
 export default function LandingPage({
     auth,
@@ -96,7 +102,7 @@ export default function LandingPage({
         {
             title: "Sistem Operasi",
             description:
-                "Praktikum semester ganjil yang tersedia untuk mahasiswa mulai dari semester 3",
+                "Praktikum semester genap yang tersedia untuk mahasiswa mulai dari semester 2",
             content:
                 "Sistem operasi adalah perangkat lunak yang mengelola perangkat keras komputer dan menyediakan layanan bagi program aplikasi. Sistem operasi berfungsi sebagai perantara antara pengguna dan perangkat keras komputer, memungkinkan eksekusi program, manajemen sumber daya, pengelolaan file, serta keamanan sistem. Beberapa sistem operasi populer meliputi Windows, Linux, dan macOS. Dalam praktikum ini, mahasiswa akan belajar konsep dasar sistem operasi seperti manajemen proses, manajemen memori, sistem file, hingga keamanan sistem. Selain itu, mahasiswa juga akan melakukan simulasi penggunaan sistem operasi dalam berbagai skenario praktis.",
             // image: { LogoJarkom },
@@ -108,41 +114,6 @@ export default function LandingPage({
             content:
                 "Jaringan komputer adalah kumpulan komputer yang saling terhubung untuk berbagi sumber daya, seperti file, printer, atau koneksi internet. Jaringan komputer terdiri dari berbagai topologi dan jenis jaringan, seperti LAN (Local Area Network), MAN (Metropolitan Area Network), dan WAN (Wide Area Network). Dalam praktikum ini, mahasiswa akan mempelajari dasar-dasar jaringan komputer, model OSI, TCP/IP, pengalamatan IP, subnetting, hingga konfigurasi perangkat jaringan seperti router dan switch. Mahasiswa juga akan melakukan simulasi menggunakan perangkat lunak seperti Cisco Packet Tracer untuk memahami lebih dalam konsep jaringan.",
             // image: { LogoJarkom },
-        },
-    ];
-
-    const PraktikumRPL = [
-        {
-            title: "Pemrograman Terstruktur",
-            description:
-                "Praktikum semester ganjil yang tersedia untuk mahasiswa mulai dari semester 1",
-            content:
-                "Pemrograman terstruktur adalah paradigma pemrograman yang mengutamakan penggunaan struktur kontrol seperti percabangan dan perulangan. Prinsip dasar dari pemrograman terstruktur adalah modularitas, di mana kode program dibagi menjadi fungsi atau prosedur kecil agar lebih mudah dipahami dan dikelola. Dalam praktikum ini, mahasiswa akan belajar dasar-dasar pemrograman dengan bahasa C/C++, memahami konsep variabel, tipe data, operator, hingga algoritma dasar seperti sorting dan searching. Selain itu, mahasiswa juga akan diberikan latihan membuat program sederhana untuk memperkuat pemahaman mereka terhadap konsep-konsep pemrograman.",
-            // image: { LogoRPL },
-        },
-        {
-            title: "Struktur Data",
-            description:
-                "Praktikum semester genap yang tersedia untuk mahasiswa mulai dari semester 2",
-            content:
-                "Struktur data adalah cara penyimpanan dan pengorganisasian data agar dapat digunakan secara efisien. Struktur data yang baik memungkinkan algoritma berjalan lebih cepat dan lebih efisien dalam penggunaan sumber daya. Dalam praktikum ini, mahasiswa akan belajar berbagai jenis struktur data seperti array, linked list, stack, queue, tree, dan graph. Selain itu, mahasiswa akan memahami bagaimana masing-masing struktur data bekerja, kapan harus menggunakannya, serta bagaimana implementasinya dalam bahasa pemrograman seperti C++ atau Java. Mahasiswa juga akan diberikan tugas membuat program yang memanfaatkan struktur data dalam berbagai kasus, seperti manajemen antrean atau pencarian jalur terpendek dalam graf.",
-            // image: { LogoRPL },
-        },
-        {
-            title: "Pemrograman Berorientasi Objek",
-            description:
-                "Praktikum semester ganjil yang tersedia untuk mahasiswa mulai dari semester 3",
-            content:
-                "Pemrograman berorientasi objek (OOP) adalah paradigma pemrograman yang berfokus pada objek dan interaksinya. OOP memungkinkan pengembangan perangkat lunak yang lebih modular, reusable, dan mudah dikembangkan. Dalam praktikum ini, mahasiswa akan belajar konsep utama dalam OOP seperti kelas, objek, enkapsulasi, pewarisan, dan polimorfisme. Mahasiswa juga akan mempelajari bagaimana menerapkan prinsip-prinsip ini dalam bahasa pemrograman seperti Java . Praktikum ini mencakup latihan membuat aplikasi berbasis OOP, seperti sistem manajemen perpustakaan atau aplikasi toko online, agar mahasiswa dapat memahami bagaimana OOP diterapkan dalam dunia nyata.",
-            // image: { LogoRPL },
-        },
-        {
-            title: "Basis Data",
-            description:
-                "Praktikum semester genap yang tersedia untuk mahasiswa mulai dari semester 4",
-            content:
-                "Basis data adalah kumpulan data yang terorganisir untuk memudahkan akses, pengelolaan, dan pemutakhiran. Dalam dunia teknologi informasi, basis data digunakan untuk menyimpan informasi yang dapat diakses oleh berbagai aplikasi. Dalam praktikum ini, mahasiswa akan belajar dasar-dasar basis data, termasuk perancangan basis data, normalisasi, serta penggunaan bahasa SQL untuk manipulasi data. Mahasiswa juga akan melakukan praktik menggunakan sistem manajemen basis data (DBMS) seperti MySQL atau PostgreSQL. Selain itu, mahasiswa akan diberikan tugas untuk membuat proyek basis data sederhana, seperti sistem manajemen inventaris atau sistem informasi akademik.",
-            // image: { LogoRPL },
         },
     ];
 
@@ -203,150 +174,59 @@ export default function LandingPage({
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">
                             Praktikum
                         </h2>
-                        <Tabs
-                            defaultValue="Jaringan Komputer"
-                            className="w-full"
-                        >
-                            <TabsList className="h-auto md:h-10 mx-auto max-w-xs md:max-w-lg grid grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1 gap-y-3 !p-3 my-4">
-                                <TabsTrigger value="Jaringan Komputer">
-                                    Jaringan Komputer
-                                </TabsTrigger>
-                                <TabsTrigger value="Rekayasa Perangkat Lunak">
-                                    Rekayasa Perangkat Lunak
-                                </TabsTrigger>
-                            </TabsList>
-                            <TabsContent
-                                value="Jaringan Komputer"
-                                className="overflow-hidden"
-                            >
-                                <div className="w-full px-4 md:px-6">
-                                    <Carousel
-                                        opts={{ align: "start" }}
-                                        className="w-full max-w-[1320px] mx-auto"
-                                    >
-                                        <CarouselContent>
-                                            {PraktikumJarkom.map(
-                                                (praktikum, index) => (
-                                                    <CarouselItem
-                                                        key={index}
-                                                        className="md:basis-full"
-                                                    >
-                                                        <div className="p-6 flex flex-col md:flex-row animate-in slide-in-from-top-5 md:slide-in-from-top-0 md:slide-in-from-left-6 fade-in-10 duration-700">
-                                                            <div className="content-center mx-auto lg:mx-0 w-auto md:w-80 relative order-first lg:order-none">
-                                                                <img
-                                                                    src={
-                                                                        LogoJarkom
-                                                                    }
-                                                                    alt="logo-jarkom"
-                                                                    width={200}
-                                                                    className="rounded-lg aspect-square object-cover object-center"
-                                                                />
-                                                            </div>
-                                                            <div className="w-full text-left lg:text-right">
-                                                                <CardHeader className="px-0 md:px-3">
-                                                                    <CardTitle>
-                                                                        {
-                                                                            praktikum.title
-                                                                        }
-                                                                    </CardTitle>
-                                                                    <CardDescription>
-                                                                        {
-                                                                            praktikum.description
-                                                                        }
-                                                                    </CardDescription>
-                                                                </CardHeader>
-                                                                <CardContent className="h-44 px-0 md:px-3">
-                                                                    <p className="text-left md:text-justify text-ellipsis line-clamp-6">
-                                                                        {
-                                                                            praktikum.content
-                                                                        }
-                                                                    </p>
-                                                                </CardContent>
-                                                                <CardFooter>
-                                                                    {/*<Button className="ml-0 md:ml-auto">*/}
-                                                                    {/*    Informasi*/}
-                                                                    {/*    Praktikum{" "}*/}
-                                                                    {/*    <SquareArrowOutUpRight />*/}
-                                                                    {/*</Button>*/}
-                                                                </CardFooter>
-                                                            </div>
-                                                        </div>
-                                                    </CarouselItem>
-                                                )
-                                            )}
-                                        </CarouselContent>
-                                        <CarouselPrevious />
-                                        <CarouselNext />
-                                    </Carousel>
-                                </div>
-                            </TabsContent>
 
-                            <TabsContent
-                                value="Rekayasa Perangkat Lunak"
-                                className="overflow-hidden"
+                        <div className="w-full px-4 md:px-6">
+                            <Carousel
+                                opts={{ align: "start" }}
+                                className="w-full max-w-[1320px] mx-auto"
                             >
-                                <div className="w-full px-4 md:px-6">
-                                    <Carousel
-                                        opts={{ align: "start" }}
-                                        className="w-full max-w-[1320px] mx-auto"
-                                    >
-                                        <CarouselContent>
-                                            {PraktikumRPL.map(
-                                                (praktikum, index) => (
-                                                    <CarouselItem
-                                                        key={index}
-                                                        className="md:basis-full"
-                                                    >
-                                                        <div className="p-6 flex flex-col md:flex-row animate-in slide-in-from-bottom-5 md:slide-in-from-bottom-0 md:slide-in-from-right-6 fade-in-10 duration-700">
-                                                            <div className="w-full">
-                                                                <CardHeader className="px-0 md:px-3">
-                                                                    <CardTitle>
-                                                                        {
-                                                                            praktikum.title
-                                                                        }
-                                                                    </CardTitle>
-                                                                    <CardDescription>
-                                                                        {
-                                                                            praktikum.description
-                                                                        }
-                                                                    </CardDescription>
-                                                                </CardHeader>
-                                                                <CardContent className="h-44 px-0 md:px-3">
-                                                                    <p className="text-left md:text-justify text-ellipsis line-clamp-6">
-                                                                        {
-                                                                            praktikum.content
-                                                                        }
-                                                                    </p>
-                                                                </CardContent>
-                                                                <CardFooter>
-                                                                    {/*<Button>*/}
-                                                                    {/*    Informasi*/}
-                                                                    {/*    Praktikum{" "}*/}
-                                                                    {/*    <SquareArrowOutUpRight />*/}
-                                                                    {/*</Button>*/}
-                                                                </CardFooter>
-                                                            </div>
-                                                            <div className="content-center mx-auto lg:mx-0 w-auto md:w-80 relative order-first lg:order-none">
-                                                                <img
-                                                                    src={
-                                                                        LogoRPL
-                                                                    }
-                                                                    alt="logo-Rekayasa-Perangkat-Lunak"
-                                                                    width={200}
-                                                                    className="mx-auto rounded-lg aspect-square object-cover object-center"
-                                                                />
-                                                            </div>
-                                                        </div>
-                                                    </CarouselItem>
-                                                )
-                                            )}
-                                        </CarouselContent>
-                                        <CarouselPrevious />
-                                        <CarouselNext />
-                                    </Carousel>
-                                </div>
-                            </TabsContent>
-                        </Tabs>
+                                <CarouselContent>
+                                    {PraktikumJarkom.map((praktikum, index) => (
+                                        <CarouselItem
+                                            key={index}
+                                            className="md:basis-full"
+                                        >
+                                            <div className="p-6 flex flex-col md:flex-row animate-in slide-in-from-top-5 md:slide-in-from-top-0 md:slide-in-from-left-6 fade-in-10 duration-700">
+                                                <div className="content-center mx-auto lg:mx-0 w-auto md:w-80 relative order-first lg:order-none">
+                                                    <img
+                                                        src={LogoJarkom}
+                                                        alt="logo-jarkom"
+                                                        width={200}
+                                                        className="rounded-lg aspect-square object-cover object-center"
+                                                    />
+                                                </div>
+                                                <div className="w-full text-left lg:text-right">
+                                                    <CardHeader className="px-0 md:px-3">
+                                                        <CardTitle>
+                                                            {praktikum.title}
+                                                        </CardTitle>
+                                                        <CardDescription>
+                                                            {
+                                                                praktikum.description
+                                                            }
+                                                        </CardDescription>
+                                                    </CardHeader>
+                                                    <CardContent className="h-44 px-0 md:px-3">
+                                                        <p className="text-left md:text-justify text-ellipsis line-clamp-6">
+                                                            {praktikum.content}
+                                                        </p>
+                                                    </CardContent>
+                                                    <CardFooter>
+                                                        {/*<Button className="ml-0 md:ml-auto">*/}
+                                                        {/*    Informasi*/}
+                                                        {/*    Praktikum{" "}*/}
+                                                        {/*    <SquareArrowOutUpRight />*/}
+                                                        {/*</Button>*/}
+                                                    </CardFooter>
+                                                </div>
+                                            </div>
+                                        </CarouselItem>
+                                    ))}
+                                </CarouselContent>
+                                <CarouselPrevious />
+                                <CarouselNext />
+                            </Carousel>
+                        </div>
                     </Card>
                 </section>
 
@@ -355,37 +235,26 @@ export default function LandingPage({
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">
                             Asisten Laboratorium
                         </h2>
-                        <Tabs
-                            defaultValue="Jaringan Komputer"
-                            className="w-full"
-                        >
-                            <TabsList className="h-auto md:h-10 mx-auto max-w-xs md:max-w-lg grid grid-cols-1 md:grid-cols-2 grid-rows-2 md:grid-rows-1 gap-y-3 !p-3 my-4">
-                                {laboratoriums.map((laboratorium) => (
-                                    <TabsTrigger
-                                        key={laboratorium.id}
-                                        value={laboratorium.nama}
-                                    >
-                                        {laboratorium.nama}
-                                    </TabsTrigger>
-                                ))}
-                            </TabsList>
-                            {laboratoriums.map((laboratorium, index) => (
-                                <TabsContent
-                                    key={laboratorium.id}
-                                    value={laboratorium.nama}
-                                    className="overflow-hidden"
-                                >
+                        <div className="w-full mt-8">
+                            {laboratoriums
+                                .filter(
+                                    (lab) => lab.nama === "Jaringan Komputer",
+                                )
+                                .map((laboratorium) => (
                                     <div
-                                        className={`mx-auto ${
-                                            index % 2 === 0
-                                                ? "animate-in md:slide-in-from-left-6"
-                                                : "animate-in md:slide-in-from-right-6"
-                                        } fade-in-10 duration-1000 md:duration-700`}
+                                        key={laboratorium.id}
+                                        className="mx-auto animate-in md:slide-in-from-bottom-6 fade-in-10 duration-1000 md:duration-700"
                                     >
                                         <Carousel
                                             opts={{
                                                 align: "start",
+                                                loop: true,
                                             }}
+                                            plugins={[
+                                                Autoplay({
+                                                    delay: 3000,
+                                                }),
+                                            ]}
                                             className="w-72 md:w-full md:max-w-xl lg:max-w-4xl xl:max-w-6xl mx-auto"
                                         >
                                             <CarouselContent className="mx-auto fade-in-10 duration-50">
@@ -441,19 +310,139 @@ export default function LandingPage({
                                                                 </Card>
                                                             </div>
                                                         </CarouselItem>
-                                                    )
+                                                    ),
                                                 )}
                                             </CarouselContent>
                                             <CarouselPrevious />
                                             <CarouselNext />
                                         </Carousel>
                                     </div>
-                                </TabsContent>
-                            ))}
-                        </Tabs>
+                                ))}
+                        </div>
                     </div>
                 </section>
 
+                <section id="struktur-organisasi" className="w-full py-20 px-4 relative overflow-hidden bg-slate-50/50">
+                    <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] -z-10"></div>
+                    
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+                            <div className="inline-block rounded-lg bg-blue-100 px-3 py-1 text-sm text-blue-800 font-semibold mb-2">Our Team</div>
+                            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-blue-900 to-blue-600">
+                                Struktur Laboratorium
+                            </h2>
+                            <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                                Jajaran pengurus inti yang berdedikasi membangun dan mengembangkan ekosistem Laboratorium Informatika ITATS.
+                            </p>
+                        </div>
+                        
+                        <div className="flex flex-col items-center max-w-5xl mx-auto w-full relative">
+                            {/* Kepala Laboratorium */}
+                            <div className="flex flex-col items-center relative z-10 w-full group">
+                                <Card className="w-full md:w-80 text-center border-blue-200/60 shadow-lg shadow-blue-900/5 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-300">
+                                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-br from-blue-600 to-blue-800 text-white p-3 rounded-full shadow-lg shadow-blue-900/20 group-hover:scale-110 transition-transform duration-300">
+                                        <Crown size={24} />
+                                    </div>
+                                    <CardHeader className="pt-10 pb-2">
+                                        <CardTitle className="text-sm font-semibold tracking-wider text-blue-600 uppercase">Kepala Laboratorium</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-6">
+                                        <p className="font-bold text-lg text-slate-800">Danang Haryo Sulaksono, S.ST., M.T.</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+
+                            {/* Connecting Line Level 1 */}
+                            <div className="h-10 w-0.5 bg-gradient-to-b from-blue-300 to-slate-300"></div>
+
+                            {/* Laboran */}
+                            <div className="flex flex-col items-center relative z-10 w-full group">
+                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
+                                        <Wrench size={20} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-2">
+                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Laboran</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-bold text-base text-slate-800">Latiful Sirri, S.kom</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+
+                            {/* Connecting Line Level 2 */}
+                            <div className="h-10 w-0.5 bg-slate-300"></div>
+
+                            {/* Koordinator */}
+                            <div className="flex flex-col items-center relative z-10 w-full group">
+                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
+                                        <Network size={20} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-2">
+                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Koordinator</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-bold text-base text-slate-800 leading-tight">Afzal Musyaffa Lathif Ashrafil Adam</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+
+                            {/* Connecting Line Level 3 (Branching) */}
+                            <div className="flex flex-col items-center w-full relative">
+                                <div className="h-8 w-0.5 bg-slate-300"></div>
+                                <div className="w-[calc(100%-2rem)] md:w-[600px] border-t-2 border-slate-300"></div>
+                                <div className="flex justify-between w-[calc(100%-2rem)] md:w-[600px]">
+                                    <div className="h-8 w-0.5 bg-slate-300"></div>
+                                    <div className="h-8 w-0.5 bg-slate-300"></div>
+                                    <div className="h-8 w-0.5 bg-slate-300"></div>
+                                </div>
+                            </div>
+
+                            {/* Sekretaris, Bendahara, Admin Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-4xl px-4 md:px-0">
+                                {/* Sekretaris */}
+                                <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-600 text-white p-2.5 rounded-full shadow-sm group-hover:bg-blue-500 transition-colors duration-300">
+                                        <FileText size={18} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-1">
+                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Sekretaris</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-semibold text-slate-800">Firman Ardiansyah</p>
+                                    </CardContent>
+                                </Card>
+
+                                {/* Bendahara */}
+                                <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-600 text-white p-2.5 rounded-full shadow-sm group-hover:bg-blue-500 transition-colors duration-300">
+                                        <Wallet size={18} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-1">
+                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Bendahara</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-semibold text-slate-800">Madadina Adilah Pamuji</p>
+                                    </CardContent>
+                                </Card>
+
+                                {/* Admin */}
+                                <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-600 text-white p-2.5 rounded-full shadow-sm group-hover:bg-blue-500 transition-colors duration-300">
+                                        <Laptop size={18} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-1">
+                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Admin</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-semibold text-slate-800">Marikh Kasiful izzat</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 <section id="news" className="w-full py-12 px-4 bg-muted">
                     <Card className="pt-8 pb-4 px-0">
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">
@@ -480,12 +469,12 @@ export default function LandingPage({
                                                             {berita.updated_at
                                                                 ? format(
                                                                       new Date(
-                                                                          berita.updated_at
+                                                                          berita.updated_at,
                                                                       ),
                                                                       "PPPp",
                                                                       {
                                                                           locale: localdeId,
-                                                                      }
+                                                                      },
                                                                   )
                                                                 : ""}
                                                         </div>
@@ -513,8 +502,8 @@ export default function LandingPage({
                                                                     "berita.show",
                                                                     {
                                                                         slug: berita.slug,
-                                                                    }
-                                                                )
+                                                                    },
+                                                                ),
                                                             )
                                                         }
                                                     >

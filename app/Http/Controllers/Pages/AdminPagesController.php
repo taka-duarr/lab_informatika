@@ -999,4 +999,33 @@ class AdminPagesController extends Controller
     ]);
 }
 
+    public function daftarTamuIndexPage(Request $request)
+    {
+        $query = \App\Models\DaftarTamu::query();
+
+        if ($request->has('start_date') && $request->start_date) {
+            $query->whereDate('tanggal', '>=', $request->start_date);
+        }
+
+        if ($request->has('end_date') && $request->end_date) {
+            $query->whereDate('tanggal', '<=', $request->end_date);
+        }
+
+        if ($request->has('q') && $request->q) {
+            $search = $request->q;
+            $query->where(function ($q) use ($search) {
+                $q->where('nama_tamu', 'like', "%{$search}%")
+                  ->orWhere('tujuan_aktivitas', 'like', "%{$search}%")
+                  ->orWhere('kondisi_lab', 'like', "%{$search}%");
+            });
+        }
+
+        $daftarTamu = $query->orderBy('tanggal', 'desc')->orderBy('jam_mulai', 'desc')->get();
+
+        return Inertia::render('Admin/AdminDaftarTamuIndexPage', [
+            'daftarTamu' => $daftarTamu,
+            'filters' => $request->only(['start_date', 'end_date', 'q'])
+        ]);
+    }
+
 }

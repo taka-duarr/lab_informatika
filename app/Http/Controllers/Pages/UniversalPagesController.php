@@ -34,4 +34,15 @@ class UniversalPagesController extends Controller
             'beritas' => fn() => Berita::select(['id', 'judul', 'slug', 'deskripsi', 'updated_at', 'admin_id', 'laboratorium_id'])->with(['admin:id,nama', 'laboratorium:id,nama'])->orderBy('updated_at', 'desc')->get()
         ]);
     }
+
+    public function daftarTamuPage()
+    {
+        $activeLogs = \App\Models\DaftarTamu::whereNull('jam_selesai')
+            ->orderBy('jam_mulai', 'desc')
+            ->get();
+
+        return Inertia::render('DaftarTamuPage', [
+            'activeLogs' => $activeLogs
+        ]);
+    }
 }

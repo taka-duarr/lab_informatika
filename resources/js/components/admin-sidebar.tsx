@@ -149,6 +149,17 @@ export function AdminSidebar({ isMaster = false, ...props }: React.ComponentProp
                     },
                 ],
             },
+            {
+                title: "Kegiatan",
+                url: "#",
+                items: [
+                    {
+                        title: "Daftar Tamu",
+                        url: route('admin.daftartamu.index'),
+                        route: 'admin.daftartamu.index'
+                    },
+                ],
+            },
         ],
     };
 

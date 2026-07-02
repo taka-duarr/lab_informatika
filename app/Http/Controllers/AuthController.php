@@ -142,19 +142,20 @@ class AuthController extends Controller
                 'required',
                 'string',
                 'min:1',
-                'regex:/^\d{2}\.\d{4}\.\d{1}\.\d{5}$/',
             ],
             'password' => 'required|string|min:6'
         ], [
-            'username.required' => 'NPM tidak boleh kosong!',
-            'username.string' => 'Format NPM tidak valid!',
-            'username.min' => 'NPM minimal harus 1 karakter!',
-            'username.regex' => 'Format NPM harus sesuai dengan pola XX.XXXX.X.XXXXX!',
+            'username.required' => 'NPM / NIP tidak boleh kosong!',
+            'username.string' => 'Format NPM / NIP tidak valid!',
+            'username.min' => 'NPM / NIP minimal harus 1 karakter!',
             'password.required' => 'Password tidak boleh kosong!',
             'password.min' => 'Password minimal harus 6 karakter!'
         ]);
-        $this->logoutOtherGuards('praktikan');
-        if (Auth::guard('praktikan')->attempt($request->only('username', 'password'))) {
+        
+        $credentials = $request->only('username', 'password');
+
+        if (Auth::guard('praktikan')->attempt($credentials)) {
+            $this->logoutOtherGuards('praktikan');
             $praktikan = Auth::guard('praktikan')->user();
 
             return Response::json([
@@ -166,11 +167,26 @@ class AuthController extends Controller
                 ],
                 'role' => 'praktikan'
             ]);
-        } else {
-            return Response::json([
-                'message' => 'NPM atau password salah'
-            ], 401);
         }
+        
+        if (Auth::guard('dosen')->attempt($credentials)) {
+            $this->logoutOtherGuards('dosen');
+            $dosen = Auth::guard('dosen')->user();
+
+            return Response::json([
+                'message' => 'Login berhasil',
+                'data' => [
+                    'id' => $dosen->id,
+                    'nama' => $dosen->nama,
+                    'username' => $dosen->username,
+                ],
+                'role' => 'dosen'
+            ]);
+        }
+
+        return Response::json([
+            'message' => 'NPM/NIP atau password salah'
+        ], 401);
     }
     public function logout(Request $request): JsonResponse
     {

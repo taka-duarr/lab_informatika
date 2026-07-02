@@ -58,7 +58,12 @@ export const AppLayout = ({
                             LABORATORIUM INFORMATIKA ITATS
                         </p>
                     </Link>
-                    <nav className="ml-auto flex gap-4 sm:gap-6">
+                    <nav className="ml-auto flex items-center gap-4 sm:gap-6">
+                        <Button asChild variant="outline" className="hidden sm:flex items-center gap-1.5 font-semibold rounded-md">
+                            <Link href={route('daftartamu.page')}>
+                                Daftar Tamu
+                            </Link>
+                        </Button>
                         <ProfileDropdown auth={auth} />
                     </nav>
                 </header>

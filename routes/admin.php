@@ -71,6 +71,10 @@ Route::prefix('admin')->name('admin.')->middleware('guard:admin')->group(functio
         Route::get('/create', [AdminPagesController::class, 'beritaCreatePage'])->name('create');
         Route::get('/update', [AdminPagesController::class, 'beritaUpdatePage'])->name('update');
     });
+
+    Route::prefix('daftar-tamu')->name('daftartamu.')->group(function () {
+        Route::get('/', [AdminPagesController::class, 'daftarTamuIndexPage'])->name('index');
+    });
     Route::prefix('nilai-praktikum')->name('nilai-praktikum.')->group(function () {
         Route::get('/', [AdminPagesController::class, 'nilaiIndexPage'])->name('index');
         Route::get('/{praktikum_id}', [AdminPagesController::class, 'nilaiDetailsPage'])->name('details');
