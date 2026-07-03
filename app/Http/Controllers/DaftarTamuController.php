@@ -63,25 +63,25 @@ class DaftarTamuController extends Controller
     public function import(Request $request)
     {
         $request->validate([
-            'data' => 'required|array',
-            'data.*.nama_tamu' => 'required|string|max:255',
-            'data.*.jumlah_tamu' => 'required|integer|min:1',
-            'data.*.tanggal' => 'required|date',
-            'data.*.jam_mulai' => 'required',
-            'data.*.jam_selesai' => 'nullable',
-            'data.*.tujuan_aktivitas' => 'required|string|max:255',
-            'data.*.kondisi_lab' => 'required|string|max:255',
+            'data'                       => 'required|array',
+            'data.*.tanggal'             => 'required|date',
+            'data.*.jam_mulai'           => 'required|string',
+            'data.*.jam_selesai'         => 'nullable|string',
+            'data.*.tujuan_aktivitas'    => 'required|string|max:500',
+            'data.*.kondisi_lab'         => 'nullable|string|max:255',
+            'data.*.nama_tamu'           => 'nullable|string|max:255',
+            'data.*.jumlah_tamu'         => 'nullable|integer|min:1',
         ]);
 
         foreach ($request->data as $item) {
             DaftarTamu::create([
-                'nama_tamu' => $item['nama_tamu'],
-                'jumlah_tamu' => $item['jumlah_tamu'],
-                'tanggal' => $item['tanggal'],
-                'jam_mulai' => $item['jam_mulai'],
-                'jam_selesai' => $item['jam_selesai'] ?? null,
-                'tujuan_aktivitas' => $item['tujuan_aktivitas'],
-                'kondisi_lab' => $item['kondisi_lab'],
+                'nama_tamu'       => $item['nama_tamu'] ?? '-',
+                'jumlah_tamu'     => $item['jumlah_tamu'] ?? 1,
+                'tanggal'         => $item['tanggal'],
+                'jam_mulai'       => $item['jam_mulai'],
+                'jam_selesai'     => $item['jam_selesai'] ?? null,
+                'tujuan_aktivitas'=> $item['tujuan_aktivitas'],
+                'kondisi_lab'     => $item['kondisi_lab'] ?? '-',
             ]);
         }
 
