@@ -20,58 +20,72 @@ class AdminSeeder extends Seeder
 
         foreach ($laboratoriums as $laboratorium) {
             if ($laboratorium->nama === 'Bahasa Pemrograman') {
-                Admin::create([
-                    'id' => Str::uuid(),
-                    'nama' => 'Admin Basprog 1',
-                    'username' => 'adminbasprog1',
-                    'password' => Hash::make('123456', ['rounds' => 12]),
-                    'laboratorium_id' => $laboratorium->id,
-                ]);
-                Admin::create([
-                    'id' => Str::uuid(),
-                    'nama' => 'Admin Basprog 2',
-                    'username' => 'adminbasprog2',
-                    'password' => Hash::make('123456', ['rounds' => 12]),
-                    'laboratorium_id' => $laboratorium->id,
-                ]);
+                Admin::updateOrCreate(
+                    ['username' => 'adminbasprog1'],
+                    [
+                        'id' => Str::uuid(),
+                        'nama' => 'Admin Basprog 1',
+                        'password' => Hash::make('123456', ['rounds' => 12]),
+                        'laboratorium_id' => $laboratorium->id,
+                    ]
+                );
+                Admin::updateOrCreate(
+                    ['username' => 'adminbasprog2'],
+                    [
+                        'id' => Str::uuid(),
+                        'nama' => 'Admin Basprog 2',
+                        'password' => Hash::make('123456', ['rounds' => 12]),
+                        'laboratorium_id' => $laboratorium->id,
+                    ]
+                );
             } elseif ($laboratorium->nama === 'Rekayasa Perangkat Lunak') {
-                Admin::create([
-                    'id' => Str::uuid(),
-                    'nama' => 'Admin RPL 1',
-                    'username' => 'adminrpl1',
-                    'password' => Hash::make('123456', ['rounds' => 12]),
-                    'laboratorium_id' => $laboratorium->id,
-                ]);
-                Admin::create([
-                    'id' => Str::uuid(),
-                    'nama' => 'Admin RPL 2',
-                    'username' => 'adminrpl2',
-                    'password' => Hash::make('123456', ['rounds' => 12]),
-                    'laboratorium_id' => $laboratorium->id,
-                ]);
+                Admin::updateOrCreate(
+                    ['username' => 'adminrpl1'],
+                    [
+                        'id' => Str::uuid(),
+                        'nama' => 'Admin RPL 1',
+                        'password' => Hash::make('123456', ['rounds' => 12]),
+                        'laboratorium_id' => $laboratorium->id,
+                    ]
+                );
+                Admin::updateOrCreate(
+                    ['username' => 'adminrpl2'],
+                    [
+                        'id' => Str::uuid(),
+                        'nama' => 'Admin RPL 2',
+                        'password' => Hash::make('123456', ['rounds' => 12]),
+                        'laboratorium_id' => $laboratorium->id,
+                    ]
+                );
             } elseif ($laboratorium->nama === 'Jaringan Komputer') {
-                Admin::create([
-                    'id' => Str::uuid(),
-                    'nama' => 'Admin Jarkom 1',
-                    'username' => 'adminjarkom1',
-                    'password' => Hash::make('123456', ['rounds' => 12]),
-                    'laboratorium_id' => $laboratorium->id,
-                ]);
-                Admin::create([
-                    'id' => Str::uuid(),
-                    'nama' => 'Admin Jarkom 2',
-                    'username' => 'adminjarkom2',
-                    'password' => Hash::make('123456', ['rounds' => 12]),
-                    'laboratorium_id' => $laboratorium->id,
-                ]);
+                Admin::updateOrCreate(
+                    ['username' => 'adminjarkom1'],
+                    [
+                        'id' => Str::uuid(),
+                        'nama' => 'Admin Jarkom 1',
+                        'password' => Hash::make('123456', ['rounds' => 12]),
+                        'laboratorium_id' => $laboratorium->id,
+                    ]
+                );
+                Admin::updateOrCreate(
+                    ['username' => 'adminjarkom2'],
+                    [
+                        'id' => Str::uuid(),
+                        'nama' => 'Admin Jarkom 2',
+                        'password' => Hash::make('123456', ['rounds' => 12]),
+                        'laboratorium_id' => $laboratorium->id,
+                    ]
+                );
             }
         }
-        Admin::create([
-            'id' => Str::uuid(),
-            'nama' => 'Shadow 1',
-            'username' => 'shadow1',
-            'password' => Hash::make('123456', ['rounds' => 12]),
-            'laboratorium_id' => null,
-        ]);
+        Admin::updateOrCreate(
+            ['username' => 'shadow1'],
+            [
+                'id' => Str::uuid(),
+                'nama' => 'Shadow 1',
+                'password' => Hash::make('123456', ['rounds' => 12]),
+                'laboratorium_id' => null,
+            ]
+        );
     }
 }

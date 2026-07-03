@@ -15,9 +15,20 @@ import {
     TableHeader,
     TableRow,
 } from "@/components/ui/table";
+import {
+    AlertDialog,
+    AlertDialogAction,
+    AlertDialogCancel,
+    AlertDialogContent,
+    AlertDialogDescription,
+    AlertDialogFooter,
+    AlertDialogHeader,
+    AlertDialogTitle,
+} from "@/components/ui/alert-dialog";
 import { format } from "date-fns";
 import { id as localdeId } from "date-fns/locale";
-import { FormEventHandler } from 'react';
+import { FormEventHandler, useState } from 'react';
+import { LogOut } from 'lucide-react';
 
 type ActiveLog = {
     id: number;
@@ -31,6 +42,8 @@ type ActiveLog = {
 
 export default function DaftarTamuPage({ auth, activeLogs }: PageProps<{ activeLogs: ActiveLog[] }>) {
     const { toast } = useToast();
+    const [checkoutTarget, setCheckoutTarget] = useState<ActiveLog | null>(null);
+
     const { data, setData, post, processing, reset, errors } = useForm({
         nama_tamu: '',
         jumlah_tamu: 1,
@@ -51,23 +64,66 @@ export default function DaftarTamuPage({ auth, activeLogs }: PageProps<{ activeL
         });
     };
 
-    const handleCheckout = (id: number) => {
-        if (confirm('Apakah Anda yakin ingin menyelesaikan aktivitas ini (Checkout)?')) {
-            router.post(route('daftartamu.checkout', id), {}, {
-                onSuccess: () => {
-                    toast({
-                        title: "Checkout Berhasil",
-                        description: "Waktu selesai telah dicatat.",
-                    });
-                }
-            });
-        }
+    const confirmCheckout = () => {
+        if (!checkoutTarget) return;
+        router.post(route('daftartamu.checkout', checkoutTarget.id), {}, {
+            onSuccess: () => {
+                toast({
+                    title: "Checkout Berhasil! 👋",
+                    description: `${checkoutTarget.nama_tamu} telah berhasil checkout. Terima kasih!`,
+                });
+                setCheckoutTarget(null);
+            },
+            onError: () => {
+                toast({
+                    title: "Checkout Gagal",
+                    description: "Terjadi kesalahan, silakan coba lagi.",
+                    variant: "destructive",
+                });
+                setCheckoutTarget(null);
+            },
+        });
     };
 
     return (
         <AppLayout auth={auth}>
             <Head title="Daftar Tamu Logbook" />
-            
+
+            {/* Checkout Confirmation Modal */}
+            <AlertDialog open={!!checkoutTarget} onOpenChange={(open) => !open && setCheckoutTarget(null)}>
+                <AlertDialogContent>
+                    <AlertDialogHeader>
+                        <div className="flex items-center gap-3 mb-1">
+                            <div className="flex items-center justify-center w-10 h-10 rounded-full bg-amber-100 text-amber-600">
+                                <LogOut className="w-5 h-5" />
+                            </div>
+                            <AlertDialogTitle className="text-lg">Konfirmasi Checkout</AlertDialogTitle>
+                        </div>
+                        <AlertDialogDescription className="text-sm text-muted-foreground space-y-2 pt-1">
+                            <span>Apakah Anda yakin ingin melakukan <strong>checkout</strong> untuk:</span>
+                            {checkoutTarget && (
+                                <div className="mt-3 rounded-lg border bg-muted/50 p-3 space-y-1 text-left">
+                                    <p className="font-semibold text-foreground">{checkoutTarget.nama_tamu}</p>
+                                    <p className="text-xs text-muted-foreground">{checkoutTarget.jumlah_tamu} Orang &bull; Masuk {checkoutTarget.jam_mulai.substring(0, 5)} WIB</p>
+                                    <p className="text-xs text-muted-foreground truncate">{checkoutTarget.tujuan_aktivitas}</p>
+                                </div>
+                            )}
+                            <span className="block pt-1">Waktu selesai akan dicatat secara otomatis.</span>
+                        </AlertDialogDescription>
+                    </AlertDialogHeader>
+                    <AlertDialogFooter>
+                        <AlertDialogCancel>Batal</AlertDialogCancel>
+                        <AlertDialogAction
+                            onClick={confirmCheckout}
+                            className="bg-amber-500 hover:bg-amber-600 text-white"
+                        >
+                            <LogOut className="w-4 h-4 mr-2" />
+                            Ya, Checkout Sekarang
+                        </AlertDialogAction>
+                    </AlertDialogFooter>
+                </AlertDialogContent>
+            </AlertDialog>
+
             <div className="container mx-auto px-4 py-8 md:py-12">
                 <div className="grid grid-cols-1 md:grid-cols-12 gap-8">
                     {/* Form Section */}
@@ -168,7 +224,13 @@ export default function DaftarTamuPage({ auth, activeLogs }: PageProps<{ activeL
                                                         </TableCell>
                                                         <TableCell className="max-w-[250px] truncate">{log.tujuan_aktivitas}</TableCell>
                                                         <TableCell className="text-right">
-                                                            <Button size="sm" variant="default" onClick={() => handleCheckout(log.id)}>
+                                                            <Button
+                                                                size="sm"
+                                                                variant="outline"
+                                                                className="border-amber-400 text-amber-600 hover:bg-amber-50 hover:text-amber-700"
+                                                                onClick={() => setCheckoutTarget(log)}
+                                                            >
+                                                                <LogOut className="w-3.5 h-3.5 mr-1.5" />
                                                                 Checkout
                                                             </Button>
                                                         </TableCell>
