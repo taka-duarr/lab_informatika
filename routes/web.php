@@ -53,7 +53,8 @@ Route::get('/test', function () {
     return Inertia::render('Test');
 });
 
-Route::get('/', [UniversalPagesController::class, 'welcome']);
+Route::get('/', [UniversalPagesController::class, 'labPortalPage'])->name('lab.portal');
+Route::get('/jarkom', [UniversalPagesController::class, 'welcome'])->name('welcome');
 Route::get('/hall-of-fames', function () {
     return Inertia::render('HallOfFamesPage');
 })->name('hall-of-fames');

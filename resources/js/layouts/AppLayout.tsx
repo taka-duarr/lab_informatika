@@ -52,10 +52,10 @@ export const AppLayout = ({
                             className="rounded-full"
                         />
                         <span className="sr-only">
-                            Laboratorium Informatika ITATS
+                            Laboratorium Jaringan Komputer ITATS
                         </span>
                         <p className="hidden md:block">
-                            LABORATORIUM INFORMATIKA ITATS
+                            LABORATORIUM JARINGAN KOMPUTER ITATS
                         </p>
                     </Link>
                     <nav className="ml-auto flex items-center gap-4 sm:gap-6">

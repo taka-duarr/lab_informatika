@@ -1,7 +1,7 @@
 import { Button } from "@/components/ui/button";
 import { CardDescription, CardTitle } from "@/components/ui/card";
 import { ColumnDef } from "@tanstack/react-table";
-import { ArrowUpDown, CheckCircle2, CircleX, FileSearch } from "lucide-react";
+import { ArrowUpDown, CheckCircle2, CircleX, FileSearch, BookMarked } from "lucide-react";
 import { romanToNumber } from "@/lib/utils";
 import { Head, router } from "@inertiajs/react";
 import { PageProps, PaginationData } from "@/types";

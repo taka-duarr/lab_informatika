@@ -43,6 +43,17 @@ const data: {
                 },
             ],
         },
+        {
+            title: "Nilai Praktikum",
+            url: "#",
+            items: [
+                {
+                    title: "Input Nilai",
+                    url: route("dosen.nilai-praktikum.index"),
+                    route: "dosen.nilai-praktikum.index",
+                },
+            ],
+        },
     ],
 };
 

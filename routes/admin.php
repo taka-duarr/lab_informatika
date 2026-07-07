@@ -40,7 +40,8 @@ Route::prefix('admin')->name('admin.')->middleware('guard:admin')->group(functio
         });
 
         Route::prefix('/nilai')->name('nilai.')->group(function () {
-            Route::get('/', [AdminPagesController::class, 'praktikumNilaiIndexPage'])->name('index');
+            Route::get('/{praktikum_id}', [\App\Http\Controllers\NilaiController::class, 'index'])->name('index');
+            Route::post('/{praktikum_id}/update-cell', [\App\Http\Controllers\NilaiController::class, 'updateCell'])->name('update-cell');
         });
     });
     Route::prefix('jenis-praktikum')->name('jenis-praktikum.')->group(function () {
@@ -76,8 +77,12 @@ Route::prefix('admin')->name('admin.')->middleware('guard:admin')->group(functio
         Route::get('/', [AdminPagesController::class, 'daftarTamuIndexPage'])->name('index');
     });
     Route::prefix('nilai-praktikum')->name('nilai-praktikum.')->group(function () {
-        Route::get('/', [AdminPagesController::class, 'nilaiIndexPage'])->name('index');
-        Route::get('/{praktikum_id}', [AdminPagesController::class, 'nilaiDetailsPage'])->name('details');
+        Route::get('/', [\App\Http\Controllers\NilaiController::class, 'listPraktikum'])->name('index');
+        Route::get('/{praktikum_id}', [\App\Http\Controllers\NilaiController::class, 'index'])->name('details');
+        Route::post('/{praktikum_id}/update-cell', [\App\Http\Controllers\NilaiController::class, 'updateCell'])->name('update-cell');
+        Route::get('/{praktikum_id}/export', [\App\Http\Controllers\NilaiController::class, 'exportExcel'])->name('export');
+        Route::post('/{praktikum_id}/import', [\App\Http\Controllers\NilaiController::class, 'importExcel'])->name('import');
+        Route::get('/{praktikum_id}/export-akhir', [\App\Http\Controllers\NilaiController::class, 'exportNilaiAkhir'])->name('export-akhir');
     });
 
     // Route::get('/kuis/export/{id}', [KuisController::class, 'exportHasil'])

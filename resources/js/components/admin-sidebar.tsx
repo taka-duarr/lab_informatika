@@ -139,6 +139,17 @@ export function AdminSidebar({ isMaster = false, ...props }: React.ComponentProp
                 ],
             },
             {
+                title: "Nilai Praktikum",
+                url: "#",
+                items: [
+                    {
+                        title: "Input Nilai",
+                        url: route('admin.nilai-praktikum.index'),
+                        route: 'admin.nilai-praktikum.index'
+                    },
+                ],
+            },
+            {
                 title: "Berita",
                 url: "#",
                 items: [

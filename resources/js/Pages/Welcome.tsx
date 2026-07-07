@@ -145,10 +145,10 @@ export default function LandingPage({
                         <div className="flex flex-col items-center space-y-4 text-center">
                             <div className="space-y-2">
                                 <h2 className="text-3xl font-bold tracking-tighter sm:text-4xl md:text-5xl lg:text-6xl text-zinc-100">
-                                    Laboratorium Teknik Informatika ITATS
+                                    Laboratorium Jaringan Komputer ITATS
                                 </h2>
                                 <p className="mx-auto max-w-[700px] text-gray-400 md:text-xl font-medium">
-                                    Welcome to Labinformatika ITATS, keep
+                                    Welcome to Lab Jaringan Komputer ITATS, keep
                                     chilling and always Looksmaxxing
                                 </p>
                             </div>
@@ -230,6 +230,145 @@ export default function LandingPage({
                     </Card>
                 </section>
 
+                <section id="struktur-organisasi" className="w-full py-20 px-4 relative overflow-hidden bg-slate-50/50">
+                    <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] -z-10"></div>
+                    
+                    <div className="container mx-auto px-4 md:px-6">
+                        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
+                            <div className="inline-block rounded-lg bg-blue-100 px-3 py-1 text-sm text-blue-800 font-semibold mb-2">Our Team</div>
+                            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-blue-900 to-blue-600">
+                                Struktur Laboratorium
+                            </h2>
+                            <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
+                                Jajaran pengurus inti yang berdedikasi membangun dan mengembangkan ekosistem Laboratorium Jaringan Komputer ITATS.
+                            </p>
+                        </div>
+                        
+                        <div className="flex flex-col items-center max-w-5xl mx-auto w-full relative">
+                            {/* Kepala Laboratorium */}
+                            <div className="flex flex-col items-center relative z-10 w-full group">
+                                <Card className="w-full md:w-80 text-center border-blue-200/60 shadow-lg shadow-blue-900/5 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-300">
+                                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-br from-blue-600 to-blue-800 text-white p-3 rounded-full shadow-lg shadow-blue-900/20 group-hover:scale-110 transition-transform duration-300">
+                                        <Crown size={24} />
+                                    </div>
+                                    <CardHeader className="pt-10 pb-2">
+                                        <CardTitle className="text-sm font-semibold tracking-wider text-blue-600 uppercase">Kepala Laboratorium</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-6">
+                                        <p className="font-bold text-lg text-slate-800">Danang Haryo Sulaksono, S.ST., M.T.</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+
+                            {/* Connecting Line Level 1 */}
+                            <div className="h-10 w-0.5 bg-gradient-to-b from-blue-300 to-slate-300"></div>
+
+                            {/* Laboran */}
+                            <div className="flex flex-col items-center relative z-10 w-full group">
+                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
+                                        <Wrench size={20} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-2">
+                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Laboran</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-bold text-base text-slate-800">Latiful Sirri, S.kom</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+
+                            {/* Connecting Line Level 2 */}
+                            <div className="h-10 w-0.5 bg-slate-300"></div>
+
+                            {/* Koordinator */}
+                            <div className="flex flex-col items-center relative z-10 w-full group">
+                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
+                                        <Network size={20} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-2">
+                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Koordinator</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-bold text-base text-slate-800 leading-tight">Luqmanul Asyraril Mubin</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+
+                            {/* Connecting Line Level 3.5 */}
+                            <div className="h-10 w-0.5 bg-slate-300"></div>
+
+                            {/* Wakil Koordinator */}
+                            <div className="flex flex-col items-center relative z-10 w-full group">
+                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
+                                        <Network size={20} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-2">
+                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Wakil Koordinator</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-bold text-base text-slate-800 leading-tight">Afzal Musyaffa Lathif Ashrafil Adam</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+
+                            {/* Connecting Line Level 4 (Branching) */}
+                            <div className="flex flex-col items-center w-full relative">
+                                <div className="h-8 w-0.5 bg-slate-300"></div>
+                                <div className="w-[calc(100%-2rem)] md:w-[600px] border-t-2 border-slate-300"></div>
+                                <div className="flex justify-between w-[calc(100%-2rem)] md:w-[600px]">
+                                    <div className="h-8 w-0.5 bg-slate-300"></div>
+                                    <div className="h-8 w-0.5 bg-slate-300"></div>
+                                    <div className="h-8 w-0.5 bg-slate-300"></div>
+                                </div>
+                            </div>
+
+                            {/* Sekretaris, Bendahara, Admin Grid */}
+                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-4xl px-4 md:px-0">
+                                {/* Sekretaris */}
+                                <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-600 text-white p-2.5 rounded-full shadow-sm group-hover:bg-blue-500 transition-colors duration-300">
+                                        <FileText size={18} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-1">
+                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Sekretaris</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-semibold text-slate-800">Firman Ardiansyah</p>
+                                    </CardContent>
+                                </Card>
+
+                                {/* Bendahara */}
+                                <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-600 text-white p-2.5 rounded-full shadow-sm group-hover:bg-blue-500 transition-colors duration-300">
+                                        <Wallet size={18} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-1">
+                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Bendahara</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-semibold text-slate-800">Madadina Adilah Pamuji</p>
+                                    </CardContent>
+                                </Card>
+
+                                {/* Admin */}
+                                <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
+                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-600 text-white p-2.5 rounded-full shadow-sm group-hover:bg-blue-500 transition-colors duration-300">
+                                        <Laptop size={18} />
+                                    </div>
+                                    <CardHeader className="pt-8 pb-1">
+                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Admin</CardTitle>
+                                    </CardHeader>
+                                    <CardContent className="pb-5">
+                                        <p className="font-semibold text-slate-800">Marikh Kasiful izzat</p>
+                                    </CardContent>
+                                </Card>
+                            </div>
+                        </div>
+                    </div>
+                </section>
                 <section id="testimonials" className="w-full py-12 px-4">
                     <div className="w-full px-4 md:px-6">
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">
@@ -322,127 +461,6 @@ export default function LandingPage({
                     </div>
                 </section>
 
-                <section id="struktur-organisasi" className="w-full py-20 px-4 relative overflow-hidden bg-slate-50/50">
-                    <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] -z-10"></div>
-                    
-                    <div className="container mx-auto px-4 md:px-6">
-                        <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-                            <div className="inline-block rounded-lg bg-blue-100 px-3 py-1 text-sm text-blue-800 font-semibold mb-2">Our Team</div>
-                            <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-blue-900 to-blue-600">
-                                Struktur Laboratorium
-                            </h2>
-                            <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                                Jajaran pengurus inti yang berdedikasi membangun dan mengembangkan ekosistem Laboratorium Informatika ITATS.
-                            </p>
-                        </div>
-                        
-                        <div className="flex flex-col items-center max-w-5xl mx-auto w-full relative">
-                            {/* Kepala Laboratorium */}
-                            <div className="flex flex-col items-center relative z-10 w-full group">
-                                <Card className="w-full md:w-80 text-center border-blue-200/60 shadow-lg shadow-blue-900/5 bg-white/80 backdrop-blur-sm transition-all duration-300 hover:shadow-xl hover:-translate-y-1 hover:border-blue-300">
-                                    <div className="absolute -top-6 left-1/2 -translate-x-1/2 bg-gradient-to-br from-blue-600 to-blue-800 text-white p-3 rounded-full shadow-lg shadow-blue-900/20 group-hover:scale-110 transition-transform duration-300">
-                                        <Crown size={24} />
-                                    </div>
-                                    <CardHeader className="pt-10 pb-2">
-                                        <CardTitle className="text-sm font-semibold tracking-wider text-blue-600 uppercase">Kepala Laboratorium</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pb-6">
-                                        <p className="font-bold text-lg text-slate-800">Danang Haryo Sulaksono, S.ST., M.T.</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-
-                            {/* Connecting Line Level 1 */}
-                            <div className="h-10 w-0.5 bg-gradient-to-b from-blue-300 to-slate-300"></div>
-
-                            {/* Laboran */}
-                            <div className="flex flex-col items-center relative z-10 w-full group">
-                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
-                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
-                                        <Wrench size={20} />
-                                    </div>
-                                    <CardHeader className="pt-8 pb-2">
-                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Laboran</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-bold text-base text-slate-800">Latiful Sirri, S.kom</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-
-                            {/* Connecting Line Level 2 */}
-                            <div className="h-10 w-0.5 bg-slate-300"></div>
-
-                            {/* Koordinator */}
-                            <div className="flex flex-col items-center relative z-10 w-full group">
-                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
-                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
-                                        <Network size={20} />
-                                    </div>
-                                    <CardHeader className="pt-8 pb-2">
-                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Koordinator</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-bold text-base text-slate-800 leading-tight">Afzal Musyaffa Lathif Ashrafil Adam</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-
-                            {/* Connecting Line Level 3 (Branching) */}
-                            <div className="flex flex-col items-center w-full relative">
-                                <div className="h-8 w-0.5 bg-slate-300"></div>
-                                <div className="w-[calc(100%-2rem)] md:w-[600px] border-t-2 border-slate-300"></div>
-                                <div className="flex justify-between w-[calc(100%-2rem)] md:w-[600px]">
-                                    <div className="h-8 w-0.5 bg-slate-300"></div>
-                                    <div className="h-8 w-0.5 bg-slate-300"></div>
-                                    <div className="h-8 w-0.5 bg-slate-300"></div>
-                                </div>
-                            </div>
-
-                            {/* Sekretaris, Bendahara, Admin Grid */}
-                            <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-4xl px-4 md:px-0">
-                                {/* Sekretaris */}
-                                <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
-                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-600 text-white p-2.5 rounded-full shadow-sm group-hover:bg-blue-500 transition-colors duration-300">
-                                        <FileText size={18} />
-                                    </div>
-                                    <CardHeader className="pt-8 pb-1">
-                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Sekretaris</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-semibold text-slate-800">Firman Ardiansyah</p>
-                                    </CardContent>
-                                </Card>
-
-                                {/* Bendahara */}
-                                <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
-                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-600 text-white p-2.5 rounded-full shadow-sm group-hover:bg-blue-500 transition-colors duration-300">
-                                        <Wallet size={18} />
-                                    </div>
-                                    <CardHeader className="pt-8 pb-1">
-                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Bendahara</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-semibold text-slate-800">Madadina Adilah Pamuji</p>
-                                    </CardContent>
-                                </Card>
-
-                                {/* Admin */}
-                                <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
-                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-600 text-white p-2.5 rounded-full shadow-sm group-hover:bg-blue-500 transition-colors duration-300">
-                                        <Laptop size={18} />
-                                    </div>
-                                    <CardHeader className="pt-8 pb-1">
-                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Admin</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-semibold text-slate-800">Marikh Kasiful izzat</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-                        </div>
-                    </div>
-                </section>
                 <section id="news" className="w-full py-12 px-4 bg-muted">
                     <Card className="pt-8 pb-4 px-0">
                         <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl text-center mb-12">

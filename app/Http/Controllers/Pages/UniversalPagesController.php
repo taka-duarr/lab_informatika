@@ -11,6 +11,11 @@ use Inertia\Inertia;
 
 class UniversalPagesController extends Controller
 {
+    public function labPortalPage()
+    {
+        return Inertia::render('LabPortalPage');
+    }
+
     public function welcome()
     {
         return Inertia::render('Welcome' , [

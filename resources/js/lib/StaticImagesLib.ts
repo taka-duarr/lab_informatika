@@ -17,11 +17,13 @@ import LogoLogin from "@/assets/login-image.png";
 import LogoLabInformatika from "@/assets/logo-itats-new.png";
 import LogoItats from "@/assets/logo-itats.jpg";
 import LogoRPL from "@/assets/logo-rpl.png";
+import LogoAI from "@/assets/logo-ai.png";
 import BgLoginPage from "@/assets/bg-login-page.png";
 
 export {
     BgLoginPage,
     LogoRPL,
+    LogoAI,
     LogoItats,
     LogoJarkom,
     MahiruCirle,
