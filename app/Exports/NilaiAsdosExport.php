@@ -46,7 +46,7 @@ class NilaiAsdosExport implements FromCollection, WithHeadings, WithMapping, Wit
         $headers = ['NPM', 'Nama Praktikan'];
         
         foreach ($this->moduls as $index => $modul) {
-            $headers[] = 'Modul ' . ($index + 1) . ' (' . $modul->nama . ') - Asdos';
+            $headers[] = 'Modul ' . ($index + 1) . ' (' . $modul->nama . ') - Dosen';
         }
 
         return $headers;
@@ -74,7 +74,7 @@ class NilaiAsdosExport implements FromCollection, WithHeadings, WithMapping, Wit
 
     public function title(): string
     {
-        return 'Format Nilai Asdos';
+        return 'Format Nilai Dosen';
     }
 
     public function styles(Worksheet $sheet)

@@ -134,7 +134,7 @@ class NilaiController extends Controller
             $fileName = 'Format_Nilai_Asistensi_' . str_replace(' ', '_', $praktikum->nama) . '.xlsx';
             return Excel::download(new NilaiAdminExport($praktikum_id), $fileName);
         } else {
-            $fileName = 'Format_Nilai_Asdos_' . str_replace(' ', '_', $praktikum->nama) . '.xlsx';
+            $fileName = 'Format_Nilai_Dosen_' . str_replace(' ', '_', $praktikum->nama) . '.xlsx';
             $dosen_id = auth('dosen')->id();
             return Excel::download(new NilaiAsdosExport($praktikum_id, $dosen_id), $fileName);
         }
@@ -154,7 +154,7 @@ class NilaiController extends Controller
             return redirect()->back()->with('success', 'Nilai Asistensi berhasil diimpor.');
         } else {
             Excel::import(new NilaiAsdosImport($praktikum_id), $request->file('file'));
-            return redirect()->back()->with('success', 'Nilai Asdos berhasil diimpor.');
+            return redirect()->back()->with('success', 'Nilai Dosen berhasil diimpor.');
         }
     }
 

@@ -223,7 +223,7 @@ export default function NilaiIndex({
                             Input Nilai: {praktikum.nama}
                         </h1>
                         <p className="text-sm text-slate-500">
-                            Kelola nilai Pretest, Asistensi, Asdos, dan Nilai Total untuk praktikan.
+                            Kelola nilai Pretest, Asistensi, Dosen, dan Nilai Total untuk praktikan.
                         </p>
                     </div>
 
@@ -290,7 +290,7 @@ export default function NilaiIndex({
                                             {role === 'admin' && <TableHead className="border-r border-t text-center font-medium text-xs">Pretest Asli</TableHead>}
                                             {role === 'admin' && <TableHead className="border-r border-t text-center font-medium text-xs text-red-600">Minus</TableHead>}
                                             {role === 'admin' && <TableHead className="border-r border-t text-center font-medium text-xs">Asistensi</TableHead>}
-                                            <TableHead className="border-r border-t text-center font-medium text-xs">Asdos</TableHead>
+                                            <TableHead className="border-r border-t text-center font-medium text-xs">Dosen</TableHead>
                                             {role === 'admin' && <TableHead className="border-r border-t text-center font-medium text-xs">Total</TableHead>}
                                         </React.Fragment>
                                     ))}
