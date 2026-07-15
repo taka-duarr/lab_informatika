@@ -373,6 +373,49 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
     }, [kuis_praktikan.is_overdue]);
 
     useEffect(() => {
+        const preventCopy = (e: ClipboardEvent) => {
+            e.preventDefault();
+            toast({
+                variant: "destructive",
+                title: "Dilarang menyalin!",
+                description: "Menyalin soal atau jawaban tidak diperbolehkan selama kuis berlangsung.",
+            });
+        };
+
+        const preventContextMenu = (e: MouseEvent) => {
+            e.preventDefault();
+        };
+
+        const preventKeyDown = (e: KeyboardEvent) => {
+            const isCtrl = e.ctrlKey || e.metaKey;
+            const keyLower = e.key.toLowerCase();
+            
+            if (
+                (isCtrl && (keyLower === 'c' || keyLower === 'x' || keyLower === 'u')) ||
+                e.key === 'F12' ||
+                (isCtrl && e.shiftKey && (keyLower === 'i' || keyLower === 'j' || keyLower === 'c'))
+            ) {
+                e.preventDefault();
+                toast({
+                    variant: "destructive",
+                    title: "Tindakan diblokir!",
+                    description: "Pintasan keyboard ini dilarang selama kuis berlangsung.",
+                });
+            }
+        };
+
+        document.addEventListener("copy", preventCopy);
+        document.addEventListener("contextmenu", preventContextMenu);
+        document.addEventListener("keydown", preventKeyDown);
+
+        return () => {
+            document.removeEventListener("copy", preventCopy);
+            document.removeEventListener("contextmenu", preventContextMenu);
+            document.removeEventListener("keydown", preventKeyDown);
+        };
+    }, [toast]);
+
+    useEffect(() => {
         const alertCount = Number(localStorage.getItem(awayStorageKey("away-count"))) || 0;
         setAwayAlertCount(alertCount);
 
@@ -448,7 +491,15 @@ export default function PraktikanKuisExamPage({ auth, serverTime, soals, jawaban
                     )}
                 </OverlayLoader>
             )}
-            <div className="flex flex-col lg:flex-row gap-4 h-auto lg:h-screen bg-zinc-100 py-6 px-3">
+            <div
+                className="select-none flex flex-col lg:flex-row gap-4 h-auto lg:h-screen bg-zinc-100 py-6 px-3"
+                style={{
+                    userSelect: 'none',
+                    WebkitUserSelect: 'none',
+                    MozUserSelect: 'none',
+                    msUserSelect: 'none'
+                }}
+            >
                 <aside data-show={ sideSoalShow } ref={ sideSoalRef } className="z-10 fixed -translate-x-full p-3 data-[show=true]:translate-x-0 lg:translate-x-0 left-0 lg:static w-2/3 sm:w-80 lg:w-72 top-0 bottom-0 flex flex-col gap-4 overflow-visible lg:overflow-hidden transition-all ease-in-out duration-200 my-card bg-white">
                     <CountdownTimer
                         startTime={serverTime}
