@@ -195,7 +195,7 @@ export function AdminSidebar({ isMaster = false, ...props }: React.ComponentProp
                     <SidebarMenu>
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild>
-                                <Link href="/">
+                                <Link href="/jarkom">
                                     Halaman Utama
                                 </Link>
                             </SidebarMenuButton>

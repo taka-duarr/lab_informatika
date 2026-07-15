@@ -1,6 +1,7 @@
 import { Head, router } from "@inertiajs/react";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { DosenLayout } from "@/layouts/DosenLayout";
+import { AslabLayout } from "@/layouts/AslabLayout";
 import { PageProps, PaginationData } from "@/types";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -18,11 +19,11 @@ interface Praktikum {
 
 interface Props extends PageProps {
     pagination: PaginationData<Praktikum[]>;
-    role: 'admin' | 'dosen';
+    role: 'admin' | 'dosen' | 'aslab';
 }
 
 export default function ListPraktikum({ pagination, role, auth }: Props) {
-    const Layout = role === 'admin' ? AdminLayout : DosenLayout;
+    const Layout = role === 'admin' ? AdminLayout : (role === 'aslab' ? AslabLayout : DosenLayout);
     const data = pagination.data;
 
     return (

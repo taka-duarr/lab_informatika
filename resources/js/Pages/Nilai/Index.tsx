@@ -1,6 +1,7 @@
 import { Head, router } from "@inertiajs/react";
 import { AdminLayout } from "@/layouts/AdminLayout";
 import { DosenLayout } from "@/layouts/DosenLayout";
+import { AslabLayout } from "@/layouts/AslabLayout";
 import { PageProps } from "@/types";
 import { Input } from "@/components/ui/input";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
@@ -73,7 +74,7 @@ interface Props extends PageProps {
     praktikans: PraktikumPraktikan[];
     nilais: Nilai[];
     kuisPraktikans: KuisPraktikan[];
-    role: 'admin' | 'dosen';
+    role: 'admin' | 'dosen' | 'aslab';
 }
 
 export default function NilaiIndex({
@@ -84,7 +85,7 @@ export default function NilaiIndex({
     role,
     auth,
 }: Props) {
-    const Layout = role === 'admin' ? AdminLayout : DosenLayout;
+    const Layout = role === 'admin' ? AdminLayout : (role === 'aslab' ? AslabLayout : DosenLayout);
     const { toast } = useToast();
     
     // Sort modules by Pertemuan and then by their own logic, here simply flattening
@@ -235,7 +236,7 @@ export default function NilaiIndex({
                             ref={fileInputRef}
                             onChange={handleFileUpload}
                         />
-                        {role === 'admin' && (
+                        {(role === 'admin' || role === 'aslab') && (
                             <Button variant="default" className="bg-emerald-600 hover:bg-emerald-700 text-white" size="sm" onClick={handleDownloadAkhir} disabled={isUploading}>
                                 <Download className="w-4 h-4 mr-2" />
                                 Cetak Nilai Akhir
@@ -266,12 +267,12 @@ export default function NilaiIndex({
                                     <TableHead className="border-r min-w-[80px]">Sesi</TableHead>
                                     
                                     {allModuls.map((modul, i) => (
-                                        <TableHead key={modul.id} colSpan={role === 'admin' ? 5 : 1} className="border-r text-center bg-slate-50">
+                                        <TableHead key={modul.id} colSpan={(role === 'admin' || role === 'aslab') ? 5 : 1} className="border-r text-center bg-slate-50">
                                             Modul {i + 1}
                                         </TableHead>
                                     ))}
                                     
-                                    {role === 'admin' && (
+                                    {(role === 'admin' || role === 'aslab') && (
                                         <>
                                             <TableHead className="text-center border-r bg-slate-50 min-w-[80px]">Rata-rata</TableHead>
                                             <TableHead className="text-center border-r bg-slate-50 min-w-[80px]">TA</TableHead>
@@ -287,20 +288,20 @@ export default function NilaiIndex({
 
                                     {allModuls.map((modul) => (
                                         <React.Fragment key={`sub-${modul.id}`}>
-                                            {role === 'admin' && <TableHead className="border-r border-t text-center font-medium text-xs">Pretest Asli</TableHead>}
-                                            {role === 'admin' && <TableHead className="border-r border-t text-center font-medium text-xs text-red-600">Minus</TableHead>}
-                                            {role === 'admin' && <TableHead className="border-r border-t text-center font-medium text-xs">Asistensi</TableHead>}
+                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t text-center font-medium text-xs">Pretest Asli</TableHead>}
+                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t text-center font-medium text-xs text-red-600">Minus</TableHead>}
+                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t text-center font-medium text-xs">Asistensi</TableHead>}
                                             <TableHead className="border-r border-t text-center font-medium text-xs">Dosen</TableHead>
-                                            {role === 'admin' && <TableHead className="border-r border-t text-center font-medium text-xs">Total</TableHead>}
+                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t text-center font-medium text-xs">Total</TableHead>}
                                         </React.Fragment>
                                     ))}
-                                    {role === 'admin' && <TableHead className="border-r border-t" colSpan={3}></TableHead>}
+                                    {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t" colSpan={3}></TableHead>}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
                                 {praktikans.length === 0 ? (
                                     <TableRow>
-                                        <TableCell colSpan={4 + (allModuls.length * (role === 'admin' ? 5 : 1)) + (role === 'admin' ? 3 : 0)} className="text-center text-slate-500 py-8">
+                                        <TableCell colSpan={4 + (allModuls.length * ((role === 'admin' || role === 'aslab') ? 5 : 1)) + ((role === 'admin' || role === 'aslab') ? 3 : 0)} className="text-center text-slate-500 py-8">
                                             Tidak ada praktikan di praktikum ini.
                                         </TableCell>
                                     </TableRow>
@@ -328,7 +329,7 @@ export default function NilaiIndex({
 
                                                     return (
                                                         <React.Fragment key={`${pp.praktikan_id}-${modul.id}`}>
-                                                            {role === 'admin' && (
+                                                            {(role === 'admin' || role === 'aslab') && (
                                                                 <TableCell className="border-r text-center p-1 bg-slate-50/30">
                                                                     <div className="flex flex-col items-center justify-center">
                                                                         <span className="text-xs font-semibold">{rawPretest}</span>
@@ -338,20 +339,20 @@ export default function NilaiIndex({
                                                                     </div>
                                                                 </TableCell>
                                                             )}
-                                                            {role === 'admin' && (
+                                                            {(role === 'admin' || role === 'aslab') && (
                                                                 <TableCell className="border-r p-1">
                                                                     {renderEditableCell(pp.praktikan_id, modul.id, 'pelanggaran_pretest', nilaiRec?.pelanggaran_pretest, true)}
                                                                 </TableCell>
                                                             )}
-                                                            {role === 'admin' && (
+                                                            {(role === 'admin' || role === 'aslab') && (
                                                                 <TableCell className="border-r p-1">
                                                                     {renderEditableCell(pp.praktikan_id, modul.id, 'nilai_asistensi', nilaiRec?.nilai_asistensi, true)}
                                                                 </TableCell>
                                                             )}
                                                             <TableCell className="border-r p-1">
-                                                                {renderEditableCell(pp.praktikan_id, modul.id, 'nilai_asdos', nilaiRec?.nilai_asdos, role === 'dosen')}
+                                                                {renderEditableCell(pp.praktikan_id, modul.id, 'nilai_asdos', nilaiRec?.nilai_asdos, role === 'dosen' || role === 'admin')}
                                                             </TableCell>
-                                                            {role === 'admin' && (
+                                                            {(role === 'admin' || role === 'aslab') && (
                                                                 <TableCell className="border-r text-center p-1 font-semibold text-blue-700 bg-blue-50/30">
                                                                     {totalModul.toFixed(1)}
                                                                 </TableCell>
@@ -361,13 +362,13 @@ export default function NilaiIndex({
                                                 })}
 
                                                 {/* Summary Columns */}
-                                                {role === 'admin' && (
+                                                {(role === 'admin' || role === 'aslab') && (
                                                     <>
                                                         <TableCell className="border-r text-center font-bold bg-slate-50">
                                                             {(allModuls.length > 0 ? (sumTotalModul / allModuls.length) : 0).toFixed(1)}
                                                         </TableCell>
                                                         <TableCell className="border-r p-1 bg-slate-50">
-                                                            {renderEditableCell(pp.praktikan_id, null, 'nilai_ta', pp.nilai_ta, true)}
+                                                            {renderEditableCell(pp.praktikan_id, null, 'nilai_ta', pp.nilai_ta, role === 'admin')}
                                                         </TableCell>
                                                         <TableCell className="text-center font-bold text-emerald-700 bg-emerald-50">
                                                             {(() => {

@@ -85,7 +85,7 @@ export function DosenSidebar({
                     <SidebarMenu>
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild>
-                                <Link href="/">Halaman Utama</Link>
+                                <Link href="/jarkom">Halaman Utama</Link>
                             </SidebarMenuButton>
                         </SidebarMenuItem>
                         <SidebarMenuItem>

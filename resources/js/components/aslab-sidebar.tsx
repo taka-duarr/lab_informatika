@@ -44,6 +44,17 @@ const data: {
             ],
         },
         {
+            title: "Nilai Praktikum",
+            url: "#",
+            items: [
+                {
+                    title: "Input Nilai",
+                    url: route('aslab.nilai-praktikum.index'),
+                    route: 'aslab.nilai-praktikum.index'
+                },
+            ],
+        },
+        {
             title: "Informasi Penting",
             url: "#",
             items: [
@@ -79,7 +90,7 @@ export function AslabSidebar({ ...props }: React.ComponentProps<typeof Sidebar>)
                     <SidebarMenu>
                         <SidebarMenuItem>
                             <SidebarMenuButton asChild>
-                                <Link href="/">
+                                <Link href="/jarkom">
                                     Halaman Utama
                                 </Link>
                             </SidebarMenuButton>

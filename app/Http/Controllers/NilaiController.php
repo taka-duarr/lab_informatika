@@ -13,6 +13,8 @@ use App\Imports\NilaiAsdosImport;
 use App\Exports\NilaiAdminExport;
 use App\Imports\NilaiAdminImport;
 use App\Exports\NilaiAkhirExport;
+use App\Exports\NilaiAslabExport;
+use App\Imports\NilaiAslabImport;
 use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use Inertia\Inertia;
@@ -23,11 +25,16 @@ class NilaiController extends Controller
     {
         $role = $request->route()->getPrefix(); 
         $isDosen = str_contains($role, 'dosen');
+        $isAslab = str_contains($role, 'aslab');
 
         $query = Praktikum::query()->with('periode', 'jenis');
         if ($isDosen) {
             $query->whereHas('praktikum_praktikan', function ($q) {
                 $q->where('dosen_id', auth('dosen')->id());
+            });
+        } elseif ($isAslab) {
+            $query->whereHas('praktikum_praktikan', function ($q) {
+                $q->where('aslab_id', auth('aslab')->id());
             });
         }
         $query->orderBy('tahun', 'desc')->orderBy('nama', 'asc');
@@ -36,7 +43,7 @@ class NilaiController extends Controller
         
         return Inertia::render('Nilai/ListPraktikum', [
             'pagination' => fn() => $praktikums,
-            'role' => $isDosen ? 'dosen' : 'admin'
+            'role' => $isDosen ? 'dosen' : ($isAslab ? 'aslab' : 'admin')
         ]);
     }
 
@@ -47,12 +54,15 @@ class NilaiController extends Controller
         $role = $request->route()->getPrefix(); 
         $isDosen = str_contains($role, 'dosen');
         $isAdmin = str_contains($role, 'admin');
+        $isAslab = str_contains($role, 'aslab');
 
         $query = PraktikumPraktikan::with(['praktikan', 'sesi_praktikum'])
             ->where('praktikum_id', $praktikum_id);
 
         if ($isDosen) {
             $query->where('dosen_id', auth('dosen')->id());
+        } elseif ($isAslab) {
+            $query->where('aslab_id', auth('aslab')->id());
         }
 
         $praktikans = $query->get();
@@ -75,7 +85,7 @@ class NilaiController extends Controller
             'praktikans' => $praktikans,
             'nilais' => $nilais,
             'kuisPraktikans' => $kuisPraktikans,
-            'role' => $isDosen ? 'dosen' : 'admin'
+            'role' => $isDosen ? 'dosen' : ($isAslab ? 'aslab' : 'admin')
         ]);
     }
 
@@ -91,6 +101,7 @@ class NilaiController extends Controller
         $role = $request->route()->getPrefix();
         $isDosen = str_contains($role, 'dosen');
         $isAdmin = str_contains($role, 'admin');
+        $isAslab = str_contains($role, 'aslab');
 
         $field = $validated['field'];
         $value = $validated['value'];
@@ -100,7 +111,10 @@ class NilaiController extends Controller
         if ($isDosen && $field !== 'nilai_asdos') {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-        if ($isAdmin && !in_array($field, ['nilai_asistensi', 'nilai_ta', 'nilai_total', 'pelanggaran_pretest'])) {
+        if ($isAdmin && !in_array($field, ['nilai_asistensi', 'nilai_ta', 'nilai_total', 'pelanggaran_pretest', 'nilai_asdos'])) {
+            return response()->json(['message' => 'Unauthorized'], 403);
+        }
+        if ($isAslab && !in_array($field, ['nilai_asistensi', 'pelanggaran_pretest'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 
@@ -129,10 +143,15 @@ class NilaiController extends Controller
         $praktikum = Praktikum::findOrFail($praktikum_id);
         $role = $request->route()->getPrefix();
         $isAdmin = str_contains($role, 'admin');
+        $isAslab = str_contains($role, 'aslab');
 
         if ($isAdmin) {
             $fileName = 'Format_Nilai_Asistensi_' . str_replace(' ', '_', $praktikum->nama) . '.xlsx';
             return Excel::download(new NilaiAdminExport($praktikum_id), $fileName);
+        } elseif ($isAslab) {
+            $fileName = 'Format_Nilai_Asistensi_' . str_replace(' ', '_', $praktikum->nama) . '.xlsx';
+            $aslab_id = auth('aslab')->id();
+            return Excel::download(new NilaiAslabExport($praktikum_id, $aslab_id), $fileName);
         } else {
             $fileName = 'Format_Nilai_Dosen_' . str_replace(' ', '_', $praktikum->nama) . '.xlsx';
             $dosen_id = auth('dosen')->id();
@@ -148,9 +167,14 @@ class NilaiController extends Controller
 
         $role = $request->route()->getPrefix();
         $isAdmin = str_contains($role, 'admin');
+        $isAslab = str_contains($role, 'aslab');
 
         if ($isAdmin) {
             Excel::import(new NilaiAdminImport($praktikum_id), $request->file('file'));
+            return redirect()->back()->with('success', 'Nilai Asistensi berhasil diimpor.');
+        } elseif ($isAslab) {
+            $aslab_id = auth('aslab')->id();
+            Excel::import(new NilaiAslabImport($praktikum_id, $aslab_id), $request->file('file'));
             return redirect()->back()->with('success', 'Nilai Asistensi berhasil diimpor.');
         } else {
             Excel::import(new NilaiAsdosImport($praktikum_id), $request->file('file'));
