@@ -11,9 +11,13 @@ Route::prefix('aslab')->name('aslab.')->middleware('guard:aslab')->group(functio
         Route::get('/', [AslabPagesController::class, 'praktikumIndexPage'])->name('index');
         Route::get('/create', [AslabPagesController::class, 'praktikumCreatePage'])->name('create');
         Route::get('/details/{id}', [AslabPagesController::class, 'praktikumDetailsPage'])->name('details');
+    });
 
-        Route::prefix('/nilai')->name('nilai.')->group(function () {
-            Route::get('/', [AslabPagesController::class, 'praktikumNilaiIndexPage'])->name('index');
-        });
+    Route::prefix('nilai-praktikum')->name('nilai-praktikum.')->group(function () {
+        Route::get('/', [\App\Http\Controllers\NilaiController::class, 'listPraktikum'])->name('index');
+        Route::get('/{praktikum_id}', [\App\Http\Controllers\NilaiController::class, 'index'])->name('details');
+        Route::post('/{praktikum_id}/update-cell', [\App\Http\Controllers\NilaiController::class, 'updateCell'])->name('update-cell');
+        Route::get('/{praktikum_id}/export', [\App\Http\Controllers\NilaiController::class, 'exportExcel'])->name('export');
+        Route::post('/{praktikum_id}/import', [\App\Http\Controllers\NilaiController::class, 'importExcel'])->name('import');
     });
 });
