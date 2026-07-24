@@ -42,20 +42,19 @@ class NilaiAdminImport implements ToCollection
             $colIndex = 2; // Modul 1 starts at index 2 (C)
             
             foreach ($this->moduls as $modul) {
-                if (isset($row[$colIndex]) && is_numeric($row[$colIndex])) {
-                    $nilai_asistensi = $row[$colIndex];
+                $rawVal = isset($row[$colIndex]) ? $row[$colIndex] : null;
+                $nilai_asistensi = ($rawVal !== null && trim((string)$rawVal) !== '' && is_numeric($rawVal)) ? (float)$rawVal : null;
 
-                    Nilai::updateOrCreate(
-                        [
-                            'praktikum_id' => $this->praktikum_id,
-                            'praktikan_id' => $praktikan->id,
-                            'modul_id' => $modul->id,
-                        ],
-                        [
-                            'nilai_asistensi' => $nilai_asistensi,
-                        ]
-                    );
-                }
+                Nilai::updateOrCreate(
+                    [
+                        'praktikum_id' => $this->praktikum_id,
+                        'praktikan_id' => $praktikan->id,
+                        'modul_id' => $modul->id,
+                    ],
+                    [
+                        'nilai_asistensi' => $nilai_asistensi,
+                    ]
+                );
                 $colIndex++;
             }
         }
