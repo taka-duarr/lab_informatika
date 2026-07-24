@@ -21,7 +21,7 @@ export const AslabLayout = ({
     return (
         <SidebarProvider>
             <AslabSidebar />
-            <SidebarInset>
+            <SidebarInset className="min-w-0 overflow-x-hidden">
                 <header className="flex h-16 shrink-0 items-center justify-between gap-2 border-b px-4">
                     <div className="flex items-center space-x-4">
                         <SidebarTrigger className="-ml-1" />
@@ -32,8 +32,8 @@ export const AslabLayout = ({
                     </div>
                     <ProfileDropdown auth={auth} />
                 </header>
-                <div className="p-3 bg-muted">
-                    <Card className="p-5 md:p-6 space-y-4 bg-white rounded-md border min-h-[calc(100vh-10rem)]">
+                <div className="p-3 bg-muted min-w-0 max-w-full overflow-hidden">
+                    <Card className="p-5 md:p-6 space-y-4 bg-white rounded-md border min-h-[calc(100vh-10rem)] min-w-0 max-w-full overflow-hidden">
                         {children}
                     </Card>
                 </div>

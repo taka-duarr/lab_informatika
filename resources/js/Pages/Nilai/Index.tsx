@@ -253,49 +253,49 @@ export default function NilaiIndex({
                     </div>
                 </div>
 
-                <Card className="shadow-sm">
+                <Card className="shadow-sm min-w-0 max-w-full overflow-hidden">
                     <CardHeader className="pb-4">
                         <CardTitle className="text-base font-semibold">Tabel Nilai Praktikan</CardTitle>
                     </CardHeader>
-                    <CardContent className="p-0 overflow-x-auto relative z-0">
-                        <Table className="w-full text-sm whitespace-nowrap">
+                    <CardContent className="p-0 relative z-0 min-w-0 max-w-full overflow-hidden">
+                        <Table className="w-full text-sm whitespace-nowrap border-separate border-spacing-0">
                             <TableHeader>
                                 <TableRow className="bg-slate-100 hover:bg-slate-100">
-                                    <TableHead className="sticky left-0 bg-slate-100 z-10 border-r w-10 text-center">No</TableHead>
-                                    <TableHead className="sticky left-10 bg-slate-100 z-10 border-r min-w-[120px]">NPM</TableHead>
-                                    <TableHead className="sticky left-[168px] bg-slate-100 z-10 border-r min-w-[200px]">Nama Lengkap</TableHead>
-                                    <TableHead className="border-r min-w-[80px]">Sesi</TableHead>
+                                    <TableHead className="sticky left-0 bg-slate-100 z-30 border-r border-b w-12 min-w-[48px] text-center font-semibold">No</TableHead>
+                                    <TableHead className="sticky left-[48px] bg-slate-100 z-30 border-r border-b w-36 min-w-[140px] font-semibold">NPM</TableHead>
+                                    <TableHead className="sticky left-[188px] bg-slate-100 z-30 border-r border-b w-56 min-w-[220px] font-semibold shadow-[4px_0_8px_-2px_rgba(0,0,0,0.1)]">Nama Lengkap</TableHead>
+                                    <TableHead className="border-r border-b min-w-[80px]">Sesi</TableHead>
                                     
                                     {allModuls.map((modul, i) => (
-                                        <TableHead key={modul.id} colSpan={(role === 'admin' || role === 'aslab') ? 5 : 1} className="border-r text-center bg-slate-50">
+                                        <TableHead key={modul.id} colSpan={(role === 'admin' || role === 'aslab') ? 5 : 1} className="border-r border-b text-center bg-slate-50 font-semibold">
                                             Modul {i + 1}
                                         </TableHead>
                                     ))}
                                     
                                     {(role === 'admin' || role === 'aslab') && (
                                         <>
-                                            <TableHead className="text-center border-r bg-slate-50 min-w-[80px]">Rata-rata</TableHead>
-                                            <TableHead className="text-center border-r bg-slate-50 min-w-[80px]">TA</TableHead>
-                                            <TableHead className="text-center bg-slate-50 min-w-[80px]">Nilai Total</TableHead>
+                                            <TableHead className="text-center border-r border-b bg-slate-50 min-w-[80px] font-semibold">Rata-rata</TableHead>
+                                            <TableHead className="text-center border-r border-b bg-slate-50 min-w-[80px] font-semibold">TA</TableHead>
+                                            <TableHead className="text-center border-b bg-slate-50 min-w-[80px] font-semibold">Nilai Total</TableHead>
                                         </>
                                     )}
                                 </TableRow>
                                 <TableRow className="bg-slate-50 hover:bg-slate-50">
-                                    <TableHead className="sticky left-0 bg-slate-50 z-10 border-r border-t w-10"></TableHead>
-                                    <TableHead className="sticky left-10 bg-slate-50 z-10 border-r border-t min-w-[120px]"></TableHead>
-                                    <TableHead className="sticky left-[168px] bg-slate-50 z-10 border-r border-t min-w-[200px]"></TableHead>
-                                    <TableHead className="border-r border-t min-w-[80px]"></TableHead>
+                                    <TableHead className="sticky left-0 bg-slate-50 z-30 border-r border-b w-12 min-w-[48px]"></TableHead>
+                                    <TableHead className="sticky left-[48px] bg-slate-50 z-30 border-r border-b w-36 min-w-[140px]"></TableHead>
+                                    <TableHead className="sticky left-[188px] bg-slate-50 z-30 border-r border-b w-56 min-w-[220px] shadow-[4px_0_8px_-2px_rgba(0,0,0,0.1)]"></TableHead>
+                                    <TableHead className="border-r border-b min-w-[80px]"></TableHead>
 
                                     {allModuls.map((modul) => (
                                         <React.Fragment key={`sub-${modul.id}`}>
-                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t text-center font-medium text-xs">Pretest Asli</TableHead>}
-                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t text-center font-medium text-xs text-red-600">Minus</TableHead>}
-                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t text-center font-medium text-xs">Asistensi</TableHead>}
-                                            <TableHead className="border-r border-t text-center font-medium text-xs">Dosen</TableHead>
-                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t text-center font-medium text-xs">Total</TableHead>}
+                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-b text-center font-medium text-xs">Pretest Asli</TableHead>}
+                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-b text-center font-medium text-xs text-red-600">Minus</TableHead>}
+                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-b text-center font-medium text-xs">Asistensi</TableHead>}
+                                            <TableHead className="border-r border-b text-center font-medium text-xs">Dosen</TableHead>
+                                            {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-b text-center font-medium text-xs">Total</TableHead>}
                                         </React.Fragment>
                                     ))}
-                                    {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-t" colSpan={3}></TableHead>}
+                                    {(role === 'admin' || role === 'aslab') && <TableHead className="border-r border-b" colSpan={3}></TableHead>}
                                 </TableRow>
                             </TableHeader>
                             <TableBody>
@@ -310,10 +310,10 @@ export default function NilaiIndex({
                                         let sumTotalModul = 0;
                                         
                                         return (
-                                            <TableRow key={pp.praktikan_id} className="hover:bg-slate-50/50">
-                                                <TableCell className="sticky left-0 bg-white z-[5] border-r text-center font-medium">{index + 1}</TableCell>
-                                                <TableCell className="sticky left-10 bg-white z-[5] border-r font-medium text-slate-700">{pp.praktikan.username}</TableCell>
-                                                <TableCell className="sticky left-[168px] bg-white z-[5] border-r font-medium text-slate-700 truncate max-w-[200px]">{pp.praktikan.nama}</TableCell>
+                                            <TableRow key={pp.praktikan_id} className="group hover:bg-slate-50/50">
+                                                <TableCell className="sticky left-0 bg-white group-hover:bg-slate-100 transition-colors z-20 border-r border-b text-center font-medium w-12 min-w-[48px]">{index + 1}</TableCell>
+                                                <TableCell className="sticky left-[48px] bg-white group-hover:bg-slate-100 transition-colors z-20 border-r border-b font-medium text-slate-700 w-36 min-w-[140px]">{pp.praktikan.username}</TableCell>
+                                                <TableCell className="sticky left-[188px] bg-white group-hover:bg-slate-100 transition-colors z-20 border-r border-b font-medium text-slate-700 truncate w-56 min-w-[220px] max-w-[220px] shadow-[4px_0_8px_-2px_rgba(0,0,0,0.1)]">{pp.praktikan.nama}</TableCell>
                                                 <TableCell className="border-r text-center text-xs text-slate-500">{pp.sesi_praktikum?.nama || '-'}</TableCell>
                                                 
                                                 {allModuls.map((modul) => {
@@ -367,8 +367,8 @@ export default function NilaiIndex({
                                                         <TableCell className="border-r text-center font-bold bg-slate-50">
                                                             {(allModuls.length > 0 ? (sumTotalModul / allModuls.length) : 0).toFixed(1)}
                                                         </TableCell>
-                                                        <TableCell className="border-r p-1 bg-slate-50">
-                                                            {renderEditableCell(pp.praktikan_id, null, 'nilai_ta', pp.nilai_ta, role === 'admin')}
+                                                        <TableCell className="border-r border-b p-1 bg-slate-50">
+                                                            {renderEditableCell(pp.praktikan_id, null, 'nilai_ta', pp.nilai_ta, role === 'admin' || role === 'aslab')}
                                                         </TableCell>
                                                         <TableCell className="text-center font-bold text-emerald-700 bg-emerald-50">
                                                             {(() => {

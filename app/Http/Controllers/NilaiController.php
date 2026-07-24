@@ -114,7 +114,7 @@ class NilaiController extends Controller
         if ($isAdmin && !in_array($field, ['nilai_asistensi', 'nilai_ta', 'nilai_total', 'pelanggaran_pretest', 'nilai_asdos'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
-        if ($isAslab && !in_array($field, ['nilai_asistensi', 'pelanggaran_pretest'])) {
+        if ($isAslab && !in_array($field, ['nilai_asistensi', 'pelanggaran_pretest', 'nilai_ta'])) {
             return response()->json(['message' => 'Unauthorized'], 403);
         }
 

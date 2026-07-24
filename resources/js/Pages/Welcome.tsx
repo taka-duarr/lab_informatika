@@ -115,6 +115,14 @@ export default function LandingPage({
                 "Jaringan komputer adalah kumpulan komputer yang saling terhubung untuk berbagi sumber daya, seperti file, printer, atau koneksi internet. Jaringan komputer terdiri dari berbagai topologi dan jenis jaringan, seperti LAN (Local Area Network), MAN (Metropolitan Area Network), dan WAN (Wide Area Network). Dalam praktikum ini, mahasiswa akan mempelajari dasar-dasar jaringan komputer, model OSI, TCP/IP, pengalamatan IP, subnetting, hingga konfigurasi perangkat jaringan seperti router dan switch. Mahasiswa juga akan melakukan simulasi menggunakan perangkat lunak seperti Cisco Packet Tracer untuk memahami lebih dalam konsep jaringan.",
             // image: { LogoJarkom },
         },
+        {
+            title: "Pemrograman Berorientasi Objek",
+            description:
+                "Praktikum yang mempelajari paradigma pemrograman berbasis objek",
+            content:
+                "Pemrograman Berorientasi Objek (OOP) adalah paradigma pemrograman berorientasi objek yang membungkus data dan fungsi ke dalam kelas dan objek. Dalam praktikum ini, mahasiswa akan mempelajari konsep utama OOP seperti Encapsulation, Inheritance, Polymorphism, dan Abstraction, serta penerapannya secara praktis dalam membangun aplikasi yang modular, reusable, dan terstruktur.",
+            // image: { LogoJarkom },
+        },
     ];
 
     return (
@@ -230,20 +238,27 @@ export default function LandingPage({
                     </Card>
                 </section>
 
-                <section id="struktur-organisasi" className="w-full py-20 px-4 relative overflow-hidden bg-slate-50/50">
+                <section
+                    id="struktur-organisasi"
+                    className="w-full py-20 px-4 relative overflow-hidden bg-slate-50/50"
+                >
                     <div className="absolute inset-0 bg-grid-slate-100 [mask-image:linear-gradient(0deg,#fff,rgba(255,255,255,0.6))] -z-10"></div>
-                    
+
                     <div className="container mx-auto px-4 md:px-6">
                         <div className="flex flex-col items-center justify-center space-y-4 text-center mb-16">
-                            <div className="inline-block rounded-lg bg-blue-100 px-3 py-1 text-sm text-blue-800 font-semibold mb-2">Our Team</div>
+                            <div className="inline-block rounded-lg bg-blue-100 px-3 py-1 text-sm text-blue-800 font-semibold mb-2">
+                                Our Team
+                            </div>
                             <h2 className="text-3xl font-bold tracking-tighter sm:text-5xl bg-clip-text text-transparent bg-gradient-to-r from-blue-900 to-blue-600">
                                 Struktur Laboratorium
                             </h2>
                             <p className="max-w-[700px] text-muted-foreground md:text-xl/relaxed lg:text-base/relaxed xl:text-xl/relaxed">
-                                Jajaran pengurus inti yang berdedikasi membangun dan mengembangkan ekosistem Laboratorium Jaringan Komputer ITATS.
+                                Jajaran pengurus inti yang berdedikasi membangun
+                                dan mengembangkan ekosistem Laboratorium
+                                Jaringan Komputer ITATS.
                             </p>
                         </div>
-                        
+
                         <div className="flex flex-col items-center max-w-5xl mx-auto w-full relative">
                             {/* Kepala Laboratorium */}
                             <div className="flex flex-col items-center relative z-10 w-full group">
@@ -252,10 +267,14 @@ export default function LandingPage({
                                         <Crown size={24} />
                                     </div>
                                     <CardHeader className="pt-10 pb-2">
-                                        <CardTitle className="text-sm font-semibold tracking-wider text-blue-600 uppercase">Kepala Laboratorium</CardTitle>
+                                        <CardTitle className="text-sm font-semibold tracking-wider text-blue-600 uppercase">
+                                            Kepala Laboratorium
+                                        </CardTitle>
                                     </CardHeader>
                                     <CardContent className="pb-6">
-                                        <p className="font-bold text-lg text-slate-800">Danang Haryo Sulaksono, S.ST., M.T.</p>
+                                        <p className="font-bold text-lg text-slate-800">
+                                            Danang Haryo Sulaksono, S.ST., M.T.
+                                        </p>
                                     </CardContent>
                                 </Card>
                             </div>
@@ -263,58 +282,30 @@ export default function LandingPage({
                             {/* Connecting Line Level 1 */}
                             <div className="h-10 w-0.5 bg-gradient-to-b from-blue-300 to-slate-300"></div>
 
-                            {/* Laboran */}
+                            {/* Koordinator (1 Card dengan 2 Nama: Firman atas, Farrel bawah) */}
                             <div className="flex flex-col items-center relative z-10 w-full group">
-                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
-                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
-                                        <Wrench size={20} />
-                                    </div>
-                                    <CardHeader className="pt-8 pb-2">
-                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Laboran</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-bold text-base text-slate-800">Latiful Sirri, S.kom</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-
-                            {/* Connecting Line Level 2 */}
-                            <div className="h-10 w-0.5 bg-slate-300"></div>
-
-                            {/* Koordinator */}
-                            <div className="flex flex-col items-center relative z-10 w-full group">
-                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
+                                <Card className="w-full md:w-80 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
                                     <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
                                         <Network size={20} />
                                     </div>
                                     <CardHeader className="pt-8 pb-2">
-                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Koordinator</CardTitle>
+                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">
+                                            Koordinator
+                                        </CardTitle>
                                     </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-bold text-base text-slate-800 leading-tight">Luqmanul Asyraril Mubin</p>
+                                    <CardContent className="pb-5 space-y-1">
+                                        <p className="font-bold text-base text-slate-800 leading-tight">
+                                            Firman Ardiansyah
+                                        </p>
+                                        <div className="w-12 h-0.5 bg-slate-200 mx-auto my-1"></div>
+                                        <p className="font-semibold text-sm text-slate-600 leading-tight">
+                                            Farrel Rizna Afrizal
+                                        </p>
                                     </CardContent>
                                 </Card>
                             </div>
 
-                            {/* Connecting Line Level 3.5 */}
-                            <div className="h-10 w-0.5 bg-slate-300"></div>
-
-                            {/* Wakil Koordinator */}
-                            <div className="flex flex-col items-center relative z-10 w-full group">
-                                <Card className="w-full md:w-72 text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300">
-                                    <div className="absolute -top-5 left-1/2 -translate-x-1/2 bg-slate-700 text-white p-2.5 rounded-full shadow-md group-hover:bg-blue-600 transition-colors duration-300">
-                                        <Network size={20} />
-                                    </div>
-                                    <CardHeader className="pt-8 pb-2">
-                                        <CardTitle className="text-xs font-semibold tracking-wider text-slate-500 uppercase">Wakil Koordinator</CardTitle>
-                                    </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-bold text-base text-slate-800 leading-tight">Afzal Musyaffa Lathif Ashrafil Adam</p>
-                                    </CardContent>
-                                </Card>
-                            </div>
-
-                            {/* Connecting Line Level 4 (Branching) */}
+                            {/* Connecting Line Level 2 (Branching to 3 Columns) */}
                             <div className="flex flex-col items-center w-full relative">
                                 <div className="h-8 w-0.5 bg-slate-300"></div>
                                 <div className="w-[calc(100%-2rem)] md:w-[600px] border-t-2 border-slate-300"></div>
@@ -325,7 +316,7 @@ export default function LandingPage({
                                 </div>
                             </div>
 
-                            {/* Sekretaris, Bendahara, Admin Grid */}
+                            {/* Sekretaris, Bendahara, Admin Grid (Masing-masing 2 orang) */}
                             <div className="grid grid-cols-1 md:grid-cols-3 gap-6 md:gap-8 w-full max-w-4xl px-4 md:px-0">
                                 {/* Sekretaris */}
                                 <Card className="w-full text-center border-slate-200/80 shadow-md bg-white/90 transition-all duration-300 hover:shadow-lg hover:-translate-y-1 hover:border-slate-300 group mt-4 md:mt-0 relative">
@@ -333,10 +324,18 @@ export default function LandingPage({
                                         <FileText size={18} />
                                     </div>
                                     <CardHeader className="pt-8 pb-1">
-                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Sekretaris</CardTitle>
+                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
+                                            Sekretaris
+                                        </CardTitle>
                                     </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-semibold text-slate-800">Firman Ardiansyah</p>
+                                    <CardContent className="pb-5 space-y-1">
+                                        <p className="font-semibold text-slate-800">
+                                            Luqmanul Asyraril Mubin
+                                        </p>
+                                        <div className="w-8 h-0.5 bg-slate-200 mx-auto my-0.5"></div>
+                                        <p className="font-medium text-xs text-slate-600">
+                                            Diaz Azriel Purnomo
+                                        </p>
                                     </CardContent>
                                 </Card>
 
@@ -346,10 +345,18 @@ export default function LandingPage({
                                         <Wallet size={18} />
                                     </div>
                                     <CardHeader className="pt-8 pb-1">
-                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Bendahara</CardTitle>
+                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
+                                            Bendahara
+                                        </CardTitle>
                                     </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-semibold text-slate-800">Madadina Adilah Pamuji</p>
+                                    <CardContent className="pb-5 space-y-1">
+                                        <p className="font-semibold text-slate-800">
+                                            Madadina Adilah Pamuji
+                                        </p>
+                                        <div className="w-8 h-0.5 bg-slate-200 mx-auto my-0.5"></div>
+                                        <p className="font-medium text-xs text-slate-600">
+                                            Muhammad Rizal Oktavian Wibowo
+                                        </p>
                                     </CardContent>
                                 </Card>
 
@@ -359,10 +366,18 @@ export default function LandingPage({
                                         <Laptop size={18} />
                                     </div>
                                     <CardHeader className="pt-8 pb-1">
-                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">Admin</CardTitle>
+                                        <CardTitle className="text-[11px] font-semibold tracking-wider text-slate-500 uppercase">
+                                            Admin
+                                        </CardTitle>
                                     </CardHeader>
-                                    <CardContent className="pb-5">
-                                        <p className="font-semibold text-slate-800">Marikh Kasiful izzat</p>
+                                    <CardContent className="pb-5 space-y-1">
+                                        <p className="font-semibold text-slate-800">
+                                            Habibin Al Solichin
+                                        </p>
+                                        <div className="w-8 h-0.5 bg-slate-200 mx-auto my-0.5"></div>
+                                        <p className="font-medium text-xs text-slate-600">
+                                            Moch. Syarief Hidayatulloh
+                                        </p>
                                     </CardContent>
                                 </Card>
                             </div>
